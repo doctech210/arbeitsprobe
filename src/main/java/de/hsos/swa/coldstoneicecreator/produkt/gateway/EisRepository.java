@@ -3,6 +3,8 @@ package de.hsos.swa.coldstoneicecreator.produkt.gateway;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
@@ -10,6 +12,9 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 @ApplicationScoped
 public class EisRepository implements EisControl{
     
+    @Inject
+    Event<Eis> kreationUpdate;
+
     @Override
     public boolean create(Eis eis) {
         eis.setId(null);
@@ -34,8 +39,16 @@ public class EisRepository implements EisControl{
 
     @Override
     public boolean put(Long id, Eis eis) {
-        //Eis altesEis = Eis.findById(id);
-        //TODO: 
+        Eis altesEis = Eis.findById(id);
+        if(!(eis.getName().equals("string") || eis.getName().equals("")))
+            altesEis.setName(eis.getName());
+        if(!(eis.getAllergene().isEmpty()) || eis.getAllergene() != null)
+            altesEis.setAllergene(eis.getAllergene());
+        this.kreationenUpdaten(altesEis); 
         return true;
+    }
+
+    private void kreationenUpdaten(Eis eis) {
+        kreationUpdate.fire(eis);
     }
 }

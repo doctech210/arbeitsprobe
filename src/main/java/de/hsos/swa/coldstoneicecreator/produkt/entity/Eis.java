@@ -1,7 +1,12 @@
 package de.hsos.swa.coldstoneicecreator.produkt.entity;
 
+import java.util.Set;
+
 import javax.enterprise.inject.Vetoed;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -14,19 +19,18 @@ public class Eis extends PanacheEntityBase {
     private Long id;
 
     private String name;
-    private boolean laktose;
-    private boolean ei;
-    private boolean nuss;
+    
+    @ElementCollection(targetClass = Allergene.class)
+    @Enumerated(EnumType.STRING)
+    private Set<Allergene> allergene;
     
     public Eis() {
     }
     
-    public Eis(Long id, String name, boolean laktose, boolean ei, boolean nuss) {
+    public Eis(Long id, String name, Set<Allergene> allergene) {
         this.id = id;
         this.name = name;
-        this.laktose = laktose;
-        this.ei = ei;
-        this.nuss = nuss;
+        this.allergene = allergene;
     }
 
     public Long getId() {
@@ -41,24 +45,11 @@ public class Eis extends PanacheEntityBase {
     public void setName(String name) {
         this.name = name;
     }
-    public boolean isLaktose() {
-        return laktose;
+    public Set<Allergene> getAllergene() {
+        return allergene;
     }
-    public void setLaktose(boolean laktose) {
-        this.laktose = laktose;
+    public void setAllergene(Set<Allergene> allergene) {
+        this.allergene = allergene;
     }
-    public boolean isEi() {
-        return ei;
-    }
-    public void setEi(boolean ei) {
-        this.ei = ei;
-    }
-    public boolean isNuss() {
-        return nuss;
-    }
-    public void setNuss(boolean nuss) {
-        this.nuss = nuss;
-    }
-
     
 }

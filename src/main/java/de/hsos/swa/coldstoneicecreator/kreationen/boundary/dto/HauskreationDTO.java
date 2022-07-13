@@ -2,11 +2,13 @@ package de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.SauceDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
 public class HauskreationDTO implements KreationDTO{
@@ -18,20 +20,13 @@ public class HauskreationDTO implements KreationDTO{
     public SauceDTO sauce;
     public String name;
     public boolean premium;
-    public boolean alkohol;
-    public boolean ei;
-    public boolean gelantine;
-    public boolean gluten;
-    public boolean laktose;
-    public boolean nuss;
-    public boolean suessstoff;
+    public Set<Allergene> allergene;
     
     public HauskreationDTO() {
     }
 
     public HauskreationDTO(Long id, EisDTO eissorte, EisDTO eissorte2, List<ZutatDTO> zutaten, SauceDTO sauce,
-            String name, boolean premium, boolean alkohol, boolean ei, boolean gelantine, boolean gluten,
-            boolean laktose, boolean nuss, boolean suessstoff) {
+            String name, boolean premium) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
@@ -39,13 +34,17 @@ public class HauskreationDTO implements KreationDTO{
         this.sauce = sauce;
         this.name = name;
         this.premium = premium;
-        this.alkohol = alkohol;
-        this.ei = ei;
-        this.gelantine = gelantine;
-        this.gluten = gluten;
-        this.laktose = laktose;
-        this.nuss = nuss;
-        this.suessstoff = suessstoff;
+        this.addAllergene(eissorte.allergene);
+        this.addAllergene(eissorte2.allergene);
+        for(ZutatDTO zutat : zutaten){
+            this.addAllergene(zutat.allergene);
+        }
+        this.addAllergene(sauce.allergene);
+    }
+
+    @Override
+    public void addAllergene(Set<Allergene> allergene){
+        allergene.addAll(allergene);
     }
 
     public static class Converter{
@@ -57,9 +56,7 @@ public class HauskreationDTO implements KreationDTO{
             }
             return new HauskreationDTO(hauskreation.getId(), EisDTO.Converter.toDTO(hauskreation.getEissorte()), 
              EisDTO.Converter.toDTO(hauskreation.getEissorte2()), liste, SauceDTO.Converter.toDTO(hauskreation.getSauce()), 
-             hauskreation.getName(), hauskreation.isPremium(),hauskreation.isAlkohol(), hauskreation.isEi(), 
-             hauskreation.isGelantine(), hauskreation.isGluten(), hauskreation.isLaktose(), hauskreation.isNuss(), 
-             hauskreation.isSuessstoff());
+             hauskreation.getName(), hauskreation.isPremium());
         }
 
         public static Hauskreation toHauskreation(HauskreationDTO hauskreationDTO) {
@@ -69,9 +66,7 @@ public class HauskreationDTO implements KreationDTO{
             }
             return new Hauskreation(hauskreationDTO.id, EisDTO.Converter.toEis(hauskreationDTO.eissorte),
              EisDTO.Converter.toEis(hauskreationDTO.eissorte2), liste, SauceDTO.Converter.toSauce(hauskreationDTO.sauce),
-             hauskreationDTO.name, hauskreationDTO.premium, hauskreationDTO.alkohol, hauskreationDTO.ei, 
-             hauskreationDTO.gelantine, hauskreationDTO.gluten, hauskreationDTO.laktose, hauskreationDTO.nuss, 
-             hauskreationDTO.suessstoff);
+             hauskreationDTO.name, hauskreationDTO.premium, hauskreationDTO.allergene);
         }
     }
 }

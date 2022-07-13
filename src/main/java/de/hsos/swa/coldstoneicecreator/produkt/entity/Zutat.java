@@ -1,7 +1,12 @@
 package de.hsos.swa.coldstoneicecreator.produkt.entity;
 
+import java.util.Set;
+
 import javax.enterprise.inject.Vetoed;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -15,27 +20,19 @@ public class Zutat extends PanacheEntityBase {
 
     private String name;
     private boolean premium;
-    private boolean alkohol;
-    private boolean ei;
-    private boolean gelantine;
-    private boolean laktose;
-    private boolean nuss;
-    private boolean suessstoff;
+
+    @ElementCollection(targetClass = Allergene.class)
+    @Enumerated(EnumType.STRING)
+    private Set<Allergene> allergene;
     
     public Zutat() {
     }
 
-    public Zutat(Long id, String name, boolean premium, boolean alkohol, boolean ei, boolean gelantine, boolean laktose,
-            boolean nuss, boolean suessstoff) {
+    public Zutat(Long id, String name, boolean premium, Set<Allergene> allergene) {
         this.id = id;
         this.name = name;
         this.premium = premium;
-        this.alkohol = alkohol;
-        this.ei = ei;
-        this.gelantine = gelantine;
-        this.laktose = laktose;
-        this.nuss = nuss;
-        this.suessstoff = suessstoff;
+        this.allergene = allergene;
     }
 
     public Long getId() {
@@ -62,53 +59,12 @@ public class Zutat extends PanacheEntityBase {
         this.premium = premium;
     }
 
-    public boolean isAlkohol() {
-        return alkohol;
+    public Set<Allergene> getAllergene() {
+        return allergene;
     }
 
-    public void setAlkohol(boolean alkohol) {
-        this.alkohol = alkohol;
+    public void setAllergene(Set<Allergene> allergene) {
+        this.allergene = allergene;
     }
 
-    public boolean isEi() {
-        return ei;
-    }
-
-    public void setEi(boolean ei) {
-        this.ei = ei;
-    }
-
-    public boolean isGelantine() {
-        return gelantine;
-    }
-
-    public void setGelantine(boolean gelantine) {
-        this.gelantine = gelantine;
-    }
-
-    public boolean isLaktose() {
-        return laktose;
-    }
-
-    public void setLaktose(boolean laktose) {
-        this.laktose = laktose;
-    }
-
-    public boolean isNuss() {
-        return nuss;
-    }
-
-    public void setNuss(boolean nuss) {
-        this.nuss = nuss;
-    }
-
-    public boolean isSuessstoff() {
-        return suessstoff;
-    }
-
-    public void setSuessstoff(boolean suessstoff) {
-        this.suessstoff = suessstoff;
-    }
-    
-    
 }

@@ -1,7 +1,12 @@
 package de.hsos.swa.coldstoneicecreator.produkt.entity;
 
+import java.util.Set;
+
 import javax.enterprise.inject.Vetoed;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -14,21 +19,18 @@ public class Sauce extends PanacheEntityBase {
     private Long id;
 
     private String name;
-    private boolean gluten;
-    private boolean ei;
-    private boolean nuss;
-    private boolean alkohol;
+    
+    @ElementCollection(targetClass = Allergene.class)
+    @Enumerated(EnumType.STRING)
+    private Set<Allergene> allergene;
     
     public Sauce() {
     }
     
-    public Sauce(Long id, String name, boolean gluten, boolean ei, boolean nuss, boolean alkohol) {
+    public Sauce(Long id, String name, Set<Allergene> allergene) {
         this.id = id;
         this.name = name;
-        this.gluten = gluten;
-        this.ei = ei;
-        this.nuss = nuss;
-        this.alkohol = alkohol;
+        this.allergene = allergene;
     }
 
     public Long getId() {
@@ -43,28 +45,11 @@ public class Sauce extends PanacheEntityBase {
     public void setName(String name) {
         this.name = name;
     }
-    public boolean isGluten() {
-        return gluten;
+    public Set<Allergene> getAllergene() {
+        return allergene;
     }
-    public void setGluten(boolean laktose) {
-        this.gluten = laktose;
+    public void setAllergene(Set<Allergene> allergene) {
+        this.allergene = allergene;
     }
-    public boolean isEi() {
-        return ei;
-    }
-    public void setEi(boolean ei) {
-        this.ei = ei;
-    }
-    public boolean isNuss() {
-        return nuss;
-    }
-    public void setNuss(boolean nuss) {
-        this.nuss = nuss;
-    }
-    public boolean isAlkohol() {
-        return alkohol;
-    }
-    public void setAlkohol(boolean alkohol) {
-        this.alkohol = alkohol;
-    }
+    
 }

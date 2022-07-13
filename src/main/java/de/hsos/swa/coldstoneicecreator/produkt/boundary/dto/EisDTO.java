@@ -1,33 +1,32 @@
 package de.hsos.swa.coldstoneicecreator.produkt.boundary.dto;
 
+import java.util.Set;
+
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 
 public class EisDTO {
     public Long id;
     public String name;
-    public boolean laktose;
-    public boolean ei;
-    public boolean nuss;
+    public Set<Allergene> allergene;
     
     public EisDTO() {
     }
     
-    public EisDTO(Long id, String name, boolean laktose, boolean ei, boolean nuss) {
+    public EisDTO(Long id, String name, Set<Allergene> allergene) {
         this.id = id;
         this.name = name;
-        this.laktose = laktose;
-        this.ei = ei;
-        this.nuss = nuss;
+        this.allergene = allergene;
     }
 
     public static class Converter{
 
         public static EisDTO toDTO(Eis eis){
-            return new EisDTO(eis.getId(), eis.getName(), eis.isLaktose(), eis.isEi(), eis.isNuss());
+            return new EisDTO(eis.getId(), eis.getName(), eis.getAllergene());
         }
 
         public static Eis toEis(EisDTO eisDTO){
-            return new Eis(eisDTO.id, eisDTO.name, eisDTO.laktose, eisDTO.ei, eisDTO.nuss);
+            return new Eis(eisDTO.id, eisDTO.name, eisDTO.allergene);
         }
     }    
 }

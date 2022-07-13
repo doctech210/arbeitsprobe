@@ -1,14 +1,19 @@
 package de.hsos.swa.coldstoneicecreator.kreationen.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.enterprise.inject.Vetoed;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
@@ -29,20 +34,16 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
     private Sauce sauce;
     private String name;
     private boolean premium;
-    private boolean alkohol;
-    private boolean ei;
-    private boolean gelantine;
-    private boolean gluten;
-    private boolean laktose;
-    private boolean nuss;
-    private boolean suessstoff;
+    
+    @ElementCollection(targetClass = Allergene.class)
+    @Enumerated(EnumType.STRING)
+    private Set<Allergene> allergene;
     
     public Eigenkreation() {
     }    
 
     public Eigenkreation(Long id, Eis eissorte, Eis eissorte2, List<Zutat> zutaten, Sauce sauce, String name,
-            boolean premium, boolean alkohol, boolean ei, boolean gelantine, boolean gluten, boolean laktose,
-            boolean nuss, boolean suessstoff) {
+            boolean premium, Set<Allergene> allergene) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
@@ -50,13 +51,7 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
         this.sauce = sauce;
         this.name = name;
         this.premium = premium;
-        this.alkohol = alkohol;
-        this.ei = ei;
-        this.gelantine = gelantine;
-        this.gluten = gluten;
-        this.laktose = laktose;
-        this.nuss = nuss;
-        this.suessstoff = suessstoff;
+        this.allergene = allergene;
     }
 
     public Long getId() {
@@ -81,62 +76,6 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
 
     public void setPremium(boolean premium) {
         this.premium = premium;
-    }
-
-    public boolean isAlkohol() {
-        return alkohol;
-    }
-
-    public void setAlkohol(boolean alkohol) {
-        this.alkohol = alkohol;
-    }
-
-    public boolean isEi() {
-        return ei;
-    }
-
-    public void setEi(boolean ei) {
-        this.ei = ei;
-    }
-
-    public boolean isGelantine() {
-        return gelantine;
-    }
-
-    public void setGelantine(boolean gelantine) {
-        this.gelantine = gelantine;
-    }
-
-    public boolean isGluten() {
-        return gluten;
-    }
-
-    public void setGluten(boolean gluten) {
-        this.gluten = gluten;
-    }
-
-    public boolean isLaktose() {
-        return laktose;
-    }
-
-    public void setLaktose(boolean laktose) {
-        this.laktose = laktose;
-    }
-
-    public boolean isNuss() {
-        return nuss;
-    }
-
-    public void setNuss(boolean nuss) {
-        this.nuss = nuss;
-    }
-
-    public boolean isSuessstoff() {
-        return suessstoff;
-    }
-
-    public void setSuessstoff(boolean suessstoff) {
-        this.suessstoff = suessstoff;
     }
 
     public Eis getEissorte() {
@@ -171,6 +110,12 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
         this.sauce = sauce;
     }
     
-        
+    public Set<Allergene> getAllergene() {
+        return allergene;
+    }
+
+    public void setAllergene(Set<Allergene> allergene) {
+        this.allergene = allergene;
+    }
 }
 
