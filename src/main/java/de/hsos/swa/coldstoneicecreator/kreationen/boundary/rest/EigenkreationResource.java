@@ -1,6 +1,8 @@
 package de.hsos.swa.coldstoneicecreator.kreationen.boundary.rest;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -11,12 +13,16 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.Response.Status;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
 
 @RequestScoped
 @Path("/eigenkreationen")
@@ -41,9 +47,19 @@ public class EigenkreationResource {
     @POST
     @Transactional
     @RolesAllowed("Admin, Kunde")
-    public Response post(EigenkreationDTO eigenkreationDTO) {
+    public Response post(@Context SecurityContext sec, EigenkreationDTO eigenkreationDTO) {
+        Kunde kunde = this.eingeloggterKunde(sec);
+        if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
         Eigenkreation eigenkreation = EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO);
-        cr.create(eigenkreation);
+        cr.create(kunde, eigenkreation);
         return Response.ok().build();
+    }
+
+    private Kunde eingeloggterKunde(SecurityContext sec) {
+        Principal user = sec.getUserPrincipal();
+        if(user == null) return null;
+        Optional<Kunde> optKunde = Kunde.find("vorname", user.getName()).firstResultOptional();
+        if(optKunde.isEmpty()) return null;
+        return optKunde.get();
     }
 }

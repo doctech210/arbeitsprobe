@@ -1,14 +1,19 @@
 package de.hsos.swa.coldstoneicecreator.kunden.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
+import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
+
 import javax.enterprise.inject.Vetoed;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import de.hsos.swa.coldstoneicecreator.kreationen.entity.Kreation;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 @Entity
@@ -19,17 +24,23 @@ public class Kunde extends PanacheEntityBase{
     private Long id;
     private String name;
     private String passwort;
-    /*@OneToMany
-    private List<Kreation> warenkorb;
-    */
+    private List<Eigenkreation> eigenkreationen;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="bestellId_id")
+    private List<Bestellung> bestellungen = new ArrayList<>();
+    
     public Kunde() {
     }
     
-    public Kunde(Long id, String name, String passwort, List<Kreation> warenkorb) {
+    public Kunde(Long id, String name, String passwort, List<Eigenkreation> eigenkreationen) {
         this.id = id;
         this.name = name;
         this.passwort = passwort;
-        //this.warenkorb = warenkorb;
+        this.eigenkreationen = eigenkreationen;
+    }
+
+    public boolean addEigenkreation(Eigenkreation eigenkreation) {
+        return this.eigenkreationen.add(eigenkreation);
     }
 
     public Long getId() {
@@ -56,12 +67,23 @@ public class Kunde extends PanacheEntityBase{
         this.passwort = passwort;
     }
 
-    /*public List<Kreation> getWarenkorb() {
-        return warenkorb;
+    public List<Eigenkreation> getEigenkreationen() {
+        return eigenkreationen;
     }
 
-    public void setWarenkorb(List<Kreation> warenkorb) {
-        this.warenkorb = warenkorb;
-    }*/
+    public void setEigenkreationen(List<Eigenkreation> eigenkreationen) {
+        this.eigenkreationen = eigenkreationen;
+    }
 
+    public List<Bestellung> getBestellungen() {
+        return bestellungen;
+    }
+
+    public void setBestellungen(List<Bestellung> bestellungen) {
+        this.bestellungen = bestellungen;
+    }
+    
+    public void addBestellung(Bestellung bestellung){
+        this.bestellungen.add(bestellung);
+    }
 }

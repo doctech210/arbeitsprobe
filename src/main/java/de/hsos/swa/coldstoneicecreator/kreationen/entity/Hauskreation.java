@@ -21,7 +21,7 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 @Entity @Vetoed
-public class Hauskreation extends PanacheEntityBase {
+public class Hauskreation extends PanacheEntityBase implements Kreation{
     
     @Id @GeneratedValue(generator = "hauskreation_seq")
     private Long id;
@@ -34,7 +34,6 @@ public class Hauskreation extends PanacheEntityBase {
     @OneToOne
     private Sauce sauce;
     private String name;
-    private boolean premium;
     
     @ElementCollection(targetClass = Allergene.class)
     @Enumerated(EnumType.STRING)
@@ -44,14 +43,13 @@ public class Hauskreation extends PanacheEntityBase {
     }    
 
     public Hauskreation(Long id, Eis eissorte, Eis eissorte2, List<Zutat> zutaten, Sauce sauce, String name,
-            boolean premium, Set<Allergene> allergene) {
+            Set<Allergene> allergene) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
         this.zutaten = zutaten;
         this.sauce = sauce;
         this.name = name;
-        this.premium = premium;
         this.allergene = allergene;
     }
 
@@ -77,6 +75,7 @@ public class Hauskreation extends PanacheEntityBase {
         this.allergene = allergene;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -91,14 +90,6 @@ public class Hauskreation extends PanacheEntityBase {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public boolean isPremium() {
-        return premium;
-    }
-
-    public void setPremium(boolean premium) {
-        this.premium = premium;
     }
 
     public Eis getEissorte() {

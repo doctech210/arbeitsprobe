@@ -33,7 +33,6 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
     @OneToOne
     private Sauce sauce;
     private String name;
-    private boolean premium;
     
     @ElementCollection(targetClass = Allergene.class)
     @Enumerated(EnumType.STRING)
@@ -43,17 +42,17 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
     }    
 
     public Eigenkreation(Long id, Eis eissorte, Eis eissorte2, List<Zutat> zutaten, Sauce sauce, String name,
-            boolean premium, Set<Allergene> allergene) {
+            Set<Allergene> allergene) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
         this.zutaten = zutaten;
         this.sauce = sauce;
         this.name = name;
-        this.premium = premium;
         this.allergene = allergene;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -68,14 +67,6 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public boolean isPremium() {
-        return premium;
-    }
-
-    public void setPremium(boolean premium) {
-        this.premium = premium;
     }
 
     public Eis getEissorte() {
