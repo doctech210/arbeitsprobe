@@ -1,7 +1,12 @@
 package de.hsos.swa.coldstoneicecreator.bestellung.boundary.rest;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
+import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungIdDAO;
+import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
+import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
 
@@ -10,6 +15,7 @@ import java.util.Optional;
 import java.security.Principal;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -57,7 +63,7 @@ public class BestellungIdResource {
     @Transactional
     @RolesAllowed("Admin, Kunde")
     public Response put(@Context SecurityContext sec, @PathParam("id") Long id){
-        Kunde kunde = this.eingeloggterKunde(sec);
+        //Kunde kunde = this.eingeloggterKunde(sec);
         //Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
         return Response.ok().build();
     }
@@ -78,5 +84,21 @@ public class BestellungIdResource {
         Optional<Kunde> optKunde = Kunde.find("vorname", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
+    }
+
+    public void bestellen(@Observes BestellungIdDAO bestellungIdDAO) {
+        if(bestellungIdDAO.getKreation().getClass() == Eigenkreation.class) {
+            BestellpostenEigen bestellposten = new BestellpostenEigen(null, (Eigenkreation)bestellungIdDAO.getKreation(), bestellungIdDAO.getAnzahl().intValue());
+            Long id = bestellungIdDAO.getBestellungsId();
+            Kunde kunde = bestellungIdDAO.getKunde();
+            Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
+            bestellung.addPostenEigen(bestellposten);
+        }else{
+            BestellpostenHaus bestellposten = new BestellpostenHaus(null, (Hauskreation)bestellungIdDAO.getKreation(), bestellungIdDAO.getAnzahl().intValue());
+            Long id = bestellungIdDAO.getBestellungsId();
+            Kunde kunde = bestellungIdDAO.getKunde();
+            Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
+            bestellung.addPostenHaus(bestellposten);
+        }
     }
 }

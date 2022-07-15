@@ -24,6 +24,8 @@ public class Kunde extends PanacheEntityBase{
     private Long id;
     private String name;
     private String passwort;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="kundenkreation_id")
     private List<Eigenkreation> eigenkreationen;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="bestellId_id")

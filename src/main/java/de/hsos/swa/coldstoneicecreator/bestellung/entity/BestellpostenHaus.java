@@ -6,27 +6,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import de.hsos.swa.coldstoneicecreator.kreationen.entity.Kreation;
+import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 @Entity
 @Vetoed
-public class Bestellposten extends PanacheEntityBase{
+public class BestellpostenHaus extends PanacheEntityBase{
     @Id @GeneratedValue(generator = "bestellposten_seq")
     private Long id;
     @OneToOne
-    private Kreation kreation;
+    private Hauskreation kreation;
     private int anzahl = 0;
     
-    public Bestellposten() {
+    public BestellpostenHaus() {
     }
 
-    public Bestellposten(Kreation kreation){
+    public BestellpostenHaus(Hauskreation kreation){
         this.kreation = kreation;
         this.anzahl++;
     }
 
-    public Bestellposten(Long id, Kreation kreation, int anzahl) {
+    public BestellpostenHaus(Long id, Hauskreation kreation, int anzahl) {
         this.id = id;
         this.kreation = kreation;
         this.anzahl = anzahl;
@@ -36,11 +36,11 @@ public class Bestellposten extends PanacheEntityBase{
         return id;
     }
 
-    public Kreation getKreation() {
+    public Hauskreation getHauskreation() {
         return kreation;
     }
 
-    public void setKreation(Kreation kreation) {
+    public void setHauskreation(Hauskreation kreation) {
         this.kreation = kreation;
     }
 
@@ -52,7 +52,7 @@ public class Bestellposten extends PanacheEntityBase{
         this.anzahl = anzahl;
     }
 
-    public void addKreation(){
+    public void addHauskreation(){
         this.anzahl++;
     }
 }

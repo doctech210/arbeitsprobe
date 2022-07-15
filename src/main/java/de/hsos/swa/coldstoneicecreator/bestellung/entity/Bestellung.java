@@ -17,16 +17,20 @@ public class Bestellung extends PanacheEntityBase{
     @Id @GeneratedValue(generator = "bestellung_seq")
     private Long id;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="posten_id")
-    private List<Bestellposten> bestellposten = new ArrayList<>();
+    @JoinColumn(name="eigenposten_id")
+    private List<BestellpostenEigen> bestellpostenEigen = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="hausposten_id")
+    private List<BestellpostenHaus> bestellpostenHaus = new ArrayList<>();
     private boolean bestellt = false;
     
     public Bestellung() {
     }
 
-    public Bestellung(Long id, List<Bestellposten> bestellposten, boolean bestellt) {
+    public Bestellung(Long id, List<BestellpostenEigen> bestellpostenEigen, List<BestellpostenHaus> bestellpostenHaus ,boolean bestellt) {
         this.id = id;
-        this.bestellposten = bestellposten;
+        this.bestellpostenEigen = bestellpostenEigen;
+        this.bestellpostenHaus = bestellpostenHaus;
         this.bestellt = bestellt;
     }
 
@@ -38,12 +42,20 @@ public class Bestellung extends PanacheEntityBase{
         this.id = id;
     }
 
-    public List<Bestellposten> getBestellposten() {
-        return bestellposten;
+    public List<BestellpostenEigen> getBestellposten() {
+        return bestellpostenEigen;
     }
 
-    public void setBestellposten(List<Bestellposten> bestellposten) {
-        this.bestellposten = bestellposten;
+    public void setBestellposten(List<BestellpostenEigen> bestellposten) {
+        this.bestellpostenEigen = bestellposten;
+    }
+
+    public List<BestellpostenHaus> getBestellpostenHaus() {
+        return bestellpostenHaus;
+    }
+
+    public void setBestellpostenHaus(List<BestellpostenHaus> bestellpostenHaus) {
+        this.bestellpostenHaus = bestellpostenHaus;
     }
 
     public boolean isBestellt() {
@@ -54,15 +66,28 @@ public class Bestellung extends PanacheEntityBase{
         this.bestellt = bestellt;
     }
 
-    public void addPosten(Bestellposten bestellposten){
-        if(bestellposten == null) return;
-        this.bestellposten.add(bestellposten);
+    public void addPostenEigen(BestellpostenEigen bestellpostenEigen){
+        if(bestellpostenEigen == null) return;
+        this.bestellpostenEigen.add(bestellpostenEigen);
     }
 
-    public void removePosten(Long postenId){
-        for(int i = 0; i < bestellposten.size(); i++){
-            if(Long.compare(postenId, bestellposten.get(i).getId()) == 0){
-                bestellposten.remove(i);
+    public void removePostenEigen(Long postenId){
+        for(int i = 0; i < bestellpostenEigen.size(); i++){
+            if(Long.compare(postenId, bestellpostenEigen.get(i).getId()) == 0){
+                bestellpostenEigen.remove(i);
+            }
+        }
+    }
+
+    public void addPostenHaus(BestellpostenHaus bestellpostenHaus){
+        if(bestellpostenHaus == null) return;
+        this.bestellpostenHaus.add(bestellpostenHaus);
+    }
+
+    public void removePostenHaus(Long postenId){
+        for(int i = 0; i < bestellpostenHaus.size(); i++){
+            if(Long.compare(postenId, bestellpostenHaus.get(i).getId()) == 0){
+                bestellpostenHaus.remove(i);
             }
         }
     }

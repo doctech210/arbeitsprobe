@@ -7,7 +7,8 @@ import javax.enterprise.event.Observes;
 import javax.ws.rs.NotFoundException;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
-import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellposten;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
@@ -17,75 +18,59 @@ import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 public class BestellpostenRepository implements BestellpostenControl {
 
     @Override
-    public Bestellposten postenAnlegen(Long bestellId, Long kreationId) {
-        Hauskreation kreation = Hauskreation.findById(kreationId);
+    public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId) {
+        Eigenkreation kreation = Eigenkreation.findById(kreationId);
         Bestellung bestellung = Bestellung.findById(bestellId);
-        if(kreation == null || bestellung == null) throw new NotFoundException();
-        List<Bestellposten> bestellposten = Bestellposten.listAll();
-        for(Bestellposten bp : bestellposten){
-            if(bp.getKreation() == kreation){
-                bp.addKreation();
+        if(kreation == null || bestellung == null) return null;
+        List<BestellpostenEigen> bestellposten = BestellpostenEigen.listAll();
+        for(BestellpostenEigen bp : bestellposten){
+            if(bp.getEigenkreation() == kreation){
+                bp.addEigenkreation();
                 return null;
             }
         }
-        Bestellposten bp = new Bestellposten(kreation);
+        BestellpostenEigen bp = new BestellpostenEigen(kreation);
         bp.persist();
         return bp;
     }
 
     @Override
-    public Bestellposten postenAnlegen2(Long bestellId, KreationDAO kreationDAO) {
-        if(kreationDAO.isEigen()){
-            Eigenkreation eigenkreation = Eigenkreation.findById(kreationDAO.getKreation().getId());
-            Bestellung bestellung = Bestellung.findById(bestellId);
-            if(eigenkreation == null || bestellung == null) throw new NotFoundException();
-            List<Bestellposten> bestellposten = Bestellposten.listAll();
-            for(Bestellposten bp : bestellposten){
-                if(bp.getKreation() == eigenkreation){
-                    bp.addKreation();
-                    return null;
-                }
-        }
-        Bestellposten bp = new Bestellposten(eigenkreation);
-        bp.persist();
-        return bp;
-        } else {
-            Hauskreation hauskreation = Hauskreation.findById(kreationDAO.getKreation().getId());
-            Bestellung bestellung = Bestellung.findById(bestellId);
-            if(hauskreation == null || bestellung == null) throw new NotFoundException();
-            List<Bestellposten> bestellposten = Bestellposten.listAll();
-            for(Bestellposten bp : bestellposten){
-                if(bp.getKreation() == hauskreation){
-                    bp.addKreation();
-                    return null;
-                }
+    public BestellpostenHaus postenHausAnlegen(Long bestellId, Long kreationId) {
+        Hauskreation kreation = Hauskreation.findById(kreationId);
+        Bestellung bestellung = Bestellung.findById(bestellId);
+        if(kreation == null || bestellung == null) return null;
+        List<BestellpostenHaus> bestellposten = BestellpostenHaus.listAll();
+        for(BestellpostenHaus bp : bestellposten){
+            if(bp.getHauskreation() == kreation){
+                bp.addHauskreation();
+                return null;
             }
-            Bestellposten bp = new Bestellposten(hauskreation);
-            bp.persist();
-            return bp;
         }
+        BestellpostenHaus bp = new BestellpostenHaus(kreation);
+        bp.persist();
+        return bp;
     }
 
 
     @Override
-    public List<Bestellposten> bestellpostenAbfragen() {
-        return Bestellposten.listAll();
+    public List<BestellpostenEigen> bestellpostenAbfragen() {
+        return BestellpostenEigen.listAll();
     }
 
     @Override
-    public Bestellposten postenAbfragen(Long postenId) {
-        Bestellposten bp = Bestellposten.findById(postenId);
+    public BestellpostenEigen postenAbfragen(Long postenId) {
+        BestellpostenEigen bp = BestellpostenEigen.findById(postenId);
         if(bp == null) throw new NotFoundException();
         return bp;
     }
 
     @Override
     public boolean postenAendern(Long bestellId, Long postenId, int anzahl) {
-        Bestellposten bp = Bestellposten.findById(postenId);
+        BestellpostenEigen bp = BestellpostenEigen.findById(postenId);
         Bestellung bs = Bestellung.findById(bestellId);
         if(bp == null) throw new NotFoundException();
         if(anzahl == 0){
-            bs.removePosten(postenId);
+            bs.removePostenEigen(postenId);
             return this.postenLoeschen(postenId);
         } else if(anzahl > 0){
             bp.setAnzahl(anzahl);
@@ -96,13 +81,14 @@ public class BestellpostenRepository implements BestellpostenControl {
 
     @Override
     public boolean postenLoeschen(Long postenId) {
-        return Bestellposten.deleteById(postenId);
+        return BestellpostenEigen.deleteById(postenId);
     }
     
     public void empfangeBestellung(@Observes KreationDAO kreationDAO){
         if(kreationDAO.getBestellId() == null){
             return;
         } 
-        this.postenAnlegen(kreationDAO.getBestellId(), kreationDAO.getKreation().getId());
+        if(kreationDAO.isEigen()) this.postenEigenAnlegen(kreationDAO.getBestellId(), kreationDAO.getKreation().getId());
+        else this.postenHausAnlegen(kreationDAO.getBestellId(), kreationDAO.getKreation().getId());
     }
 }
