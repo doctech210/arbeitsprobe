@@ -1,9 +1,14 @@
 package de.hsos.swa.coldstoneicecreator.bestellung.boundary.rest;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
+import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungDAO;
+import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
+import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +17,7 @@ import java.util.ArrayList;
 import java.security.Principal;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -37,7 +43,7 @@ public class BestellungResource {
     @GET
     @RolesAllowed("Admin, Kunde")
     public Response get(@Context SecurityContext sec) {
-        Kunde kunde = this.eingeloggterKunde(sec);
+        Nutzer kunde = this.eingeloggterKunde(sec);
         List<Bestellung> alle = bc.bestellungenAbfragen(kunde.getId());
         List<BestellungDTO> alleDTO = new ArrayList<>();
         for(Bestellung bestellung : alle) {
@@ -50,17 +56,33 @@ public class BestellungResource {
     @Transactional
     @RolesAllowed("Admin, Kunde")
     public Response post(@Context SecurityContext sec, BestellungDTO bestellungDTO) {
-        Kunde kunde = this.eingeloggterKunde(sec);
+        Nutzer kunde = this.eingeloggterKunde(sec);
         Bestellung bestellung = BestellungDTO.Converter.toBestellung(bestellungDTO);
         bc.bestellungAnlegen(bestellung, kunde.getId());
         return Response.ok().build();
     }
 
+    
+    public void bestellen(@Observes BestellungDAO bestellungDAO) {
+        if(bestellungDAO.getKreation().getClass() == Eigenkreation.class) {
+            BestellpostenEigen bestellposten = new BestellpostenEigen(null, (Eigenkreation)bestellungDAO.getKreation(), bestellungDAO.getAnzahl().intValue());
+            Bestellung bestellung = new Bestellung();
+            Nutzer kunde = bestellungDAO.getKunde();
+            bc.bestellungAnlegen(bestellung, kunde.getId());
+            bestellung.addPostenEigen(bestellposten);
+        }else{
+            BestellpostenHaus bestellposten = new BestellpostenHaus(null, (Hauskreation)bestellungDAO.getKreation(), bestellungDAO.getAnzahl().intValue());
+            Bestellung bestellung = new Bestellung();
+            Nutzer kunde = bestellungDAO.getKunde();
+            bc.bestellungAnlegen(bestellung, kunde.getId());
+            bestellung.addPostenHaus(bestellposten);
+        }
+    }
 
-    private Kunde eingeloggterKunde(SecurityContext sec) {
+    private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
-        Optional<Kunde> optKunde = Kunde.find("vorname", user.getName()).firstResultOptional();
+        Optional<Nutzer> optKunde = Nutzer.find("vorname", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }

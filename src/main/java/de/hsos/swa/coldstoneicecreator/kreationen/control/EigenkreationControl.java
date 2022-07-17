@@ -3,11 +3,11 @@ package de.hsos.swa.coldstoneicecreator.kreationen.control;
 import java.util.List;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 public interface EigenkreationControl {
     
-    public boolean create(Kunde kunde, Eigenkreation eigenkreation);
+    public boolean create(Nutzer kunde, Eigenkreation eigenkreation);
     
     public List<Eigenkreation> get();
 

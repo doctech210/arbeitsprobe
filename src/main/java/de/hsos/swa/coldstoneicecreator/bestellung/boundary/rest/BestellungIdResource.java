@@ -8,7 +8,7 @@ import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungIdDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 import java.util.Optional;
 
@@ -44,7 +44,7 @@ public class BestellungIdResource {
     @GET
     @RolesAllowed("Admin, Kunde")
     public Response get(@Context SecurityContext sec, @PathParam("id") Long id) {
-        Kunde kunde = this.eingeloggterKunde(sec);
+        Nutzer kunde = this.eingeloggterKunde(sec);
         Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
         BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
         return Response.ok(bestellungDTO).build();
@@ -72,16 +72,16 @@ public class BestellungIdResource {
     @Transactional
     @RolesAllowed("Admin, Kunde")
     public Response delete(@Context SecurityContext sec, @PathParam("id") Long id){
-        Kunde kunde = this.eingeloggterKunde(sec);
+        Nutzer kunde = this.eingeloggterKunde(sec);
         bc.bestellungLoeschen(id, kunde.getId());
         return Response.ok().build();
     }
 
 
-    private Kunde eingeloggterKunde(SecurityContext sec) {
+    private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
-        Optional<Kunde> optKunde = Kunde.find("vorname", user.getName()).firstResultOptional();
+        Optional<Nutzer> optKunde = Nutzer.find("vorname", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }
@@ -90,15 +90,17 @@ public class BestellungIdResource {
         if(bestellungIdDAO.getKreation().getClass() == Eigenkreation.class) {
             BestellpostenEigen bestellposten = new BestellpostenEigen(null, (Eigenkreation)bestellungIdDAO.getKreation(), bestellungIdDAO.getAnzahl().intValue());
             Long id = bestellungIdDAO.getBestellungsId();
-            Kunde kunde = bestellungIdDAO.getKunde();
+            Nutzer kunde = bestellungIdDAO.getKunde();
             Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
             bestellung.addPostenEigen(bestellposten);
         }else{
             BestellpostenHaus bestellposten = new BestellpostenHaus(null, (Hauskreation)bestellungIdDAO.getKreation(), bestellungIdDAO.getAnzahl().intValue());
             Long id = bestellungIdDAO.getBestellungsId();
-            Kunde kunde = bestellungIdDAO.getKunde();
+            Nutzer kunde = bestellungIdDAO.getKunde();
             Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
             bestellung.addPostenHaus(bestellposten);
         }
     }
+
+
 }

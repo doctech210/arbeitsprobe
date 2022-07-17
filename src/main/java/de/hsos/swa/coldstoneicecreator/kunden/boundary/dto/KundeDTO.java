@@ -3,7 +3,7 @@ package de.hsos.swa.coldstoneicecreator.kunden.boundary.dto;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 
@@ -25,7 +25,7 @@ public class KundeDTO {
 
     public static class Converter {
 
-        public static KundeDTO toDTO(Kunde kunde) {
+        public static KundeDTO toDTO(Nutzer kunde) {
             List<EigenkreationDTO> eigenkreationenDTO = new ArrayList<>();
             for(Eigenkreation eigenkreation : kunde.getEigenkreationen()) {
                 eigenkreationenDTO.add(EigenkreationDTO.Converter.toDTO(eigenkreation));
@@ -33,12 +33,14 @@ public class KundeDTO {
             return new KundeDTO(kunde.getId(), kunde.getName(), kunde.getPasswort(), eigenkreationenDTO);
         }
 
-        public static Kunde toKunde(KundeDTO kundeDTO) {
+        public static Nutzer toKunde(KundeDTO kundeDTO) {
             List<Eigenkreation> eigenkreationen = new ArrayList<>();
             for(EigenkreationDTO eigenkreationDTO : kundeDTO.eigenkreationenDTO) {
                 eigenkreationen.add(EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO));
             }
-            return new Kunde(kundeDTO.id, kundeDTO.name, kundeDTO.passwort, eigenkreationen);
+            Nutzer kunde = new Nutzer(kundeDTO.name, kundeDTO.passwort, eigenkreationen);
+            kunde.setEigenkreationen(eigenkreationen);
+            return kunde;
         }
     }
 }

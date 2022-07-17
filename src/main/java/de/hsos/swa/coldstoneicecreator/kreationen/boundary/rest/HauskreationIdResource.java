@@ -27,7 +27,7 @@ import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungIdDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.HauskreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.HauskreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 @RequestScoped
 @Path("/hauskreationen/{id:\\d+}")
@@ -68,7 +68,7 @@ public class HauskreationIdResource {
     @Transactional
     @RolesAllowed("Admin, Kunde")
     public Response post(@PathParam("id") Long id, @Context SecurityContext sec, Long anzahl) {
-        Kunde kunde = this.eingeloggterKunde(sec);
+        Nutzer kunde = this.eingeloggterKunde(sec);
         Hauskreation kreation = hc.getById(id);
         Bestellung bestellung = kunde.getBestellungen().get(kunde.getBestellungen().size()-1);
         if(bestellung != null && !bestellung.isBestellt()) {
@@ -92,10 +92,10 @@ public class HauskreationIdResource {
         return Response.ok().build();
     }
 
-    private Kunde eingeloggterKunde(SecurityContext sec) {
+    private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
-        Optional<Kunde> optKunde = Kunde.find("vorname", user.getName()).firstResultOptional();
+        Optional<Nutzer> optKunde = Nutzer.find("vorname", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }

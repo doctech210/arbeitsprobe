@@ -11,8 +11,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
@@ -25,13 +25,13 @@ public class Hauskreation extends PanacheEntityBase implements Kreation{
     
     @Id @GeneratedValue(generator = "hauskreation_seq")
     private Long id;
-    @OneToOne
+    @ManyToOne
     private Eis eissorte;
-    @OneToOne
+    @ManyToOne
     private Eis eissorte2;
-    @OneToMany
+    @ManyToMany
     private List<Zutat> zutaten;
-    @OneToOne
+    @ManyToOne
     private Sauce sauce;
     private String name;
     

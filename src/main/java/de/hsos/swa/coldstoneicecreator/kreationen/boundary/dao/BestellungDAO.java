@@ -1,10 +1,10 @@
 package de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Kreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 public class BestellungDAO {
-    private Kunde kunde;
+    private Nutzer kunde;
     private Kreation kreation;
     private Long anzahl;
 
@@ -12,13 +12,13 @@ public class BestellungDAO {
     public BestellungDAO() {
     }
 
-    public BestellungDAO(Kunde kunde, Kreation kreation, Long anzahl) {
+    public BestellungDAO(Nutzer kunde, Kreation kreation, Long anzahl) {
         this.kunde = kunde;
         this.kreation = kreation;
         this.anzahl = anzahl;
     }
 
-    public Kunde getKunde() {
+    public Nutzer getKunde() {
         return kunde;
     }
     public Kreation getKreation() {

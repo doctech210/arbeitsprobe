@@ -15,8 +15,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeDTO;
+import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeExportDTO;
+import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeImportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 @RequestScoped
 @Path("/kunden")
@@ -28,21 +30,21 @@ public class KundeResource {
     KundeControl kc;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    //@RolesAllowed("Admin, Kunde")
     public Response get() {
-        List<Kunde> alle = kc.get();
-        List<KundeDTO> alleDTO = new ArrayList<>();
-        for(Kunde kunde : alle) {
-            alleDTO.add(KundeDTO.Converter.toDTO(kunde));
+        List<Nutzer> alle = kc.get();
+        List<KundeExportDTO> alleDTO = new ArrayList<>();
+        for(Nutzer kunde : alle) {
+            alleDTO.add(KundeExportDTO.Converter.toDTO(kunde));
         }
         return Response.ok(alleDTO).build();
     }
 
     @POST
     @Transactional
-    @RolesAllowed("Admin")
-    public Response post(KundeDTO kundeDTO) {
-        Kunde kunde = KundeDTO.Converter.toKunde(kundeDTO);
+    //@RolesAllowed("Admin")
+    public Response post(KundeImportDTO kundeImportDTO) {
+        Nutzer kunde = KundeImportDTO.Converter.toKunde(kundeImportDTO);
         kc.create(kunde);
         return Response.ok().build();
     }

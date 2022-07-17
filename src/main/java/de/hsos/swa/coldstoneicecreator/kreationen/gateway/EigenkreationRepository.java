@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 @ApplicationScoped
 public class EigenkreationRepository implements EigenkreationControl{
@@ -18,7 +18,7 @@ public class EigenkreationRepository implements EigenkreationControl{
     Event<KreationDAO> neueEigenkreation;
 
     @Override
-    public boolean create(Kunde kunde, Eigenkreation eigenkreation) {
+    public boolean create(Nutzer kunde, Eigenkreation eigenkreation) {
         eigenkreation.setId(null);
         eigenkreation.persist();
         kunde.addEigenkreation(eigenkreation);

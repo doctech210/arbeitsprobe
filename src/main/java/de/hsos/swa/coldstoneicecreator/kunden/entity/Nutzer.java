@@ -15,15 +15,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.security.jpa.Password;
+import io.quarkus.security.jpa.Roles;
+import io.quarkus.security.jpa.UserDefinition;
+import io.quarkus.security.jpa.Username;
 
 @Entity
 @Vetoed
-public class Kunde extends PanacheEntityBase{
+@UserDefinition
+public class Nutzer extends PanacheEntityBase{
     
     @Id @GeneratedValue(generator = "kunde_seq")
     private Long id;
+    @Username
     private String name;
+    @Password
     private String passwort;
+    @Roles
+    private String role = "Kunde";
+    
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="kundenkreation_id")
     private List<Eigenkreation> eigenkreationen;
@@ -31,11 +41,11 @@ public class Kunde extends PanacheEntityBase{
     @JoinColumn(name="bestellId_id")
     private List<Bestellung> bestellungen = new ArrayList<>();
     
-    public Kunde() {
+    public Nutzer() {
     }
     
-    public Kunde(Long id, String name, String passwort, List<Eigenkreation> eigenkreationen) {
-        this.id = id;
+    public Nutzer(String name, String passwort, List<Eigenkreation> eigenkreationen) {
+        this.id = null;
         this.name = name;
         this.passwort = passwort;
         this.eigenkreationen = eigenkreationen;
@@ -67,6 +77,14 @@ public class Kunde extends PanacheEntityBase{
 
     public void setPasswort(String passwort) {
         this.passwort = passwort;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public List<Eigenkreation> getEigenkreationen() {

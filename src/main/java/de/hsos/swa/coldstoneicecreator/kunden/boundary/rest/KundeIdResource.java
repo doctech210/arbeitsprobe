@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 @RequestScoped
 @Path("/kunden/{id:\\d+}")
@@ -30,7 +30,7 @@ public class KundeIdResource {
     @GET
     @RolesAllowed("Admin, Kunde")
     public Response get(@PathParam("id") Long id) {
-        Kunde kunde = kc.getById(id);
+        Nutzer kunde = kc.getById(id);
         if(kunde != null) { 
             KundeDTO kundeDTO = KundeDTO.Converter.toDTO(kunde);
             return Response.ok(kundeDTO).build();
@@ -42,7 +42,7 @@ public class KundeIdResource {
     @Transactional
     @RolesAllowed("Admin, Kunde")
     public Response put(@PathParam("id") Long id, KundeDTO kundeDTO) {
-        Kunde kunde = KundeDTO.Converter.toKunde(kundeDTO);
+        Nutzer kunde = KundeDTO.Converter.toKunde(kundeDTO);
         kc.put(id, kunde);
         return Response.ok().build();
     }

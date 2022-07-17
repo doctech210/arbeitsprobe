@@ -22,7 +22,7 @@ import javax.ws.rs.core.Response.Status;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Kunde;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 @RequestScoped
 @Path("/eigenkreationen")
@@ -48,17 +48,17 @@ public class EigenkreationResource {
     @Transactional
     @RolesAllowed("Admin, Kunde")
     public Response post(@Context SecurityContext sec, EigenkreationDTO eigenkreationDTO) {
-        Kunde kunde = this.eingeloggterKunde(sec);
+        Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
         Eigenkreation eigenkreation = EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO);
         cr.create(kunde, eigenkreation);
         return Response.ok().build();
     }
 
-    private Kunde eingeloggterKunde(SecurityContext sec) {
+    private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
-        Optional<Kunde> optKunde = Kunde.find("vorname", user.getName()).firstResultOptional();
+        Optional<Nutzer> optKunde = Nutzer.find("vorname", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }
