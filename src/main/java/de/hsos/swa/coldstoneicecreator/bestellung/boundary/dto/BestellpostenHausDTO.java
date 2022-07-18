@@ -7,12 +7,12 @@ import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 public class BestellpostenHausDTO {
     public Long id;
     public HauskreationDTO hauskreationDTO;
-    public int anzahl = 0;
+    public Long anzahl;
     
     public BestellpostenHausDTO() {
     }
 
-    public BestellpostenHausDTO(Long id, HauskreationDTO hauskreationDTO, int anzahl) {
+    public BestellpostenHausDTO(Long id, HauskreationDTO hauskreationDTO, Long anzahl) {
         this.id = id;
         this.hauskreationDTO = hauskreationDTO;
         this.anzahl = anzahl;

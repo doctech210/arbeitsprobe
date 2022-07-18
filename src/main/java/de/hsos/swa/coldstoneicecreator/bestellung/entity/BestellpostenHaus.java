@@ -16,17 +16,17 @@ public class BestellpostenHaus extends PanacheEntityBase{
     private Long id;
     @OneToOne
     private Hauskreation kreation;
-    private int anzahl = 0;
+    private Long anzahl;
     
     public BestellpostenHaus() {
     }
 
-    public BestellpostenHaus(Hauskreation kreation){
+    public BestellpostenHaus(Hauskreation kreation, Long anzahl){
         this.kreation = kreation;
-        this.anzahl++;
+        this.anzahl = anzahl;
     }
 
-    public BestellpostenHaus(Long id, Hauskreation kreation, int anzahl) {
+    public BestellpostenHaus(Long id, Hauskreation kreation, Long anzahl) {
         this.id = id;
         this.kreation = kreation;
         this.anzahl = anzahl;
@@ -44,11 +44,11 @@ public class BestellpostenHaus extends PanacheEntityBase{
         this.kreation = kreation;
     }
 
-    public int getAnzahl() {
+    public Long getAnzahl() {
         return anzahl;
     }
 
-    public void setAnzahl(int anzahl) {
+    public void setAnzahl(Long anzahl) {
         this.anzahl = anzahl;
     }
 

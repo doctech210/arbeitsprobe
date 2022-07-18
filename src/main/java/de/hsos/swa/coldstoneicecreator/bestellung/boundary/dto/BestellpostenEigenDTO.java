@@ -7,12 +7,12 @@ import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
 public class BestellpostenEigenDTO {
     public Long id;
     public EigenkreationDTO eigenkreationDTO;
-    public int anzahl = 0;
+    public Long anzahl;
     
     public BestellpostenEigenDTO() {
     }
 
-    public BestellpostenEigenDTO(Long id, EigenkreationDTO eigenkreationDTO, int anzahl) {
+    public BestellpostenEigenDTO(Long id, EigenkreationDTO eigenkreationDTO, Long anzahl) {
         this.id = id;
         this.eigenkreationDTO = eigenkreationDTO;
         this.anzahl = anzahl;

@@ -10,7 +10,7 @@ import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
-import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
+import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationIdDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 
@@ -18,36 +18,38 @@ import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 public class BestellpostenRepository implements BestellpostenControl {
 
     @Override
-    public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId) {
+    public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId, Long anzahl) {
         Eigenkreation kreation = Eigenkreation.findById(kreationId);
         Bestellung bestellung = Bestellung.findById(bestellId);
         if(kreation == null || bestellung == null) return null;
         List<BestellpostenEigen> bestellposten = BestellpostenEigen.listAll();
         for(BestellpostenEigen bp : bestellposten){
             if(bp.getEigenkreation() == kreation){
-                bp.addEigenkreation();
+                bp.setAnzahl(anzahl);
                 return null;
             }
         }
-        BestellpostenEigen bp = new BestellpostenEigen(kreation);
+        BestellpostenEigen bp = new BestellpostenEigen(kreation, anzahl);
         bp.persist();
+        bestellung.addPostenEigen(bp);
         return bp;
     }
 
     @Override
-    public BestellpostenHaus postenHausAnlegen(Long bestellId, Long kreationId) {
+    public BestellpostenHaus postenHausAnlegen(Long bestellId, Long kreationId, Long anzahl) {
         Hauskreation kreation = Hauskreation.findById(kreationId);
         Bestellung bestellung = Bestellung.findById(bestellId);
         if(kreation == null || bestellung == null) return null;
         List<BestellpostenHaus> bestellposten = BestellpostenHaus.listAll();
         for(BestellpostenHaus bp : bestellposten){
             if(bp.getHauskreation() == kreation){
-                bp.addHauskreation();
+                bp.setAnzahl(anzahl);
                 return null;
             }
         }
-        BestellpostenHaus bp = new BestellpostenHaus(kreation);
+        BestellpostenHaus bp = new BestellpostenHaus(kreation, anzahl);
         bp.persist();
+        bestellung.addPostenHaus(bp);
         return bp;
     }
 
@@ -65,7 +67,7 @@ public class BestellpostenRepository implements BestellpostenControl {
     }
 
     @Override
-    public boolean postenAendern(Long bestellId, Long postenId, int anzahl) {
+    public boolean postenAendern(Long bestellId, Long postenId, Long anzahl) {
         BestellpostenEigen bp = BestellpostenEigen.findById(postenId);
         Bestellung bs = Bestellung.findById(bestellId);
         if(bp == null) throw new NotFoundException();
@@ -84,11 +86,11 @@ public class BestellpostenRepository implements BestellpostenControl {
         return BestellpostenEigen.deleteById(postenId);
     }
     
-    public void empfangeBestellung(@Observes KreationDAO kreationDAO){
-        if(kreationDAO.getBestellId() == null){
+    public void empfangeBestellung(@Observes KreationIdDAO kreationIdDAO){
+        if(kreationIdDAO.getBestellId() == null){
             return;
         } 
-        if(kreationDAO.isEigen()) this.postenEigenAnlegen(kreationDAO.getBestellId(), kreationDAO.getKreation().getId());
-        else this.postenHausAnlegen(kreationDAO.getBestellId(), kreationDAO.getKreation().getId());
+        if(kreationIdDAO.isEigen()) this.postenEigenAnlegen(kreationIdDAO.getBestellId(), kreationIdDAO.getKreation().getId(), kreationIdDAO.getAnzahl());
+        else this.postenHausAnlegen(kreationIdDAO.getBestellId(), kreationIdDAO.getKreation().getId(), kreationIdDAO.getAnzahl());
     }
 }

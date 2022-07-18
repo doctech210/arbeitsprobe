@@ -361,8 +361,5 @@ INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (105, 165);
 INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (105, 179);
 
 
-
-
-
-INSERT INTO Nutzer (name, passwort, role, id) VALUES ('admin', '$2a$10$YfY/ecjvrYqeFQ9xnuFLAe2EUhQBQkMal58kBUJx8sRbKL1VrbcC.', 'Admin', 0);
-INSERT INTO Nutzer (name, passwort, role, id) VALUES ('user', '$2a$10$OfQWuRPsizS5HZJ7KSSMPuujQtu.ttm5X3PiWTuKoJ59At9TY8koe', 'Kunde', 100);
+--INSERT INTO Nutzer (name, passwort, role, id) VALUES ('admin', '$2a$10$YfY/ecjvrYqeFQ9xnuFLAe2EUhQBQkMal58kBUJx8sRbKL1VrbcC.', 'Admin', 0);
+--INSERT INTO Nutzer (name, passwort, role, id) VALUES ('user', '$2a$10$OfQWuRPsizS5HZJ7KSSMPuujQtu.ttm5X3PiWTuKoJ59At9TY8koe', 'Kunde', 100);

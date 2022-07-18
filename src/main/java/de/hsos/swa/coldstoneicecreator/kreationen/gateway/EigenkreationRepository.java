@@ -18,11 +18,11 @@ public class EigenkreationRepository implements EigenkreationControl{
     Event<KreationDAO> neueEigenkreation;
 
     @Override
-    public boolean create(Nutzer kunde, Eigenkreation eigenkreation) {
+    public boolean create(Nutzer kunde, Eigenkreation eigenkreation, Long anzahl) {
         eigenkreation.setId(null);
         eigenkreation.persist();
         kunde.addEigenkreation(eigenkreation);
-        this.eigenkreationHinzu(new KreationDAO(kunde, eigenkreation, true));
+        this.neueEigenkreation.fire(new KreationDAO(kunde, eigenkreation, anzahl, true));
         return true;
     }
 
@@ -46,9 +46,4 @@ public class EigenkreationRepository implements EigenkreationControl{
         //TODO: 
         return true;
     }
-
-    private void eigenkreationHinzu(KreationDAO kreation){
-        neueEigenkreation.fire(kreation);
-    }
-    
 }

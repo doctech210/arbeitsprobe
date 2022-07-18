@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
 
 @ApplicationScoped
 public class KundeRepository implements KundeControl{
@@ -14,6 +15,7 @@ public class KundeRepository implements KundeControl{
     public boolean create(Nutzer kunde) {
         kunde.setId(null);
         kunde.persist();
+        UserLogin.add(kunde.getName(), kunde.getPasswort(), kunde.getRole());
         return true;
     }
 

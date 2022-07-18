@@ -15,23 +15,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import io.quarkus.security.jpa.Password;
-import io.quarkus.security.jpa.Roles;
-import io.quarkus.security.jpa.UserDefinition;
-import io.quarkus.security.jpa.Username;
 
 @Entity
 @Vetoed
-@UserDefinition
 public class Nutzer extends PanacheEntityBase{
     
     @Id @GeneratedValue(generator = "kunde_seq")
     private Long id;
-    @Username
     private String name;
-    @Password
     private String passwort;
-    @Roles
     private String role = "Kunde";
     
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -79,14 +71,6 @@ public class Nutzer extends PanacheEntityBase{
         this.passwort = passwort;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public List<Eigenkreation> getEigenkreationen() {
         return eigenkreationen;
     }
@@ -105,5 +89,13 @@ public class Nutzer extends PanacheEntityBase{
     
     public void addBestellung(Bestellung bestellung){
         this.bestellungen.add(bestellung);
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

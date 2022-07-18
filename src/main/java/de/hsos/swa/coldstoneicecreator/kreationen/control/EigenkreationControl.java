@@ -7,7 +7,7 @@ import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 public interface EigenkreationControl {
     
-    public boolean create(Nutzer kunde, Eigenkreation eigenkreation);
+    public boolean create(Nutzer kunde, Eigenkreation eigenkreation, Long anzahl);
     
     public List<Eigenkreation> get();
 

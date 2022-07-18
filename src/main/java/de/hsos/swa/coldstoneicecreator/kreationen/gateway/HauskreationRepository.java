@@ -2,23 +2,35 @@ package de.hsos.swa.coldstoneicecreator.kreationen.gateway;
 
 import java.util.List;
 
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
-
+import javax.inject.Inject;
 import javax.enterprise.context.RequestScoped;
 
+import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.HauskreationControl;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 @RequestScoped
 public class HauskreationRepository implements HauskreationControl{
     
+    @Inject
+    Event<KreationDAO> neueHauskreation;
+
     @Override
     public boolean create(Hauskreation hauskreation) {
         hauskreation.setId(null);
         hauskreation.persist();
+        return true;
+    }
+
+    @Override
+    public boolean create(Nutzer kunde, Hauskreation eigenkreation, Long anzahl) {
+        this.neueHauskreation.fire(new KreationDAO(kunde, eigenkreation, anzahl, false));
         return true;
     }
 

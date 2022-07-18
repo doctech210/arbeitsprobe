@@ -6,7 +6,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.transaction.Status;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -20,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.Response.Status;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungDAO;
@@ -52,7 +52,7 @@ public class HauskreationIdResource {
             HauskreationDTO hauskreationDTO = HauskreationDTO.Converter.toDTO(hauskreation);
             return Response.ok(hauskreationDTO).build();
         }
-        return Response.status(Status.STATUS_UNKNOWN).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @PUT
@@ -69,22 +69,9 @@ public class HauskreationIdResource {
     @RolesAllowed({"Admin", "Kunde"})
     public Response post(@PathParam("id") Long id, @Context SecurityContext sec, Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
-        Hauskreation kreation = hc.getById(id);
-        int anzahlBestellungen = kunde.getBestellungen().size();
-        Bestellung bestellung = null;
-        if(anzahlBestellungen > 0){
-            bestellung = kunde.getBestellungen().get(anzahlBestellungen);
-        }
-        if(bestellung != null && !bestellung.isBestellt()) {
-            //Bestellung existiert und hat ist noch nicht abgeschickt
-            Long bestellungsId = kunde.getBestellungen().get(kunde.getBestellungen().size()-1).getId();
-            BestellungIdDAO bestellungIdDAO = new BestellungIdDAO(kunde, kreation, anzahl, bestellungsId);
-            bestellenId.fire(bestellungIdDAO);
-        }else{
-            // neue Bestellung muss erstellt werden
-            BestellungDAO bestellungDAO = new BestellungDAO(kunde, kreation, anzahl);
-            bestellen.fire(bestellungDAO);
-        }
+        if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
+        Hauskreation hauskreation = hc.getById(id);
+        hc.create(kunde, hauskreation, anzahl);
         return Response.ok().build();
     }
 
@@ -102,5 +89,12 @@ public class HauskreationIdResource {
         Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
+    }
+
+    private Bestellung offeneBestellung(Nutzer kunde) {
+        for(Bestellung b : kunde.getBestellungen()){
+            if(!b.isBestellt()) return b;
+        } 
+        return null;
     }
 }

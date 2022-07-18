@@ -47,11 +47,11 @@ public class EigenkreationResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    public Response post(@Context SecurityContext sec, EigenkreationDTO eigenkreationDTO) {
+    public Response post(@Context SecurityContext sec, EigenkreationDTO eigenkreationDTO, Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
         Eigenkreation eigenkreation = EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO);
-        cr.create(kunde, eigenkreation);
+        cr.create(kunde, eigenkreation, anzahl);
         return Response.ok().build();
     }
 

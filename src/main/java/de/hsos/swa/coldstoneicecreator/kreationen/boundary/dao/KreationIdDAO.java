@@ -3,21 +3,23 @@ package de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Kreation;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
-public class KreationDAO {
+public class KreationIdDAO {
 
     private Nutzer kunde;
     private Kreation kreation;
     private Long anzahl;
+    private Long bestellId;
     private boolean eigen;
     
-    public KreationDAO() {
+    public KreationIdDAO() {
     }
 
-    public KreationDAO(Nutzer kunde, Kreation kreation, Long anzahl, boolean eigen) {
-        this.kunde = kunde;
-        this.kreation = kreation;
-        this.anzahl = anzahl;
-        this.eigen = eigen;
+    public KreationIdDAO(KreationDAO kreationDAO, Long bestellId){
+        this.kunde = kreationDAO.getKunde();
+        this.kreation = kreationDAO.getKreation();
+        this.anzahl = kreationDAO.getAnzahl();
+        this.eigen = kreationDAO.isEigen();
+        this.bestellId = bestellId;
     }
 
     public Nutzer getKunde() {
@@ -26,6 +28,14 @@ public class KreationDAO {
 
     public Kreation getKreation() {
         return kreation;
+    }
+
+    public Long getBestellId() {
+        return bestellId;
+    }
+
+    public void setBestellId(Long bestellId) {
+        this.bestellId = bestellId;
     }
 
     public boolean isEigen() {

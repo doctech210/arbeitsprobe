@@ -7,15 +7,15 @@ import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 
 public interface BestellpostenControl {
     
-    public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId);
+    public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId, Long anzahl);
 
-    public BestellpostenHaus postenHausAnlegen(Long bestellId, Long kreationId);
+    public BestellpostenHaus postenHausAnlegen(Long bestellId, Long kreationId, Long anzahl);
     
     public List<BestellpostenEigen> bestellpostenAbfragen();
 
     public BestellpostenEigen postenAbfragen(Long postenId);
 
-    public boolean postenAendern(Long bestellId, Long postenId, int anzahl);
+    public boolean postenAendern(Long bestellId, Long postenId, Long anzahl);
 
     public boolean postenLoeschen(Long postenId);
 }

@@ -16,17 +16,17 @@ public class BestellpostenEigen extends PanacheEntityBase{
     private Long id;
     @OneToOne
     private Eigenkreation kreation;
-    private int anzahl = 0;
+    private Long anzahl;
     
     public BestellpostenEigen() {
     }
 
-    public BestellpostenEigen(Eigenkreation kreation){
+    public BestellpostenEigen(Eigenkreation kreation, Long anzahl){
         this.kreation = kreation;
-        this.anzahl++;
+        this.anzahl = anzahl;
     }
 
-    public BestellpostenEigen(Long id, Eigenkreation kreation, int anzahl) {
+    public BestellpostenEigen(Long id, Eigenkreation kreation, Long anzahl) {
         this.id = id;
         this.kreation = kreation;
         this.anzahl = anzahl;
@@ -44,11 +44,11 @@ public class BestellpostenEigen extends PanacheEntityBase{
         this.kreation = kreation;
     }
 
-    public int getAnzahl() {
+    public Long getAnzahl() {
         return anzahl;
     }
 
-    public void setAnzahl(int anzahl) {
+    public void setAnzahl(Long anzahl) {
         this.anzahl = anzahl;
     }
 
