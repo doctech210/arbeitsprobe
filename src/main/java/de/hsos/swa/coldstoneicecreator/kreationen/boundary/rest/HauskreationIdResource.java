@@ -45,7 +45,7 @@ public class HauskreationIdResource {
     Event<BestellungIdDAO> bestellenId;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
         Hauskreation hauskreation = hc.getById(id);
         if(hauskreation != null) {
@@ -57,7 +57,7 @@ public class HauskreationIdResource {
 
     @PUT
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response put(@PathParam("id") Long id, HauskreationDTO hauskreationDTO) {
         Hauskreation hauskreation = HauskreationDTO.Converter.toHauskreation(hauskreationDTO);
         hc.put(id, hauskreation);
@@ -66,11 +66,15 @@ public class HauskreationIdResource {
     
     @POST
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response post(@PathParam("id") Long id, @Context SecurityContext sec, Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         Hauskreation kreation = hc.getById(id);
-        Bestellung bestellung = kunde.getBestellungen().get(kunde.getBestellungen().size()-1);
+        int anzahlBestellungen = kunde.getBestellungen().size();
+        Bestellung bestellung = null;
+        if(anzahlBestellungen > 0){
+            bestellung = kunde.getBestellungen().get(anzahlBestellungen);
+        }
         if(bestellung != null && !bestellung.isBestellt()) {
             //Bestellung existiert und hat ist noch nicht abgeschickt
             Long bestellungsId = kunde.getBestellungen().get(kunde.getBestellungen().size()-1).getId();
@@ -86,7 +90,7 @@ public class HauskreationIdResource {
 
     @DELETE
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response delete(@PathParam("id") Long id) {
         hc.delete(id);
         return Response.ok().build();
@@ -95,7 +99,7 @@ public class HauskreationIdResource {
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
-        Optional<Nutzer> optKunde = Nutzer.find("vorname", user.getName()).firstResultOptional();
+        Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }

@@ -42,7 +42,7 @@ public class BestellungIdResource {
     BestellungControl bc;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get(@Context SecurityContext sec, @PathParam("id") Long id) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
@@ -52,7 +52,7 @@ public class BestellungIdResource {
 
     @POST
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response post(@Context SecurityContext sec, @PathParam("id") Long id) {
         //Kunde kunde = this.eingeloggterKunde(sec);
         //TODO: POST als "bestellen" nutzen?
@@ -61,7 +61,7 @@ public class BestellungIdResource {
 
     @PUT
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response put(@Context SecurityContext sec, @PathParam("id") Long id){
         //Kunde kunde = this.eingeloggterKunde(sec);
         //Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
@@ -70,7 +70,7 @@ public class BestellungIdResource {
 
     @DELETE
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response delete(@Context SecurityContext sec, @PathParam("id") Long id){
         Nutzer kunde = this.eingeloggterKunde(sec);
         bc.bestellungLoeschen(id, kunde.getId());
@@ -81,7 +81,7 @@ public class BestellungIdResource {
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
-        Optional<Nutzer> optKunde = Nutzer.find("vorname", user.getName()).firstResultOptional();
+        Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }

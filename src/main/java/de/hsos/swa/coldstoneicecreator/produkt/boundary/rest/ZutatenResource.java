@@ -28,7 +28,7 @@ public class ZutatenResource {
     ZutatControl zc;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get() {
         List<Zutat> alle = zc.get();
         List<ZutatDTO> alleDTO = new ArrayList<>();
@@ -40,7 +40,7 @@ public class ZutatenResource {
 
     @POST
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response post(ZutatDTO zutatDTO) {
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
         zc.create(zutat); 

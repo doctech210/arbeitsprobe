@@ -1,5 +1,6 @@
 package de.hsos.swa.coldstoneicecreator.bestellung.boundary.rest;
 
+import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
@@ -40,8 +41,11 @@ public class BestellungResource {
     @Inject
     BestellungControl bc;
 
+    @Inject
+    BestellpostenControl bp;
+
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get(@Context SecurityContext sec) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         List<Bestellung> alle = bc.bestellungenAbfragen(kunde.getId());
@@ -54,7 +58,7 @@ public class BestellungResource {
 
     @POST
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response post(@Context SecurityContext sec, BestellungDTO bestellungDTO) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         Bestellung bestellung = BestellungDTO.Converter.toBestellung(bestellungDTO);
@@ -71,10 +75,10 @@ public class BestellungResource {
             bc.bestellungAnlegen(bestellung, kunde.getId());
             bestellung.addPostenEigen(bestellposten);
         }else{
-            BestellpostenHaus bestellposten = new BestellpostenHaus(null, (Hauskreation)bestellungDAO.getKreation(), bestellungDAO.getAnzahl().intValue());
             Bestellung bestellung = new Bestellung();
             Nutzer kunde = bestellungDAO.getKunde();
-            bc.bestellungAnlegen(bestellung, kunde.getId());
+            bestellung = bc.bestellungAnlegen(bestellung, kunde.getId());
+            BestellpostenHaus bestellposten = bp.postenHausAnlegen(bestellung.getId(), bestellungDAO.getKreation().getId());
             bestellung.addPostenHaus(bestellposten);
         }
     }
@@ -82,7 +86,7 @@ public class BestellungResource {
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
-        Optional<Nutzer> optKunde = Nutzer.find("vorname", user.getName()).firstResultOptional();
+        Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }

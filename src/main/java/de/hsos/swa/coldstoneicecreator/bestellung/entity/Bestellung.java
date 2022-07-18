@@ -27,7 +27,7 @@ public class Bestellung extends PanacheEntityBase{
     public Bestellung() {
     }
 
-    public Bestellung(Long id, List<BestellpostenEigen> bestellpostenEigen, List<BestellpostenHaus> bestellpostenHaus ,boolean bestellt) {
+    public Bestellung(Long id, List<BestellpostenEigen> bestellpostenEigen, List<BestellpostenHaus> bestellpostenHaus, boolean bestellt) {
         this.id = id;
         this.bestellpostenEigen = bestellpostenEigen;
         this.bestellpostenHaus = bestellpostenHaus;

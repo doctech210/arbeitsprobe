@@ -29,7 +29,7 @@ public class EisResource {
     EisControl ec;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get() {
         List<Eis> alle = ec.get();
         List<EisDTO> alleDTO = new ArrayList<>();
@@ -41,7 +41,7 @@ public class EisResource {
 
     @POST
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response post(EisDTO eisDTO) {
         Eis eis = EisDTO.Converter.toEis(eisDTO);
         ec.create(eis);

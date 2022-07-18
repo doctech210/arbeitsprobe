@@ -2,6 +2,7 @@ package de.hsos.swa.coldstoneicecreator.kunden.boundary.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -14,7 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeExportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeImportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
@@ -30,7 +30,7 @@ public class KundeResource {
     KundeControl kc;
 
     @GET
-    //@RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin"})
     public Response get() {
         List<Nutzer> alle = kc.get();
         List<KundeExportDTO> alleDTO = new ArrayList<>();
@@ -42,7 +42,7 @@ public class KundeResource {
 
     @POST
     @Transactional
-    //@RolesAllowed("Admin")
+    @PermitAll
     public Response post(KundeImportDTO kundeImportDTO) {
         Nutzer kunde = KundeImportDTO.Converter.toKunde(kundeImportDTO);
         kc.create(kunde);

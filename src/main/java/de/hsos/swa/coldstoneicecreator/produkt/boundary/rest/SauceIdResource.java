@@ -29,7 +29,7 @@ public class SauceIdResource {
     SauceControl sc;
     
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
         Sauce sauce = sc.getById(id);
         if(sauce != null) {
@@ -41,7 +41,7 @@ public class SauceIdResource {
 
     @PUT
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response put(@PathParam("id") Long id, SauceDTO sauceDTO) {
         Sauce sauce = SauceDTO.Converter.toSauce(sauceDTO);
         sc.put(id, sauce);
@@ -50,7 +50,7 @@ public class SauceIdResource {
 
     @DELETE
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response delete(@PathParam("id") Long id) {
         sc.delete(id);
         return Response.ok().build();

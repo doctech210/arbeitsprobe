@@ -362,26 +362,7 @@ INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (105, 179);
 
 
 
--- INSERT INTO Hauskreation (eissorte_id, eissorte2_id, name, sauce_id, id) VALUES (102, 103, 'Glatteis', 101, 102);
--- INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (102, 'LAKTOSE');
--- INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (102, 'GLUTEN');
--- INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (102, 103);
--- INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (102, 108);
--- INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (102, 112);
-
-
-
-
--- INSERT INTO Hauskreation (eissorte_id, eissorte2_id, name, sauce_id, id) VALUES (101, 101, 'Easy Cheesy', 101, 101);
--- INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (101, 'LAKTOSE');
--- INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (101, 'EI');
--- INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (101, 'GLUTEN');
--- INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (101, 103);
--- INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (101, 108);
--- INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (101, 109);
-
 
 
 INSERT INTO Nutzer (name, passwort, role, id) VALUES ('admin', '$2a$10$YfY/ecjvrYqeFQ9xnuFLAe2EUhQBQkMal58kBUJx8sRbKL1VrbcC.', 'Admin', 0);
 INSERT INTO Nutzer (name, passwort, role, id) VALUES ('user', '$2a$10$OfQWuRPsizS5HZJ7KSSMPuujQtu.ttm5X3PiWTuKoJ59At9TY8koe', 'Kunde', 100);
---INSERT INTO users (username, name, password, role) VALUES ('admin', 'Administrator', '$2a$10$YfY/ecjvrYqeFQ9xnuFLAe2EUhQBQkMal58kBUJx8sRbKL1VrbcC.', 'admin');

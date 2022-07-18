@@ -56,7 +56,7 @@ public class BestellungRepository implements BestellungControl {
         for(Bestellung b : bestellungen) {
             if(!b.isBestellt()) return null;
         }
-        bestellung.setId(Long.valueOf(null));
+        bestellung.setId(null);
         bestellung.persist();
         return bestellung;
     }

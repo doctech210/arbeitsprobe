@@ -28,7 +28,7 @@ public class SauceResource {
     SauceControl sc;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get() {
         List<Sauce> alle = sc.get();
         List<SauceDTO> alleDTO = new ArrayList<>();
@@ -40,7 +40,7 @@ public class SauceResource {
 
     @POST
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response post(SauceDTO sauceDTO) {
         Sauce sauce = SauceDTO.Converter.toSauce(sauceDTO);
         sc.create(sauce);

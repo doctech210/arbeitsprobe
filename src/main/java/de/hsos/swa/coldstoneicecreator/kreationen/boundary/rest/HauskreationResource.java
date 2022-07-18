@@ -28,7 +28,7 @@ public class HauskreationResource {
     HauskreationControl hc;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get() {
         List<Hauskreation> alle = hc.get();
         List<HauskreationDTO> alleDTO = new ArrayList<>();
@@ -40,7 +40,7 @@ public class HauskreationResource {
 
     @POST
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response post(HauskreationDTO hauskreationDTO) {
         Hauskreation hauskreation = HauskreationDTO.Converter.toHauskreation(hauskreationDTO);
         hc.create(hauskreation);

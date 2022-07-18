@@ -28,7 +28,7 @@ public class ZutatenIdResource {
     ZutatControl zc;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
         Zutat zutat = zc.getById(id);
         if(zutat != null) {
@@ -40,7 +40,7 @@ public class ZutatenIdResource {
 
     @PUT
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response put(@PathParam("id") Long id, ZutatDTO zutatDTO) {
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
         zc.put(id, zutat);
@@ -49,7 +49,7 @@ public class ZutatenIdResource {
 
     @DELETE
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response delete(@PathParam("id") Long id) {
         zc.delete(id);
         return Response.ok().build();

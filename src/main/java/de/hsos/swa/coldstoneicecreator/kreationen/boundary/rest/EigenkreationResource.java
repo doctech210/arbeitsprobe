@@ -34,7 +34,7 @@ public class EigenkreationResource {
     EigenkreationControl cr;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get() {
         List<Eigenkreation> alle = cr.get();
         List<EigenkreationDTO> alleDTO = new ArrayList<>();
@@ -46,7 +46,7 @@ public class EigenkreationResource {
 
     @POST
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response post(@Context SecurityContext sec, EigenkreationDTO eigenkreationDTO) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
@@ -58,7 +58,7 @@ public class EigenkreationResource {
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
-        Optional<Nutzer> optKunde = Nutzer.find("vorname", user.getName()).firstResultOptional();
+        Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }

@@ -29,7 +29,7 @@ public class EisIdResource {
     EisControl ec;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
         Eis eis = ec.getById(id);
         if(eis != null) {
@@ -41,7 +41,7 @@ public class EisIdResource {
 
     @PUT
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response put(@PathParam("id") Long id, EisDTO eisDTO) {
         Eis eis = EisDTO.Converter.toEis(eisDTO);
         ec.put(id, eis);
@@ -50,7 +50,7 @@ public class EisIdResource {
 
     @DELETE
     @Transactional
-    @RolesAllowed("Admin")
+    @RolesAllowed({"Admin"})
     public Response delete(@PathParam("id") Long id) {
         ec.delete(id);
         return Response.ok().build();

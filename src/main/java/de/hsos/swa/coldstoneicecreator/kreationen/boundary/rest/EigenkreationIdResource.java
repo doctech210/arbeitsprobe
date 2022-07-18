@@ -29,7 +29,7 @@ public class EigenkreationIdResource {
     EigenkreationControl ec;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
         Eigenkreation eigenkreation = ec.getById(id);
         if(eigenkreation != null) { 
@@ -41,7 +41,7 @@ public class EigenkreationIdResource {
 
     @PUT
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response put(@PathParam("id") Long id, EigenkreationDTO eigenkreationDTO) {
         Eigenkreation eigenkreation = EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO);
         ec.put(id, eigenkreation);
@@ -50,7 +50,7 @@ public class EigenkreationIdResource {
     
     @POST
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response post(@PathParam("id") Long id) {
         //TODO: Add to shoppinglist
         return Response.ok().build();
@@ -58,7 +58,7 @@ public class EigenkreationIdResource {
 
     @DELETE
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response delete(@PathParam("id") Long id) {
         ec.delete(id);
         return Response.ok().build();

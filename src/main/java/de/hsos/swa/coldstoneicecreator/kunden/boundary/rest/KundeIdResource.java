@@ -28,7 +28,7 @@ public class KundeIdResource {
     KundeControl kc;
 
     @GET
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
         Nutzer kunde = kc.getById(id);
         if(kunde != null) { 
@@ -40,7 +40,7 @@ public class KundeIdResource {
 
     @PUT
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response put(@PathParam("id") Long id, KundeDTO kundeDTO) {
         Nutzer kunde = KundeDTO.Converter.toKunde(kundeDTO);
         kc.put(id, kunde);
@@ -49,7 +49,7 @@ public class KundeIdResource {
 
     @DELETE
     @Transactional
-    @RolesAllowed("Admin, Kunde")
+    @RolesAllowed({"Admin", "Kunde"})
     public Response delete(@PathParam("id") Long id) {
         kc.delete(id);
         return Response.ok().build();
