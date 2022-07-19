@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeDTO;
+import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeImportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
@@ -41,8 +42,8 @@ public class KundeIdResource {
     @PUT
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    public Response put(@PathParam("id") Long id, KundeDTO kundeDTO) {
-        Nutzer kunde = KundeDTO.Converter.toKunde(kundeDTO);
+    public Response put(@PathParam("id") Long id, KundeImportDTO kundeImportDTO) {
+        Nutzer kunde = KundeImportDTO.Converter.toKunde(kundeImportDTO);
         kc.put(id, kunde);
         return Response.ok().build();
     }

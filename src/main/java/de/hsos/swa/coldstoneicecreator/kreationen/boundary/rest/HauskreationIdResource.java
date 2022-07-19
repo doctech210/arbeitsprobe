@@ -21,13 +21,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
-import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungIdDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.HauskreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.HauskreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
 @RequestScoped
 @Path("/hauskreationen/{id:\\d+}")
@@ -83,6 +84,16 @@ public class HauskreationIdResource {
         return Response.ok().build();
     }
 
+    @PUT
+    @Transactional
+    @RolesAllowed({"Admin"})
+    @Path("/zutaten/{zutatnummer:\\d+}")
+    public Response putZutaten(@PathParam("id") Long id, @PathParam("zutatnummer") int zutatnummer, ZutatDTO zutatDTO) {
+        Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
+        hc.putZutat(id, --zutatnummer, zutat);
+        return Response.ok().build();
+    }
+
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
@@ -91,10 +102,10 @@ public class HauskreationIdResource {
         return optKunde.get();
     }
 
-    private Bestellung offeneBestellung(Nutzer kunde) {
+    /*private Bestellung offeneBestellung(Nutzer kunde) {
         for(Bestellung b : kunde.getBestellungen()){
             if(!b.isBestellt()) return b;
         } 
         return null;
-    }
+    }*/
 }

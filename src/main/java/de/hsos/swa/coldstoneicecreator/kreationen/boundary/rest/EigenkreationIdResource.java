@@ -18,6 +18,8 @@ import javax.ws.rs.core.Response;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
+import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
 @RequestScoped
 @Path("/eigenkreationen/{id:\\d+}")
@@ -53,6 +55,16 @@ public class EigenkreationIdResource {
     @RolesAllowed({"Admin", "Kunde"})
     public Response post(@PathParam("id") Long id) {
         //TODO: Add to shoppinglist
+        return Response.ok().build();
+    }
+    
+    @PUT
+    @Transactional
+    @RolesAllowed({"Admin"})
+    @Path("/zutaten/{zutatnummer:\\d+}")
+    public Response putZutaten(@PathParam("id") Long id, @PathParam("zutatnummer") int zutatnummer, ZutatDTO zutatDTO) {
+        Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
+        ec.putZutat(id, --zutatnummer, zutat);
         return Response.ok().build();
     }
 

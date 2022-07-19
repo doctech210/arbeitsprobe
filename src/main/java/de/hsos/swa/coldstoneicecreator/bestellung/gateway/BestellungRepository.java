@@ -10,9 +10,13 @@ import javax.ws.rs.NotFoundException;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationIdDAO;
+import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
+import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 @ApplicationScoped
@@ -92,6 +96,40 @@ public class BestellungRepository implements BestellungControl {
         Nutzer kunde = kreationDAO.getKunde();
         kunde.addBestellung(bestellung);
         neueKreation.fire(new KreationIdDAO(kreationDAO, bestellung.getId()));
+    }
+
+    @Override
+    public boolean hauskreationAnpassen(Bestellung bestellung, int kreationsnummer, BestellpostenHaus bestellpostenHaus) {
+        boolean geaendert = false;
+        BestellpostenHaus alterPostenHaus = bestellung.getBestellpostenHaus().get(kreationsnummer);
+        Long neueAnzahl = bestellpostenHaus.getAnzahl();
+        if(neueAnzahl != null) {
+            alterPostenHaus.setAnzahl(neueAnzahl);
+            geaendert = true;
+        }
+        Hauskreation hauskreation = bestellpostenHaus.getHauskreation();
+        if(hauskreation != null) {
+            alterPostenHaus.setHauskreation(hauskreation);
+            geaendert = true;
+        }
+        return geaendert;
+    }
+
+    @Override
+    public boolean eigenkreationAnpassen(Bestellung bestellung, int kreationsnummer, BestellpostenEigen bestellpostenEigen) {
+        boolean geaendert = false;
+        BestellpostenEigen alterPostenHaus = bestellung.getBestellposten().get(kreationsnummer);
+        Long neueAnzahl = bestellpostenEigen.getAnzahl();
+        if(neueAnzahl != null) {
+            alterPostenHaus.setAnzahl(neueAnzahl);
+            geaendert = true;
+        }
+        Eigenkreation eigenkreation = bestellpostenEigen.getEigenkreation();
+        if(eigenkreation != null) {
+            alterPostenHaus.setEigenkreation(eigenkreation);
+            geaendert = true;
+        }
+        return geaendert;
     }
 
     /*

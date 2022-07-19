@@ -19,6 +19,7 @@ import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeExportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeImportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
 
 @RequestScoped
 @Path("/kunden")
@@ -46,6 +47,6 @@ public class KundeResource {
     public Response post(KundeImportDTO kundeImportDTO) {
         Nutzer kunde = KundeImportDTO.Converter.toKunde(kundeImportDTO);
         kc.create(kunde);
-        return Response.ok().build();
+        return Response.ok(UserLogin.listAll()).build();
     }
 }

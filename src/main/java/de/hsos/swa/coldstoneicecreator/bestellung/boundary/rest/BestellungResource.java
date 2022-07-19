@@ -24,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.Response.Status;
 import javax.annotation.security.RolesAllowed;
 
 @RequestScoped
@@ -53,11 +54,19 @@ public class BestellungResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    public Response post(@Context SecurityContext sec, BestellungDTO bestellungDTO) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
+    public Response post(@Context SecurityContext sec/*, BestellungDTO bestellungDTO*/) {
+        /*Nutzer kunde = this.eingeloggterKunde(sec);
         Bestellung bestellung = BestellungDTO.Converter.toBestellung(bestellungDTO);
         bc.bestellungAnlegen(bestellung, kunde.getId());
         return Response.ok(bestellung).build();
+        */
+        Nutzer kunde = this.eingeloggterKunde(sec);
+        Bestellung bestellung = this.offeneBestellung(kunde);
+        if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
+        bestellung.setBestellt(true);        
+        BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
+        //TODO: hier als Event an den Bestellmechanismus schicken
+        return Response.ok(bestellungDTO).build();
     }
 
     private Nutzer eingeloggterKunde(SecurityContext sec) {
@@ -66,5 +75,12 @@ public class BestellungResource {
         Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
+    }
+
+    private Bestellung offeneBestellung(Nutzer kunde) {
+        for(Bestellung b : kunde.getBestellungen()){
+            if(!b.isBestellt()) return b;
+        } 
+        return null;
     }
 }

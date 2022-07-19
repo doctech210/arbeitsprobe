@@ -50,8 +50,39 @@ public class HauskreationRepository implements HauskreationControl{
 
     @Override
     public boolean put(Long id, Hauskreation hauskreation) {
-        //Hauskreation alteHauskreation = Hauskreation.findById(id);
-        //TODO: 
+        Hauskreation alteHauskreation = Hauskreation.findById(id);
+        boolean geaendert = false;
+        Eis neuesEis = hauskreation.getEissorte();
+        if(neuesEis != null) {
+            alteHauskreation.setEissorte(neuesEis);
+            geaendert = true;
+        }
+        Eis neuesEis2 = hauskreation.getEissorte();
+        if(neuesEis2 != null) {
+            alteHauskreation.setEissorte(neuesEis2);
+            geaendert = true;
+        }
+        Sauce neueSauce = hauskreation.getSauce();
+        if(neueSauce != null) {
+            alteHauskreation.setSauce(neueSauce);
+            geaendert = true;
+        }
+        String neuerName = hauskreation.getName();
+        if(neuerName != "string" && neuerName != "") {
+            alteHauskreation.setName(neuerName);
+            geaendert = true;
+        }
+        return geaendert;
+    }
+
+    @Override
+    public boolean putZutat(Long id, int zutatnummer, Zutat zutat) {
+        Hauskreation alteHauskreation = Hauskreation.findById(id);
+        List<Zutat> zutaten = alteHauskreation.getZutaten();
+        Zutat alteZutat = zutaten.get(zutatnummer);
+        alteZutat.setName(zutat.getName());
+        alteZutat.setPremium(zutat.isPremium());
+        alteZutat.setAllergene(zutat.getAllergene());
         return true;
     }
 

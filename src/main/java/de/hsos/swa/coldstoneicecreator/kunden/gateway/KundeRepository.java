@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
+import io.quarkus.elytron.security.common.BcryptUtil;
 
 @ApplicationScoped
 public class KundeRepository implements KundeControl{
@@ -35,9 +36,22 @@ public class KundeRepository implements KundeControl{
 
     @Override
     public boolean put(Long id, Nutzer kunde) {
-        //Kunde alteKunde = Kunde.findById(id);
-        //TODO: 
-        return true;
+        boolean geaendert = false;
+        Nutzer alteKunde = Nutzer.findById(id);
+        UserLogin loginKunde = UserLogin.findById(id);
+        String neuerName = kunde.getName();
+        if(neuerName != "string" && neuerName != "") {
+            alteKunde.setName(neuerName);
+            loginKunde.username = neuerName;
+            geaendert = true;
+        }
+        String neuesPasswort = kunde.getPasswort();
+        if(neuesPasswort != "string" && neuesPasswort != "") {
+            alteKunde.setPasswort(neuesPasswort);
+            loginKunde.password = BcryptUtil.bcryptHash(neuesPasswort);
+            geaendert = true;
+        }
+        return geaendert;
     }
     
 }

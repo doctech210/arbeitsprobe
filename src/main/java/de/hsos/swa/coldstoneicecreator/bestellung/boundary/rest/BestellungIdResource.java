@@ -1,7 +1,11 @@
 package de.hsos.swa.coldstoneicecreator.bestellung.boundary.rest;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
+import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellpostenEigenDTO;
+import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellpostenHausDTO;
 import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
@@ -27,7 +31,7 @@ import javax.ws.rs.PathParam;
 import javax.annotation.security.RolesAllowed;
 
 @RequestScoped
-@Path("Bestellungen/{id:\\d+}")
+@Path("bestellungen/{id:\\d+}")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class BestellungIdResource {
@@ -48,17 +52,35 @@ public class BestellungIdResource {
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
     public Response post(@Context SecurityContext sec, @PathParam("id") Long id) {
-        //Kunde kunde = this.eingeloggterKunde(sec);
-        //TODO: POST als "bestellen" nutzen?
+        /*Nutzer kunde = this.eingeloggterKunde(sec);
+        Bestellung bestellung = this.offeneBestellung(kunde);
+        if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
+        bestellung.setBestellt(true);        
+        BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
+        */return Response.ok().build();
+    }
+
+    @PUT
+    @Transactional
+    @RolesAllowed({"Admin", "Kunde"})
+    @Path("/eigenkreationen/{kreationsnummer:\\d+}")
+    public Response putEigen(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("kreationsnummer") int kreationsnummer, BestellpostenEigenDTO bestellpostenEigenDTO){
+        Nutzer kunde = this.eingeloggterKunde(sec);
+        Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
+        BestellpostenEigen bestellpostenEigen = BestellpostenEigenDTO.Converter.toBestellposten(bestellpostenEigenDTO);
+        bc.eigenkreationAnpassen(bestellung, kreationsnummer, bestellpostenEigen);
         return Response.ok().build();
     }
 
     @PUT
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    public Response put(@Context SecurityContext sec, @PathParam("id") Long id){
-        //Kunde kunde = this.eingeloggterKunde(sec);
-        //Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
+    @Path("/hauskreationen/{kreationsnummer:\\d+}")
+    public Response putHaus(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("kreationsnummer") int kreationsnummer, BestellpostenHausDTO bestellpostenHausDTO){
+        Nutzer kunde = this.eingeloggterKunde(sec);
+        Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
+        BestellpostenHaus bestellpostenHaus = BestellpostenHausDTO.Converter.toBestellposten(bestellpostenHausDTO);
+        bc.hauskreationAnpassen(bestellung, kreationsnummer, bestellpostenHaus);
         return Response.ok().build();
     }
 
@@ -79,5 +101,4 @@ public class BestellungIdResource {
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }
-
 }

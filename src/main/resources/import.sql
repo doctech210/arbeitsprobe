@@ -132,7 +132,7 @@ INSERT INTO Zutat (name, premium, id) VALUES ('Ahojbrause', FALSE, 126);
 INSERT INTO Zutat (name, premium, id) VALUES ('Brauseufos', FALSE, 127);
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Cini Minis', FALSE, 128);
-INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (128, 'Gluten');
+INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (128, 'GLUTEN');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Cookies', FALSE, 129);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (129, 'GLUTEN');

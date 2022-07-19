@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
 public interface EigenkreationControl {
     
@@ -16,4 +17,6 @@ public interface EigenkreationControl {
     public boolean delete(Long id);
 
     public boolean put(Long id, Eigenkreation eigenkreation);
+
+    public boolean putZutat(Long id, int zutatnummer, Zutat zutat);
 }
