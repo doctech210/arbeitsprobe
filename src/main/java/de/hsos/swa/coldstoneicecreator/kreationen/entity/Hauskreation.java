@@ -42,15 +42,14 @@ public class Hauskreation extends PanacheEntityBase implements Kreation{
     public Hauskreation() {
     }    
 
-    public Hauskreation(Long id, Eis eissorte, Eis eissorte2, List<Zutat> zutaten, Sauce sauce, String name,
-            Set<Allergene> allergene) {
+    public Hauskreation(Long id, Eis eissorte, Eis eissorte2, List<Zutat> zutaten, Sauce sauce, String name) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
         this.zutaten = zutaten;
         this.sauce = sauce;
         this.name = name;
-        this.allergene = allergene;
+        this.checkAllergene();
     }
 
     public void checkAllergene() {
@@ -114,6 +113,11 @@ public class Hauskreation extends PanacheEntityBase implements Kreation{
 
     public void setZutaten(List<Zutat> zutaten) {
         this.zutaten = zutaten;
+    }
+
+    public void addZutat(Zutat zutat) {
+        this.zutaten.add(zutat);
+        this.checkAllergene();
     }
 
     public Sauce getSauce() {

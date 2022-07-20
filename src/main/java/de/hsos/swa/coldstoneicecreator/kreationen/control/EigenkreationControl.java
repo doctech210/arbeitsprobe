@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
-import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 
 public interface EigenkreationControl {
     
@@ -18,5 +18,9 @@ public interface EigenkreationControl {
 
     public boolean put(Long id, Eigenkreation eigenkreation);
 
-    public boolean putZutat(Long id, int zutatnummer, Zutat zutat);
+    public boolean putZutat(Long id, int zutatnummer, Long neueZutatId);
+
+    public boolean post(Long kreationId, Long anzahl, Nutzer nutzer);
+
+    public List<Eigenkreation> getOhneAllergene(List<Allergene> allergene);
 }

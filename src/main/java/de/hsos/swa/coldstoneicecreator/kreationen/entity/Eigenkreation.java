@@ -1,5 +1,6 @@
 package de.hsos.swa.coldstoneicecreator.kreationen.entity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,15 +42,33 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
     public Eigenkreation() {
     }    
 
-    public Eigenkreation(Long id, Eis eissorte, Eis eissorte2, List<Zutat> zutaten, Sauce sauce, String name,
-            Set<Allergene> allergene) {
+    public Eigenkreation(Long id, Eis eissorte, Eis eissorte2, List<Zutat> zutaten, Sauce sauce, String name) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
         this.zutaten = zutaten;
         this.sauce = sauce;
         this.name = name;
-        this.allergene = allergene;
+        this.checkAllergene();
+    }
+
+    public void checkAllergene() {
+        Set<Allergene> neueAllergene = new HashSet<>();
+        for(Allergene allergen : eissorte.getAllergene()){
+            neueAllergene.add(allergen);
+        }
+        for(Allergene allergen : eissorte2.getAllergene()){
+            neueAllergene.add(allergen);
+        }
+        for(Zutat zutat : this.zutaten) {
+            for(Allergene allergen : zutat.getAllergene()){
+                neueAllergene.add(allergen);
+            }
+        }
+        for(Allergene allergen : sauce.getAllergene()){
+            neueAllergene.add(allergen);
+        }
+        this.allergene = neueAllergene;
     }
 
     @Override
@@ -91,6 +110,11 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
 
     public void setZutaten(List<Zutat> zutaten) {
         this.zutaten = zutaten;
+    }
+
+    public void addZutat(Zutat zutat) {
+        this.zutaten.add(zutat);
+        this.checkAllergene();
     }
 
     public Sauce getSauce() {

@@ -34,16 +34,16 @@ import javax.annotation.security.RolesAllowed;
 public class BestellungResource {
 
     @Inject
-    BestellungControl bc;
+    BestellungControl bestellungRepo;
 
     @Inject
-    BestellpostenControl bp;
+    BestellpostenControl bestellpostenRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
     public Response get(@Context SecurityContext sec) {
         Nutzer kunde = this.eingeloggterKunde(sec);
-        List<Bestellung> alle = bc.bestellungenAbfragen(kunde.getId());
+        List<Bestellung> alle = bestellungRepo.bestellungenAbfragen(kunde.getId());
         List<BestellungDTO> alleDTO = new ArrayList<>();
         for(Bestellung bestellung : alle) {
             alleDTO.add(BestellungDTO.Converter.toDTO(bestellung));

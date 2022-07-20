@@ -12,11 +12,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 
 @RequestScoped
@@ -26,12 +28,15 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 public class EisResource {
     
     @Inject
-    EisControl ec;
+    EisControl eisRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
-    public Response get() {
-        List<Eis> alle = ec.get();
+    public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
+        List<Eis> alle = eisRepo.get();
+        if(allergene != null) {
+            alle = eisRepo.getOhneAllergene(allergene);
+        }
         List<EisDTO> alleDTO = new ArrayList<>();
         for(Eis eis : alle) {
             alleDTO.add(EisDTO.Converter.toDTO(eis));
@@ -44,7 +49,7 @@ public class EisResource {
     @RolesAllowed({"Admin"})
     public Response post(EisDTO eisDTO) {
         Eis eis = EisDTO.Converter.toEis(eisDTO);
-        ec.create(eis);
+        eisRepo.create(eis);
         return Response.ok().build();
     }
 }

@@ -1,5 +1,6 @@
 package de.hsos.swa.coldstoneicecreator.kreationen.gateway;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.event.Event;
@@ -9,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.HauskreationControl;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
@@ -38,6 +40,26 @@ public class HauskreationRepository implements HauskreationControl{
     public List<Hauskreation> get() {
         return Hauskreation.listAll();
     }
+
+    @Override
+    public List<Hauskreation> getOhneAllergene(List<Allergene> allergene){
+        List<Hauskreation> hauskreationen = Hauskreation.listAll();
+        List<Allergene> va = new ArrayList<>();
+        for(Allergene allergen : allergene) {
+            if(allergen.equals(Allergene.VEGAN)) {
+                va.add(Allergene.EI);
+                va.add(Allergene.HONIG);
+                va.add(Allergene.LAKTOSE);
+                va.add(Allergene.GELANTINE);
+            }
+        }
+        va.addAll(allergene);
+        for(Allergene allergen : va) {  
+            hauskreationen.removeIf(hauskreation -> hauskreation.getAllergene().contains(allergen));
+        }
+        return hauskreationen;
+    }
+
     @Override
     public Hauskreation getById(Long id) {
         return Hauskreation.findById(id);

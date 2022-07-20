@@ -26,12 +26,12 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 public class EisIdResource {
     
     @Inject
-    EisControl ec;
+    EisControl eisRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
-        Eis eis = ec.getById(id);
+        Eis eis = eisRepo.getById(id);
         if(eis != null) {
             EisDTO eisDTO = EisDTO.Converter.toDTO(eis);
             return Response.ok(eisDTO).build();
@@ -44,7 +44,7 @@ public class EisIdResource {
     @RolesAllowed({"Admin"})
     public Response put(@PathParam("id") Long id, EisDTO eisDTO) {
         Eis eis = EisDTO.Converter.toEis(eisDTO);
-        ec.put(id, eis);
+        eisRepo.put(id, eis);
         return Response.ok().build();
     }
 
@@ -52,7 +52,7 @@ public class EisIdResource {
     @Transactional
     @RolesAllowed({"Admin"})
     public Response delete(@PathParam("id") Long id) {
-        ec.delete(id);
+        eisRepo.delete(id);
         return Response.ok().build();
     }
 }

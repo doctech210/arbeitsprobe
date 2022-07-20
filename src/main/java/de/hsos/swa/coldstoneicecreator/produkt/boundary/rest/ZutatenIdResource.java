@@ -25,12 +25,12 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 public class ZutatenIdResource {
     
     @Inject
-    ZutatControl zc;
+    ZutatControl zutatRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
-        Zutat zutat = zc.getById(id);
+        Zutat zutat = zutatRepo.getById(id);
         if(zutat != null) {
             ZutatDTO zutatDTO = ZutatDTO.Converter.toDTO(zutat);
             return Response.ok(zutatDTO).build();
@@ -43,7 +43,7 @@ public class ZutatenIdResource {
     @RolesAllowed({"Admin"})
     public Response put(@PathParam("id") Long id, ZutatDTO zutatDTO) {
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
-        zc.put(id, zutat);
+        zutatRepo.put(id, zutat);
         return Response.ok().build();
     }
 
@@ -51,7 +51,7 @@ public class ZutatenIdResource {
     @Transactional
     @RolesAllowed({"Admin"})
     public Response delete(@PathParam("id") Long id) {
-        zc.delete(id);
+        zutatRepo.delete(id);
         return Response.ok().build();
     }
 }

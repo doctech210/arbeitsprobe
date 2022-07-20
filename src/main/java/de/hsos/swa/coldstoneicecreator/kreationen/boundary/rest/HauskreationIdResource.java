@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -21,8 +20,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
-import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungDAO;
-import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.BestellungIdDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.HauskreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.HauskreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
@@ -37,18 +34,12 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 public class HauskreationIdResource {
     
     @Inject
-    HauskreationControl hc;
-
-    @Inject
-    Event<BestellungDAO> bestellen;
-
-    @Inject
-    Event<BestellungIdDAO> bestellenId;
+    HauskreationControl hauskreationRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
-        Hauskreation hauskreation = hc.getById(id);
+        Hauskreation hauskreation = hauskreationRepo.getById(id);
         if(hauskreation != null) {
             HauskreationDTO hauskreationDTO = HauskreationDTO.Converter.toDTO(hauskreation);
             return Response.ok(hauskreationDTO).build();
@@ -61,7 +52,7 @@ public class HauskreationIdResource {
     @RolesAllowed({"Admin"})
     public Response put(@PathParam("id") Long id, HauskreationDTO hauskreationDTO) {
         Hauskreation hauskreation = HauskreationDTO.Converter.toHauskreation(hauskreationDTO);
-        hc.put(id, hauskreation);
+        hauskreationRepo.put(id, hauskreation);
         return Response.ok().build();
     }
     
@@ -71,8 +62,8 @@ public class HauskreationIdResource {
     public Response post(@PathParam("id") Long id, @Context SecurityContext sec, Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
-        Hauskreation hauskreation = hc.getById(id);
-        hc.create(kunde, hauskreation, anzahl);
+        Hauskreation hauskreation = hauskreationRepo.getById(id);
+        hauskreationRepo.create(kunde, hauskreation, anzahl);
         return Response.ok().build();
     }
 
@@ -80,7 +71,7 @@ public class HauskreationIdResource {
     @Transactional
     @RolesAllowed({"Admin"})
     public Response delete(@PathParam("id") Long id) {
-        hc.delete(id);
+        hauskreationRepo.delete(id);
         return Response.ok().build();
     }
 
@@ -90,7 +81,7 @@ public class HauskreationIdResource {
     @Path("/zutaten/{zutatnummer:\\d+}")
     public Response putZutaten(@PathParam("id") Long id, @PathParam("zutatnummer") int zutatnummer, ZutatDTO zutatDTO) {
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
-        hc.putZutat(id, --zutatnummer, zutat);
+        hauskreationRepo.putZutat(id, --zutatnummer, zutat);
         return Response.ok().build();
     }
 

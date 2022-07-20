@@ -1,5 +1,6 @@
 package de.hsos.swa.coldstoneicecreator.produkt.gateway;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -7,6 +8,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 
 @ApplicationScoped
@@ -26,6 +28,26 @@ public class EisRepository implements EisControl{
     public List<Eis> get() {
         return Eis.listAll();
     }
+
+    @Override
+    public List<Eis> getOhneAllergene(List<Allergene> allergene){
+        List<Eis> eise = Eis.listAll();
+        List<Allergene> va = new ArrayList<>();
+        for(Allergene allergen : allergene) {
+            if(allergen.equals(Allergene.VEGAN)) {
+                va.add(Allergene.EI);
+                va.add(Allergene.HONIG);
+                va.add(Allergene.LAKTOSE);
+                va.add(Allergene.GELANTINE);
+            }
+        }
+        va.addAll(allergene);
+        for(Allergene allergen : va) {  
+            eise.removeIf(eis -> eis.getAllergene().contains(allergen));
+        }
+        return eise;
+    }
+
 
     @Override
     public Eis getById(Long id) {

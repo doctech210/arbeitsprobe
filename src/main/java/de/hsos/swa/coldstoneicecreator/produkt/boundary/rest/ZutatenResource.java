@@ -13,9 +13,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.QueryParam;
 
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.ZutatControl;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
 @RequestScoped
@@ -25,12 +27,15 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 public class ZutatenResource {
     
     @Inject
-    ZutatControl zc;
+    ZutatControl zutatRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
-    public Response get() {
-        List<Zutat> alle = zc.get();
+    public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
+        List<Zutat> alle = zutatRepo.get();
+        if(allergene != null) {
+            alle = zutatRepo.getOhneAllergene(allergene);
+        }
         List<ZutatDTO> alleDTO = new ArrayList<>();
         for(Zutat zutat : alle) {
             alleDTO.add(ZutatDTO.Converter.toDTO(zutat));
@@ -43,7 +48,7 @@ public class ZutatenResource {
     @RolesAllowed({"Admin"})
     public Response post(ZutatDTO zutatDTO) {
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
-        zc.create(zutat); 
+        zutatRepo.create(zutat); 
         return Response.ok().build();
     }
 }

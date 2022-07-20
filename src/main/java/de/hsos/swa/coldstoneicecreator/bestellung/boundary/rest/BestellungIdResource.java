@@ -37,13 +37,13 @@ import javax.annotation.security.RolesAllowed;
 public class BestellungIdResource {
 
     @Inject
-    BestellungControl bc;
+    BestellungControl bestellungRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
     public Response get(@Context SecurityContext sec, @PathParam("id") Long id) {
         Nutzer kunde = this.eingeloggterKunde(sec);
-        Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
+        Bestellung bestellung = bestellungRepo.bestellungAbfragen(id, kunde.getId());
         BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
         return Response.ok(bestellungDTO).build();
     } 
@@ -66,9 +66,9 @@ public class BestellungIdResource {
     @Path("/eigenkreationen/{kreationsnummer:\\d+}")
     public Response putEigen(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("kreationsnummer") int kreationsnummer, BestellpostenEigenDTO bestellpostenEigenDTO){
         Nutzer kunde = this.eingeloggterKunde(sec);
-        Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
+        Bestellung bestellung = bestellungRepo.bestellungAbfragen(id, kunde.getId());
         BestellpostenEigen bestellpostenEigen = BestellpostenEigenDTO.Converter.toBestellposten(bestellpostenEigenDTO);
-        bc.eigenkreationAnpassen(bestellung, kreationsnummer, bestellpostenEigen);
+        bestellungRepo.eigenkreationAnpassen(bestellung, kreationsnummer, bestellpostenEigen);
         return Response.ok().build();
     }
 
@@ -78,9 +78,9 @@ public class BestellungIdResource {
     @Path("/hauskreationen/{kreationsnummer:\\d+}")
     public Response putHaus(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("kreationsnummer") int kreationsnummer, BestellpostenHausDTO bestellpostenHausDTO){
         Nutzer kunde = this.eingeloggterKunde(sec);
-        Bestellung bestellung = bc.bestellungAbfragen(id, kunde.getId());
+        Bestellung bestellung = bestellungRepo.bestellungAbfragen(id, kunde.getId());
         BestellpostenHaus bestellpostenHaus = BestellpostenHausDTO.Converter.toBestellposten(bestellpostenHausDTO);
-        bc.hauskreationAnpassen(bestellung, kreationsnummer, bestellpostenHaus);
+        bestellungRepo.hauskreationAnpassen(bestellung, kreationsnummer, bestellpostenHaus);
         return Response.ok().build();
     }
 
@@ -89,7 +89,7 @@ public class BestellungIdResource {
     @RolesAllowed({"Admin", "Kunde"})
     public Response delete(@Context SecurityContext sec, @PathParam("id") Long id){
         Nutzer kunde = this.eingeloggterKunde(sec);
-        bc.bestellungLoeschen(id, kunde.getId());
+        bestellungRepo.bestellungLoeschen(id, kunde.getId());
         return Response.ok().build();
     }
 

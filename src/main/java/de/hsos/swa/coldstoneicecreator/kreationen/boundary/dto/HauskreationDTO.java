@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.security.RolesAllowed;
-
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.SauceDTO;
@@ -13,7 +11,6 @@ import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
-@RolesAllowed("admin")
 public class HauskreationDTO implements KreationDTO{
     
     public Long id;
@@ -28,24 +25,14 @@ public class HauskreationDTO implements KreationDTO{
     }
 
     public HauskreationDTO(Long id, EisDTO eissorte, EisDTO eissorte2, List<ZutatDTO> zutaten, SauceDTO sauce,
-            String name) {
+            String name, Set<Allergene> allergene) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
         this.zutaten = zutaten;
         this.sauce = sauce;
         this.name = name;
-        this.addAllergene(eissorte.allergene);
-        this.addAllergene(eissorte2.allergene);
-        for(ZutatDTO zutat : zutaten){
-            this.addAllergene(zutat.allergene);
-        }
-        this.addAllergene(sauce.allergene);
-    }
-
-    @Override
-    public void addAllergene(Set<Allergene> allergene){
-        allergene.addAll(allergene);
+        this.allergene = allergene;
     }
 
     public static class Converter{
@@ -57,7 +44,7 @@ public class HauskreationDTO implements KreationDTO{
             }
             return new HauskreationDTO(hauskreation.getId(), EisDTO.Converter.toDTO(hauskreation.getEissorte()), 
              EisDTO.Converter.toDTO(hauskreation.getEissorte2()), liste, SauceDTO.Converter.toDTO(hauskreation.getSauce()), 
-             hauskreation.getName());
+             hauskreation.getName(), hauskreation.getAllergene());
         }
 
         public static Hauskreation toHauskreation(HauskreationDTO hauskreationDTO) {
@@ -65,9 +52,11 @@ public class HauskreationDTO implements KreationDTO{
             for(ZutatDTO zutatDTO : hauskreationDTO.zutaten) {
                 liste.add(ZutatDTO.Converter.toZutat(zutatDTO));
             }
-            return new Hauskreation(hauskreationDTO.id, EisDTO.Converter.toEis(hauskreationDTO.eissorte),
+            Hauskreation hauskreation = new Hauskreation(hauskreationDTO.id, EisDTO.Converter.toEis(hauskreationDTO.eissorte),
              EisDTO.Converter.toEis(hauskreationDTO.eissorte2), liste, SauceDTO.Converter.toSauce(hauskreationDTO.sauce),
-             hauskreationDTO.name, hauskreationDTO.allergene);
+             hauskreationDTO.name);
+             hauskreation.setAllergene(hauskreationDTO.allergene);
+            return hauskreation;
         }
     }
 }

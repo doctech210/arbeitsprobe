@@ -26,12 +26,12 @@ import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 public class KundeIdResource {
     
     @Inject 
-    KundeControl kc;
+    KundeControl kundenRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
-        Nutzer kunde = kc.getById(id);
+        Nutzer kunde = kundenRepo.getById(id);
         if(kunde != null) { 
             KundeDTO kundeDTO = KundeDTO.Converter.toDTO(kunde);
             return Response.ok(kundeDTO).build();
@@ -44,7 +44,7 @@ public class KundeIdResource {
     @RolesAllowed({"Admin", "Kunde"})
     public Response put(@PathParam("id") Long id, KundeImportDTO kundeImportDTO) {
         Nutzer kunde = KundeImportDTO.Converter.toKunde(kundeImportDTO);
-        kc.put(id, kunde);
+        kundenRepo.put(id, kunde);
         return Response.ok().build();
     }
 
@@ -52,7 +52,7 @@ public class KundeIdResource {
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
     public Response delete(@PathParam("id") Long id) {
-        kc.delete(id);
+        kundenRepo.delete(id);
         return Response.ok().build();
     }
 }

@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,9 +21,14 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
+import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.*;
+import de.hsos.swa.coldstoneicecreator.produkt.gateway.EisRepository;
+import de.hsos.swa.coldstoneicecreator.produkt.gateway.SauceRepository;
+import de.hsos.swa.coldstoneicecreator.produkt.gateway.ZutatRepository;
 
 @RequestScoped
 @Path("/eigenkreationen")
@@ -31,27 +37,45 @@ import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 public class EigenkreationResource {
     
     @Inject
-    EigenkreationControl cr;
+    EigenkreationControl eigenkreationRepo;
+
+    @Inject
+    EisRepository eisRepo;
+
+    @Inject
+    SauceRepository sauceRepo;
+
+    @Inject
+    ZutatRepository ZutatRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
-    public Response get() {
-        List<Eigenkreation> alle = cr.get();
+    public Response get(@QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
+        Nutzer kunde = this.eingeloggterKunde(sec);
+        List<Eigenkreation> alle = kunde.getEigenkreationen();
+        if(allergene != null) alle = eigenkreationRepo.getOhneAllergene(allergene);
         List<EigenkreationDTO> alleDTO = new ArrayList<>();
         for(Eigenkreation eigenkreation : alle) {
             alleDTO.add(EigenkreationDTO.Converter.toDTO(eigenkreation));
         }
         return Response.ok(alleDTO).build();
     }
-
+    
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    public Response post(@Context SecurityContext sec, EigenkreationDTO eigenkreationDTO, Long anzahl) {
+    public Response post(@Context SecurityContext sec, KreationIdDTO eigenkreationIds) {
+        Eis eissorte1 = eisRepo.getById(eigenkreationIds.eissorte1Id);
+        Eis eissorte2 = eisRepo.getById(eigenkreationIds.eissorte2Id);
+        Sauce sauce = sauceRepo.getById(eigenkreationIds.sauceId);
+        List<Zutat> zutaten = new ArrayList<>();
+        for(Long id : eigenkreationIds.zutatenId) {
+            zutaten.add(ZutatRepo.getById(id));
+        }
+        Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, eigenkreationIds.name);
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
-        Eigenkreation eigenkreation = EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO);
-        cr.create(kunde, eigenkreation, anzahl);
+        eigenkreationRepo.create(kunde, eigenkreation, Long.valueOf(eigenkreationIds.anzahl));
         return Response.ok().build();
     }
 

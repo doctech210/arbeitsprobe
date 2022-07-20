@@ -11,11 +11,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.SauceDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.SauceControl;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 
 @RequestScoped
@@ -25,12 +27,15 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 public class SauceResource {
     
     @Inject
-    SauceControl sc;
+    SauceControl sauceRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
-    public Response get() {
-        List<Sauce> alle = sc.get();
+    public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
+        List<Sauce> alle = sauceRepo.get();
+        if(allergene != null){
+            alle = sauceRepo.getOhneAllergene(allergene);
+        }
         List<SauceDTO> alleDTO = new ArrayList<>();
         for(Sauce sauce : alle) {
             alleDTO.add(SauceDTO.Converter.toDTO(sauce));
@@ -43,7 +48,7 @@ public class SauceResource {
     @RolesAllowed({"Admin"})
     public Response post(SauceDTO sauceDTO) {
         Sauce sauce = SauceDTO.Converter.toSauce(sauceDTO);
-        sc.create(sauce);
+        sauceRepo.create(sauce);
         return Response.ok().build();
     }
 }

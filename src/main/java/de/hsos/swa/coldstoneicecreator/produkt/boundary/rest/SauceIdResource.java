@@ -26,12 +26,12 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 public class SauceIdResource {
 
     @Inject
-    SauceControl sc;
+    SauceControl sauceRepo;
     
     @GET
     @RolesAllowed({"Admin", "Kunde"})
     public Response get(@PathParam("id") Long id) {
-        Sauce sauce = sc.getById(id);
+        Sauce sauce = sauceRepo.getById(id);
         if(sauce != null) {
             SauceDTO sauceDTO = SauceDTO.Converter.toDTO(sauce);
             return Response.ok(sauceDTO).build();
@@ -44,7 +44,7 @@ public class SauceIdResource {
     @RolesAllowed({"Admin"})
     public Response put(@PathParam("id") Long id, SauceDTO sauceDTO) {
         Sauce sauce = SauceDTO.Converter.toSauce(sauceDTO);
-        sc.put(id, sauce);
+        sauceRepo.put(id, sauce);
         return Response.ok().build();
     }
 
@@ -52,7 +52,7 @@ public class SauceIdResource {
     @Transactional
     @RolesAllowed({"Admin"})
     public Response delete(@PathParam("id") Long id) {
-        sc.delete(id);
+        sauceRepo.delete(id);
         return Response.ok().build();
     }
 }

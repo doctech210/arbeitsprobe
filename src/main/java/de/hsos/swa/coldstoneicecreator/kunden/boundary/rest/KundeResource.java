@@ -19,7 +19,6 @@ import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeExportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.KundeImportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
 
 @RequestScoped
 @Path("/kunden")
@@ -28,12 +27,12 @@ import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
 public class KundeResource {
     
     @Inject
-    KundeControl kc;
+    KundeControl kundenRepo;
 
     @GET
     @RolesAllowed({"Admin"})
     public Response get() {
-        List<Nutzer> alle = kc.get();
+        List<Nutzer> alle = kundenRepo.get();
         List<KundeExportDTO> alleDTO = new ArrayList<>();
         for(Nutzer kunde : alle) {
             alleDTO.add(KundeExportDTO.Converter.toDTO(kunde));
@@ -46,7 +45,7 @@ public class KundeResource {
     @PermitAll
     public Response post(KundeImportDTO kundeImportDTO) {
         Nutzer kunde = KundeImportDTO.Converter.toKunde(kundeImportDTO);
-        kc.create(kunde);
-        return Response.ok(UserLogin.listAll()).build();
+        kundenRepo.create(kunde);
+        return Response.ok().build();
     }
 }

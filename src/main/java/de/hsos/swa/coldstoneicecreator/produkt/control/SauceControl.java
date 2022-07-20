@@ -2,6 +2,7 @@ package de.hsos.swa.coldstoneicecreator.produkt.control;
 
 import java.util.List;
 
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 
 public interface SauceControl {
@@ -15,4 +16,6 @@ public interface SauceControl {
     public boolean delete(Long id);
 
     public boolean put(Long id, Sauce sauce);
+
+    public List<Sauce> getOhneAllergene(List<Allergene> allergene);
 }
