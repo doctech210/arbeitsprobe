@@ -15,6 +15,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.SauceDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.SauceControl;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
@@ -30,6 +32,10 @@ public class SauceIdResource {
     
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt eine bestimmte Sauce zurueck",
+        description = "Gibt eine bestimmte Sauce ueber die uebergebene ID zurueck"
+    )
     public Response get(@PathParam("id") Long id) {
         Sauce sauce = sauceRepo.getById(id);
         if(sauce != null) {
@@ -42,6 +48,10 @@ public class SauceIdResource {
     @PUT
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Aendern einer bestimmten Sauce",
+        description = "Aendern einer bestimmte Sauce ueber die uebergebene ID"
+    )
     public Response put(@PathParam("id") Long id, SauceDTO sauceDTO) {
         Sauce sauce = SauceDTO.Converter.toSauce(sauceDTO);
         sauceRepo.put(id, sauce);
@@ -51,8 +61,12 @@ public class SauceIdResource {
     @DELETE
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Loeschen einer bestimmten Sauce",
+        description = "Loeschen einer bestimmten Sauce ueber die uebergebene ID"
+    )
     public Response delete(@PathParam("id") Long id) {
         sauceRepo.delete(id);
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 }

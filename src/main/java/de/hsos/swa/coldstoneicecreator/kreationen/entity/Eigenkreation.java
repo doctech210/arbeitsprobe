@@ -52,22 +52,15 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
         this.checkAllergene();
     }
 
+    @Override
     public void checkAllergene() {
         Set<Allergene> neueAllergene = new HashSet<>();
-        for(Allergene allergen : eissorte.getAllergene()){
-            neueAllergene.add(allergen);
+        neueAllergene.addAll(eissorte.getAllergene());
+        neueAllergene.addAll(eissorte2.getAllergene());
+        for(Zutat zutat : zutaten) {
+            neueAllergene.addAll(zutat.getAllergene());
         }
-        for(Allergene allergen : eissorte2.getAllergene()){
-            neueAllergene.add(allergen);
-        }
-        for(Zutat zutat : this.zutaten) {
-            for(Allergene allergen : zutat.getAllergene()){
-                neueAllergene.add(allergen);
-            }
-        }
-        for(Allergene allergen : sauce.getAllergene()){
-            neueAllergene.add(allergen);
-        }
+        neueAllergene.addAll(sauce.getAllergene());
         this.allergene = neueAllergene;
     }
 
@@ -76,59 +69,74 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public Eis getEissorte() {
         return eissorte;
     }
 
+    @Override
     public void setEissorte(Eis eissorte) {
         this.eissorte = eissorte;
     }
 
+    @Override
     public Eis getEissorte2() {
         return eissorte2;
     }
 
+    @Override
     public void setEissorte2(Eis eissorte2) {
         this.eissorte2 = eissorte2;
     }
 
+    @Override
     public List<Zutat> getZutaten() {
         return zutaten;
     }
 
+    @Override
     public void setZutaten(List<Zutat> zutaten) {
         this.zutaten = zutaten;
     }
 
     public void addZutat(Zutat zutat) {
-        this.zutaten.add(zutat);
-        this.checkAllergene();
+        if(zutat != null){
+            this.zutaten.add(zutat);
+            this.checkAllergene();
+        }
     }
 
+    @Override
     public Sauce getSauce() {
         return sauce;
     }
 
+    @Override
     public void setSauce(Sauce sauce) {
         this.sauce = sauce;
     }
     
+    @Override
     public Set<Allergene> getAllergene() {
         return allergene;
     }
 
+    @Override
     public void setAllergene(Set<Allergene> allergene) {
         this.allergene = allergene;
     }

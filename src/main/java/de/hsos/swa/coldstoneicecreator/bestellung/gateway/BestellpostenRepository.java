@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.ws.rs.NotFoundException;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
@@ -53,27 +52,14 @@ public class BestellpostenRepository implements BestellpostenControl {
         return bp;
     }
 
-
     @Override
-    public List<BestellpostenEigen> bestellpostenAbfragen() {
-        return BestellpostenEigen.listAll();
-    }
-
-    @Override
-    public BestellpostenEigen postenAbfragen(Long postenId) {
-        BestellpostenEigen bp = BestellpostenEigen.findById(postenId);
-        if(bp == null) throw new NotFoundException();
-        return bp;
-    }
-
-    @Override
-    public boolean postenAendern(Long bestellId, Long postenId, Long anzahl) {
+    public boolean postenAendernEigen(Long bestellId, Long postenId, Long anzahl) {
         BestellpostenEigen bp = BestellpostenEigen.findById(postenId);
         Bestellung bs = Bestellung.findById(bestellId);
-        if(bp == null) throw new NotFoundException();
+        if(bp == null) return false;
         if(anzahl == 0){
             bs.removePostenEigen(postenId);
-            return this.postenLoeschen(postenId);
+            return this.postenLoeschenEigen(postenId);
         } else if(anzahl > 0){
             bp.setAnzahl(anzahl);
             return true;
@@ -82,8 +68,26 @@ public class BestellpostenRepository implements BestellpostenControl {
     }
 
     @Override
-    public boolean postenLoeschen(Long postenId) {
+    public boolean postenAendernHaus(Long bestellId, Long postenId, Long anzahl) {
+        BestellpostenHaus bp = BestellpostenHaus.findById(postenId);
+        Bestellung bs = Bestellung.findById(bestellId);
+        if(bp == null) return false;
+        if(anzahl == 0){
+            bs.removePostenHaus(postenId);
+            return this.postenLoeschenHaus(postenId);
+        } else if(anzahl > 0){
+            bp.setAnzahl(anzahl);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean postenLoeschenEigen(Long postenId) {
         return BestellpostenEigen.deleteById(postenId);
+    }
+
+    private boolean postenLoeschenHaus(Long postenId) {
+        return BestellpostenHaus.deleteById(postenId);
     }
     
     public void empfangeBestellung(@Observes KreationIdDAO kreationIdDAO){

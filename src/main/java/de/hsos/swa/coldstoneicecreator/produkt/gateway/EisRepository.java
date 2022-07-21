@@ -71,6 +71,6 @@ public class EisRepository implements EisControl{
     }
 
     private void kreationenUpdaten(Eis eis) {
-        kreationUpdate.fire(eis);
+        kreationUpdate.fire(eis); //geht in das Eigenkreations- und das HauskreationsRepository
     }
 }

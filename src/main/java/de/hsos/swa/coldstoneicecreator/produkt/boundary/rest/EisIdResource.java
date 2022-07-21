@@ -3,7 +3,6 @@ package de.hsos.swa.coldstoneicecreator.produkt.boundary.rest;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.transaction.Status;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,6 +13,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
@@ -30,18 +32,26 @@ public class EisIdResource {
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt eine bestimmte Eissorte zurueck",
+        description = "Gibt eine bestimmte Eissorte ueber die uebergebene ID zureuck"
+    )
     public Response get(@PathParam("id") Long id) {
         Eis eis = eisRepo.getById(id);
         if(eis != null) {
             EisDTO eisDTO = EisDTO.Converter.toDTO(eis);
             return Response.ok(eisDTO).build();
         }
-        return Response.status(Status.STATUS_UNKNOWN).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @PUT
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Aendern einer bestimmten Eissorte",
+        description = "Aendern einer bestimmten Eissorte ueber die uebergebene ID"
+    )
     public Response put(@PathParam("id") Long id, EisDTO eisDTO) {
         Eis eis = EisDTO.Converter.toEis(eisDTO);
         eisRepo.put(id, eis);
@@ -51,8 +61,12 @@ public class EisIdResource {
     @DELETE
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Loeschen einer bestimmten Eissorte",
+        description = "Loeschen einer bestimmten Eissorte ueber die uebergebene ID"
+    )
     public Response delete(@PathParam("id") Long id) {
         eisRepo.delete(id);
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 }

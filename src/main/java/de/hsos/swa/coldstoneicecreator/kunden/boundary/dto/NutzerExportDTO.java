@@ -2,16 +2,16 @@ package de.hsos.swa.coldstoneicecreator.kunden.boundary.dto;
 
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
-public class KundeExportDTO {
+public class NutzerExportDTO {
 
     public Long id;
     public String name;
     public String role;
     
-    public KundeExportDTO() {
+    public NutzerExportDTO() {
     }
 
-    public KundeExportDTO(Long id, String name, String role) {
+    public NutzerExportDTO(Long id, String name, String role) {
         this.id = id;
         this.name = name;
         this.role = role;
@@ -19,8 +19,8 @@ public class KundeExportDTO {
 
     public static class Converter {
 
-        public static KundeExportDTO toDTO(Nutzer kunde){
-            return new KundeExportDTO(kunde.getId(), kunde.getName(), kunde.getRole());
+        public static NutzerExportDTO toDTO(Nutzer nutzer){
+            return new NutzerExportDTO(nutzer.getId(), nutzer.getName(), nutzer.getRole());
         }
 
         /*public static Kunde toKunde(KundeImportDTO kundeImportDTO) {

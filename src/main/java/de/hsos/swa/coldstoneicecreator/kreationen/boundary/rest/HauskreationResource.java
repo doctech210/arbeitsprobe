@@ -15,6 +15,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.HauskreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.HauskreationControl;
@@ -47,6 +49,10 @@ public class HauskreationResource {
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt alle Hauskreationen zurueck",
+        description = "Gibt alle Hauskreationen mit dem angegebenen Filter zurueck"
+    )
     public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
         List<Hauskreation> alle = hauskreationRepo.get();
         if(allergene != null) {
@@ -62,6 +68,10 @@ public class HauskreationResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Erstellt eine neue Hauskreation",
+        description = "Erstellt eine neue Hauskreation"
+    )
     public Response post(KreationIdDTO kreationIds) {
         Eis eissorte1 = eisRepo.getById(kreationIds.eissorte1Id);
         Eis eissorte2 = eisRepo.getById(kreationIds.eissorte2Id);

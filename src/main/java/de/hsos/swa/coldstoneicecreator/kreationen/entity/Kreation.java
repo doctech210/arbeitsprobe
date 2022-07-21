@@ -15,4 +15,32 @@ public interface Kreation {
     Set<Allergene> allergene = null;
 
     Long getId();
+
+    void checkAllergene();
+
+    Set<Allergene> getAllergene();
+
+    void setAllergene(Set<Allergene> allergene);
+
+    void setId(Long id);
+
+    String getName();
+
+    void setName(String name);
+
+    Eis getEissorte();
+
+    void setEissorte(Eis eissorte);
+
+    Eis getEissorte2();
+
+    void setEissorte2(Eis eissorte2);
+
+    List<Zutat> getZutaten();
+
+    void setZutaten(List<Zutat> zutaten);
+
+    Sauce getSauce();
+
+    void setSauce(Sauce sauce);
 }

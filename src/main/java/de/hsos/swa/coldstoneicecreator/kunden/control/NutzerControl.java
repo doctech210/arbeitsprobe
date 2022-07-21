@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
-public interface KundeControl {
+public interface NutzerControl {
     public boolean create(Nutzer kunde);
     
     public List<Nutzer> get();

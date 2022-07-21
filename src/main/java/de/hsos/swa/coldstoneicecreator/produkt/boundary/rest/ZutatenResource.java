@@ -13,6 +13,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import javax.ws.rs.QueryParam;
 
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
@@ -31,6 +35,10 @@ public class ZutatenResource {
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt alle Zutaten zureuck",
+        description = "Gibt alle Zutaten mit dem eingegebenen Filter zurueck"
+    )
     public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
         List<Zutat> alle = zutatRepo.get();
         if(allergene != null) {
@@ -46,7 +54,12 @@ public class ZutatenResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Erstellen einer neuen Zutat",
+        description = "Erstellen einer neuen Zutat"
+    )
     public Response post(ZutatDTO zutatDTO) {
+        if(zutatDTO == null) return Response.status(Status.NOT_FOUND).build();
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
         zutatRepo.create(zutat); 
         return Response.ok().build();

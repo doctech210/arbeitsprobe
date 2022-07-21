@@ -72,6 +72,6 @@ public class SauceRepository implements SauceControl{
     }
 
     private void kreationenUpdaten(Sauce sauce){
-        kreationUpdate.fire(sauce);
+        kreationUpdate.fire(sauce); //geht in das Eigenkreations- und das HauskreationsRepository
     }
 }

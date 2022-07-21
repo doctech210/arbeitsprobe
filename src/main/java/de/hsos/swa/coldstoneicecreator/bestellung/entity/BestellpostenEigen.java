@@ -49,7 +49,11 @@ public class BestellpostenEigen extends PanacheEntityBase{
     }
 
     public void setAnzahl(Long anzahl) {
-        this.anzahl = anzahl;
+        if(anzahl == null){
+            this.anzahl = Long.valueOf(0);
+        }else{
+            this.anzahl = anzahl;
+        }
     }
 
     public void addEigenkreation(){

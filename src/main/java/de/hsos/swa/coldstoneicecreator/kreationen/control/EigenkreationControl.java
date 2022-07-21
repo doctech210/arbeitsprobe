@@ -14,11 +14,13 @@ public interface EigenkreationControl {
 
     public Eigenkreation getById(Long id);
 
-    public boolean delete(Long id);
+    public Eigenkreation getById(Long id, Nutzer kunde);
 
-    public boolean put(Long id, Eigenkreation eigenkreation);
+    public boolean delete(Long id, Nutzer kunde);
 
-    public boolean putZutat(Long id, int zutatnummer, Long neueZutatId);
+    public boolean put(Long id, Eigenkreation eigenkreation, Nutzer kunde);
+
+    public boolean putZutat(Long id, int zutatnummer, Long neueZutatId, Nutzer kunde);
 
     public boolean post(Long kreationId, Long anzahl, Nutzer nutzer);
 

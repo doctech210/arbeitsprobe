@@ -7,16 +7,16 @@ import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 
-public class KundeDTO {
+public class NutzerDTO {
     public Long id;
     public String name;
     public String passwort;
     public List<EigenkreationDTO> eigenkreationenDTO;
 
-    public KundeDTO() {
+    public NutzerDTO() {
     }
 
-    public KundeDTO(Long id, String name, String passwort, List<EigenkreationDTO> eigenkreationenDTO) {
+    public NutzerDTO(Long id, String name, String passwort, List<EigenkreationDTO> eigenkreationenDTO) {
         this.id = id;
         this.name = name;
         this.passwort = passwort;
@@ -25,22 +25,22 @@ public class KundeDTO {
 
     public static class Converter {
 
-        public static KundeDTO toDTO(Nutzer kunde) {
+        public static NutzerDTO toDTO(Nutzer nutzer) {
             List<EigenkreationDTO> eigenkreationenDTO = new ArrayList<>();
-            for(Eigenkreation eigenkreation : kunde.getEigenkreationen()) {
+            for(Eigenkreation eigenkreation : nutzer.getEigenkreationen()) {
                 eigenkreationenDTO.add(EigenkreationDTO.Converter.toDTO(eigenkreation));
             }
-            return new KundeDTO(kunde.getId(), kunde.getName(), kunde.getPasswort(), eigenkreationenDTO);
+            return new NutzerDTO(nutzer.getId(), nutzer.getName(), nutzer.getPasswort(), eigenkreationenDTO);
         }
 
-        public static Nutzer toKunde(KundeDTO kundeDTO) {
+        public static Nutzer toNutzer(NutzerDTO nutzerDTO) {
             List<Eigenkreation> eigenkreationen = new ArrayList<>();
-            for(EigenkreationDTO eigenkreationDTO : kundeDTO.eigenkreationenDTO) {
+            for(EigenkreationDTO eigenkreationDTO : nutzerDTO.eigenkreationenDTO) {
                 eigenkreationen.add(EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO));
             }
-            Nutzer kunde = new Nutzer(kundeDTO.name, kundeDTO.passwort, eigenkreationen);
-            kunde.setEigenkreationen(eigenkreationen);
-            return kunde;
+            Nutzer nutzer = new Nutzer(nutzerDTO.name, nutzerDTO.passwort, eigenkreationen);
+            nutzer.setEigenkreationen(eigenkreationen);
+            return nutzer;
         }
     }
 }

@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import de.hsos.swa.coldstoneicecreator.kunden.control.KundeControl;
+import de.hsos.swa.coldstoneicecreator.kunden.control.NutzerControl;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
 import io.quarkus.elytron.security.common.BcryptUtil;
 
 @ApplicationScoped
-public class KundeRepository implements KundeControl{
+public class NutzerRepository implements NutzerControl{
     
     @Override
     public boolean create(Nutzer kunde) {

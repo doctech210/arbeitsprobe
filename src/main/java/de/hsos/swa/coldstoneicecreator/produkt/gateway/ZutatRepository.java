@@ -73,7 +73,7 @@ public class ZutatRepository implements ZutatControl{
     }
 
     private void kreationenUpdaten(Zutat zutat){
-        kreationUpdate.fire(zutat);
+        kreationUpdate.fire(zutat); //geht in das Eigenkreations- und das HauskreationsRepository
     }
 
     public void zutatWechseln(@Observes ZutatenIdDAO zutatenwechselDAO) {

@@ -14,6 +14,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.SauceDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.SauceControl;
@@ -31,6 +34,10 @@ public class SauceResource {
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt alle Saucen zurueck",
+        description = "Gitb alle Saucen mit dem angegebenen Filter zurueck"
+    )
     public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
         List<Sauce> alle = sauceRepo.get();
         if(allergene != null){
@@ -46,7 +53,12 @@ public class SauceResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Erstellen einer neuen Sauce",
+        description = "Erstellen einer neuen Sauce"
+    )
     public Response post(SauceDTO sauceDTO) {
+        if(sauceDTO == null) return Response.status(Status.NOT_FOUND).build();
         Sauce sauce = SauceDTO.Converter.toSauce(sauceDTO);
         sauceRepo.create(sauce);
         return Response.ok().build();

@@ -22,6 +22,7 @@ public class Nutzer extends PanacheEntityBase{
     
     @Id @GeneratedValue(generator = "kunde_seq")
     private Long id;
+    //TODO: Name unique machen oder versuchen die "eingeloggterKunde" zu aendern
     private String name;
     private String passwort;
     private String role = "Kunde";

@@ -15,6 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
@@ -32,6 +35,10 @@ public class EisResource {
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt alle Eissorten zurueck",
+        description = "Gibt alle Eissorten ueber den eingestellten Filter zurueck"
+    )
     public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
         List<Eis> alle = eisRepo.get();
         if(allergene != null) {
@@ -47,7 +54,12 @@ public class EisResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Erstellen eine neue Eissorte",
+        description = "Erstellen einer neuen Eissorte"
+    )
     public Response post(EisDTO eisDTO) {
+        if(eisDTO == null) return Response.status(Status.NOT_FOUND).build();
         Eis eis = EisDTO.Converter.toEis(eisDTO);
         eisRepo.create(eis);
         return Response.ok().build();

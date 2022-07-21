@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -26,6 +27,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 import javax.annotation.security.RolesAllowed;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
 
 @RequestScoped
 @Path("/bestellungen/")
@@ -41,9 +44,19 @@ public class BestellungResource {
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt alle Bestellungen des Nutzers zurueck",
+        description = "Gibt alle Bestellungen des angemeldeten Nutzers zurueck"
+    )
     public Response get(@Context SecurityContext sec) {
         Nutzer kunde = this.eingeloggterKunde(sec);
-        List<Bestellung> alle = bestellungRepo.bestellungenAbfragen(kunde.getId());
+        if(kunde == null) Response.status(Status.NOT_FOUND).build();
+        List<Bestellung> alle = null;
+        if(kunde.getRole().equals("Admin")){
+            alle = bestellungRepo.bestellungenAbfragen();
+        }else{
+            alle = bestellungRepo.bestellungenAbfragen(kunde.getId());
+        }
         List<BestellungDTO> alleDTO = new ArrayList<>();
         for(Bestellung bestellung : alle) {
             alleDTO.add(BestellungDTO.Converter.toDTO(bestellung));
@@ -54,33 +67,58 @@ public class BestellungResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    public Response post(@Context SecurityContext sec/*, BestellungDTO bestellungDTO*/) {
-        /*Nutzer kunde = this.eingeloggterKunde(sec);
-        Bestellung bestellung = BestellungDTO.Converter.toBestellung(bestellungDTO);
-        bc.bestellungAnlegen(bestellung, kunde.getId());
-        return Response.ok(bestellung).build();
-        */
+    @Operation(
+        summary = "Schickt die aktuelle Bestellung ab",
+        description = "Schickt die aktuelle Bestellung des angemeldeten Nutzers ab"
+    )
+    public Response post(@Context SecurityContext sec) {
         Nutzer kunde = this.eingeloggterKunde(sec);
+        if(kunde == null) Response.status(Status.NOT_FOUND).build();
         Bestellung bestellung = this.offeneBestellung(kunde);
         if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
         bestellung.setBestellt(true);        
         BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
-        //TODO: hier als Event an den Bestellmechanismus schicken
         return Response.ok(bestellungDTO).build();
     }
 
+    @DELETE
+    @Transactional
+    @RolesAllowed("Kunde")
+    @Operation(
+        summary = "Loescht die aktuelle Bestellung",
+        description = "Loescht die aktuelle, nicht abgeschickte Bestellung des angemeldeten Nutzers"
+    )
+    public Response delete(@Context SecurityContext sec){
+        Nutzer kunde = this.eingeloggterKunde(sec);
+        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        Bestellung bestellung = this.offeneBestellung(kunde);
+        if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
+        bestellungRepo.bestellungLoeschen(bestellung.getId());
+        return Response.noContent().build();
+    }
+
+    /**
+     * 
+     * @param kunde
+     * @return
+     */
+    private Bestellung offeneBestellung(Nutzer kunde) {
+        for(Bestellung b : kunde.getBestellungen()){
+            if(!b.isBestellt()) return b;
+        } 
+        return null;
+    }
+
+    /**
+     * 
+     * @param sec
+     * @return
+     */
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
         Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
-    }
-
-    private Bestellung offeneBestellung(Nutzer kunde) {
-        for(Bestellung b : kunde.getBestellungen()){
-            if(!b.isBestellt()) return b;
-        } 
-        return null;
     }
 }

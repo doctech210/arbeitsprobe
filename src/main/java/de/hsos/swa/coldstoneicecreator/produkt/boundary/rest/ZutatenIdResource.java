@@ -14,6 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.ZutatControl;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
@@ -29,6 +31,10 @@ public class ZutatenIdResource {
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt eine bestimmte Zutat zurueck",
+        description = "Gibt eine bestimmte Zutat ueber die uebergebene ID zurueck"
+    )
     public Response get(@PathParam("id") Long id) {
         Zutat zutat = zutatRepo.getById(id);
         if(zutat != null) {
@@ -41,6 +47,10 @@ public class ZutatenIdResource {
     @PUT
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Aendern einer bestimmten Zutat",
+        description = "Aendern einer bestimmt Zutat ueber die uebergebene ID"
+    )
     public Response put(@PathParam("id") Long id, ZutatDTO zutatDTO) {
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
         zutatRepo.put(id, zutat);
@@ -50,8 +60,12 @@ public class ZutatenIdResource {
     @DELETE
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Loeschen einer bestimmten Zutat",
+        description = "Loeschen einer bestimmten Zutat ueber die uebergebene ID"
+    )
     public Response delete(@PathParam("id") Long id) {
         zutatRepo.delete(id);
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 }

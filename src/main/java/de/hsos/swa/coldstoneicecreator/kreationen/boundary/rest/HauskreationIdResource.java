@@ -1,5 +1,7 @@
 package de.hsos.swa.coldstoneicecreator.kreationen.boundary.rest;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
@@ -20,11 +22,18 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.HauskreationDTO;
+import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.HauskreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
-import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
+import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
+import de.hsos.swa.coldstoneicecreator.produkt.control.SauceControl;
+import de.hsos.swa.coldstoneicecreator.produkt.control.ZutatControl;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
 @RequestScoped
@@ -35,9 +44,22 @@ public class HauskreationIdResource {
     
     @Inject
     HauskreationControl hauskreationRepo;
+    
+    @Inject
+    EisControl eisRepo;
+
+    @Inject
+    ZutatControl zutatRepo;
+    
+    @Inject
+    SauceControl sauceRepo;
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt eine bestimmte Hauskreation zurueck",
+        description = "Gibt eine bestimmte Hauskreation mit der uebergebenen ID zurueck"
+    )
     public Response get(@PathParam("id") Long id) {
         Hauskreation hauskreation = hauskreationRepo.getById(id);
         if(hauskreation != null) {
@@ -50,8 +72,19 @@ public class HauskreationIdResource {
     @PUT
     @Transactional
     @RolesAllowed({"Admin"})
-    public Response put(@PathParam("id") Long id, HauskreationDTO hauskreationDTO) {
-        Hauskreation hauskreation = HauskreationDTO.Converter.toHauskreation(hauskreationDTO);
+    @Operation(
+        summary = "Aendern einer bestimmten Hauskreation",
+        description = "Aendern einer bestimmmten Hauskreation ueber die uebergebene ID"
+    )
+    public Response put(@PathParam("id") Long id, KreationIdDTO kreationIdDTO) {
+        Eis eissorte1 = eisRepo.getById(kreationIdDTO.eissorte1Id);
+        Eis eissorte2 = eisRepo.getById(kreationIdDTO.eissorte2Id);
+        List<Zutat> zutaten = new ArrayList<>();
+        for(Long zutatId : kreationIdDTO.zutatenId) {
+            zutaten.add(zutatRepo.getById(zutatId));
+        }
+        Sauce sauce = sauceRepo.getById(kreationIdDTO.sauceId);
+        Hauskreation hauskreation = new Hauskreation(null, eissorte1, eissorte2, zutaten, sauce, kreationIdDTO.name);
         hauskreationRepo.put(id, hauskreation);
         return Response.ok().build();
     }
@@ -59,9 +92,13 @@ public class HauskreationIdResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    public Response post(@PathParam("id") Long id, @Context SecurityContext sec, Long anzahl) {
+    @Operation(
+        summary = "Fuegt eine bestimmte Hauskreation der Bestellung hinzu",
+        description = "Fuegt eine bestimmte Hauskreation über die uerbergebenen ID der aktuellen Bestellung hinzu"
+    )
+    public Response post(@Context SecurityContext sec, @PathParam("id") Long id, Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
+        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         Hauskreation hauskreation = hauskreationRepo.getById(id);
         hauskreationRepo.create(kunde, hauskreation, anzahl);
         return Response.ok().build();
@@ -70,21 +107,20 @@ public class HauskreationIdResource {
     @DELETE
     @Transactional
     @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Loeschen einer bestimmten Hauskreation",
+        description = "Loeschen einer bestimmten Hauskreation ueber die uebergebene ID"
+    )
     public Response delete(@PathParam("id") Long id) {
         hauskreationRepo.delete(id);
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
-    @PUT
-    @Transactional
-    @RolesAllowed({"Admin"})
-    @Path("/zutaten/{zutatnummer:\\d+}")
-    public Response putZutaten(@PathParam("id") Long id, @PathParam("zutatnummer") int zutatnummer, ZutatDTO zutatDTO) {
-        Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
-        hauskreationRepo.putZutat(id, --zutatnummer, zutat);
-        return Response.ok().build();
-    }
-
+    /**
+     * 
+     * @param sec
+     * @return
+     */
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
@@ -92,11 +128,4 @@ public class HauskreationIdResource {
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }
-
-    /*private Bestellung offeneBestellung(Nutzer kunde) {
-        for(Bestellung b : kunde.getBestellungen()){
-            if(!b.isBestellt()) return b;
-        } 
-        return null;
-    }*/
 }

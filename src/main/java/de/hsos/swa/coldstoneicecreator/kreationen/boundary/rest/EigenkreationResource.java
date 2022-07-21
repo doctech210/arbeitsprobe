@@ -20,6 +20,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
@@ -50,8 +52,13 @@ public class EigenkreationResource {
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Gibt alle Eigenkreationen des Nutzer zurueck",
+        description = "Gibt alle Eigenkreationen des angemeldeten Nutzers mit dem eingestellten Filter zurueck"
+    )
     public Response get(@QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
         Nutzer kunde = this.eingeloggterKunde(sec);
+        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         List<Eigenkreation> alle = kunde.getEigenkreationen();
         if(allergene != null) alle = eigenkreationRepo.getOhneAllergene(allergene);
         List<EigenkreationDTO> alleDTO = new ArrayList<>();
@@ -64,7 +71,14 @@ public class EigenkreationResource {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
+    @Operation(
+        summary = "Erstellt eine neue Eigenkreation",
+        description = "Erstellt eine neue Eigenkreation für einen angemeldeten Nutzer und fuegt sie automatisch " +
+                        "der aktuellen Bestellung hinzu"
+    )
     public Response post(@Context SecurityContext sec, KreationIdDTO eigenkreationIds) {
+        Nutzer kunde = this.eingeloggterKunde(sec);
+        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         Eis eissorte1 = eisRepo.getById(eigenkreationIds.eissorte1Id);
         Eis eissorte2 = eisRepo.getById(eigenkreationIds.eissorte2Id);
         Sauce sauce = sauceRepo.getById(eigenkreationIds.sauceId);
@@ -73,9 +87,7 @@ public class EigenkreationResource {
             zutaten.add(ZutatRepo.getById(id));
         }
         Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, eigenkreationIds.name);
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.BAD_REQUEST).build();
-        eigenkreationRepo.create(kunde, eigenkreation, Long.valueOf(eigenkreationIds.anzahl));
+        eigenkreationRepo.create(kunde, eigenkreation, eigenkreationIds.anzahl);
         return Response.ok().build();
     }
 

@@ -31,8 +31,8 @@ public class HauskreationRepository implements HauskreationControl{
     }
 
     @Override
-    public boolean create(Nutzer kunde, Hauskreation eigenkreation, Long anzahl) {
-        this.neueHauskreation.fire(new KreationDAO(kunde, eigenkreation, anzahl, false));
+    public boolean create(Nutzer kunde, Hauskreation hauskreation, Long anzahl) {
+        this.neueHauskreation.fire(new KreationDAO(kunde, hauskreation, anzahl, false));  //geht an BestellungRepository
         return true;
     }
 
@@ -95,17 +95,6 @@ public class HauskreationRepository implements HauskreationControl{
             geaendert = true;
         }
         return geaendert;
-    }
-
-    @Override
-    public boolean putZutat(Long id, int zutatnummer, Zutat zutat) {
-        Hauskreation alteHauskreation = Hauskreation.findById(id);
-        List<Zutat> zutaten = alteHauskreation.getZutaten();
-        Zutat alteZutat = zutaten.get(zutatnummer);
-        alteZutat.setName(zutat.getName());
-        alteZutat.setPremium(zutat.isPremium());
-        alteZutat.setAllergene(zutat.getAllergene());
-        return true;
     }
 
     public void eisUpdate(@Observes Eis neuesEis) {

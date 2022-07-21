@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
@@ -28,10 +29,11 @@ public class EigenkreationRepository implements EigenkreationControl{
 
     @Override
     public boolean create(Nutzer kunde, Eigenkreation eigenkreation, Long anzahl) {
+        if(eigenkreation == null) return false;
         eigenkreation.setId(null);
         eigenkreation.persist();
         kunde.addEigenkreation(eigenkreation);
-        this.neueEigenkreation.fire(new KreationDAO(kunde, eigenkreation, anzahl, true));
+        this.neueEigenkreation.fire(new KreationDAO(kunde, eigenkreation, anzahl, true)); //geht an BestellungRepository
         return true;
     }
 
@@ -39,20 +41,39 @@ public class EigenkreationRepository implements EigenkreationControl{
     public List<Eigenkreation> get() {
         return Eigenkreation.listAll();
     }
+
     @Override
     public Eigenkreation getById(Long id) {
         return Eigenkreation.findById(id);
     }
 
     @Override
-    public boolean delete(Long id) {
-        return Eigenkreation.deleteById(id);
+    public Eigenkreation getById(Long id, Nutzer kunde) {
+        List<Eigenkreation> eigenkreationen = kunde.getEigenkreationen();
+        for(Eigenkreation eigenkreation : eigenkreationen) {
+            if(Long.compare(eigenkreation.getId(), id) == 0) return eigenkreation;
+        }
+        return null;
     }
 
     @Override
-    public boolean put(Long id, Eigenkreation eigenkreation) {
-        Eigenkreation alteEigenkreation = Eigenkreation.findById(id);
+    public boolean delete(Long id, Nutzer kunde) {
+        List<Eigenkreation> eigenkreationen = kunde.getEigenkreationen();
+        for(Eigenkreation ek : eigenkreationen) {
+            if(Long.compare(ek.getId(), id) == 0) ek.delete(); return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean put(Long id, Eigenkreation eigenkreation, Nutzer kunde) {
         boolean geaendert = false;
+        Eigenkreation alteEigenkreation = null;
+        List<Eigenkreation> eigenkreationen = kunde.getEigenkreationen();
+        for(Eigenkreation ek : eigenkreationen) {
+            if(Long.compare(ek.getId(), id) == 0) alteEigenkreation =  ek;
+        }
+        if(alteEigenkreation == null) return geaendert;
         Eis neuesEis = eigenkreation.getEissorte();
         if(neuesEis != null) {
             alteEigenkreation.setEissorte(neuesEis);
@@ -77,14 +98,20 @@ public class EigenkreationRepository implements EigenkreationControl{
     }
     
     @Override
-    public boolean putZutat(Long id, int zutatnummer, Long neueZutatId) {
-        Eigenkreation eigenkreation = Eigenkreation.findById(id);
+    public boolean putZutat(Long id, int zutatnummer, Long neueZutatId, Nutzer kunde) {
+        boolean geaendert = false;
+        Eigenkreation eigenkreation = null;
+        List<Eigenkreation> eigenkreationen = kunde.getEigenkreationen();
+        for(Eigenkreation ek : eigenkreationen) {
+            if(Long.compare(ek.getId(), id) == 0) eigenkreation =  ek;
+        }
+        if(eigenkreation == null) return geaendert;
         List<Zutat> zutaten = eigenkreation.getZutaten();
         zutaten.remove(zutatnummer);
-        //TODO: Zutat und neue Zutat an ZutatRepository wechseln
         ZutatenIdDAO zutatenIdDAO = new ZutatenIdDAO(neueZutatId, eigenkreation);
-        zutatWechseln.fire(zutatenIdDAO);
-        return true;
+        zutatWechseln.fire(zutatenIdDAO); //geht an das ZutatenRepository
+        geaendert = true;
+        return geaendert;
     }
 
     @Override
@@ -113,5 +140,34 @@ public class EigenkreationRepository implements EigenkreationControl{
             eigenkreationen.removeIf(zutat -> zutat.getAllergene().contains(allergen));
         }
         return eigenkreationen;
+    }
+
+    public void eisUpdate(@Observes Eis neuesEis) {
+        List<Eigenkreation> eigenkreationen = Eigenkreation.listAll();
+        for(Eigenkreation eigenkreation : eigenkreationen) {
+            if(Long.compare(eigenkreation.getEissorte().getId(), neuesEis.getId()) == 0 || Long.compare(eigenkreation.getEissorte2().getId(), neuesEis.getId()) == 0){
+                eigenkreation.checkAllergene();
+            }
+        }
+    }
+
+    public void sauceUpdate(@Observes Sauce neueSauce) {
+        List<Eigenkreation> eigenkreationen = Eigenkreation.listAll();
+        for(Eigenkreation eigenkreation : eigenkreationen) {
+            if(Long.compare(eigenkreation.getSauce().getId(), neueSauce.getId()) == 0){
+                eigenkreation.checkAllergene();
+            }
+        }
+    }
+
+    public void eisUpdate(@Observes Zutat neueZutat) {
+        List<Eigenkreation> eigenkreationen = Eigenkreation.listAll();
+        for(Eigenkreation eigenkreation : eigenkreationen) {
+            for(Zutat zutat : eigenkreation.getZutaten()) {
+                if(Long.compare(zutat.getId(), neueZutat.getId()) == 0){
+                    eigenkreation.checkAllergene();
+                }
+            }
+        }
     }
 }
