@@ -4,6 +4,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Status;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -36,7 +38,7 @@ public class NutzerIdResource {
         summary = "Gibt einen bestimmten Nutzer zurueck",
         description = "Gibt einen bestimmten Nutzer ueber die uebergebenen ID zurueck"
     )
-    public Response get(@PathParam("id") Long id) {
+    public Response get(@NotNull @PathParam("id") Long id) {
         Nutzer nutzer = nutzerRepo.getById(id);
         if(nutzer != null) { 
             NutzerDTO nutzerDTO = NutzerDTO.Converter.toDTO(nutzer);
@@ -52,7 +54,7 @@ public class NutzerIdResource {
         summary = "Aendern eines bestimmten Nutzers",
         description = "Returns all orders saved in the database"
     )
-    public Response put(@PathParam("id") Long id, NutzerImportDTO kundeImportDTO) {
+    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull NutzerImportDTO kundeImportDTO) {
         Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(kundeImportDTO);
         nutzerRepo.put(id, nutzer);
         return Response.ok().build();
@@ -65,7 +67,7 @@ public class NutzerIdResource {
         summary = "Loescht einen bestimmten Nutzer",
         description = "Loescht einen bestimmten Nutzer ueber die uebergebene ID"
     )
-    public Response delete(@PathParam("id") Long id) {
+    public Response delete(@NotNull @PathParam("id") Long id) {
         nutzerRepo.delete(id);
         return Response.noContent().build();
     }

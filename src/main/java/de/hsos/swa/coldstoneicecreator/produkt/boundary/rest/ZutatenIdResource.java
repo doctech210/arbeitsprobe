@@ -4,6 +4,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Status;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,7 +37,7 @@ public class ZutatenIdResource {
         summary = "Gibt eine bestimmte Zutat zurueck",
         description = "Gibt eine bestimmte Zutat ueber die uebergebene ID zurueck"
     )
-    public Response get(@PathParam("id") Long id) {
+    public Response get(@NotNull @PathParam("id") Long id) {
         Zutat zutat = zutatRepo.getById(id);
         if(zutat != null) {
             ZutatDTO zutatDTO = ZutatDTO.Converter.toDTO(zutat);
@@ -51,7 +53,7 @@ public class ZutatenIdResource {
         summary = "Aendern einer bestimmten Zutat",
         description = "Aendern einer bestimmt Zutat ueber die uebergebene ID"
     )
-    public Response put(@PathParam("id") Long id, ZutatDTO zutatDTO) {
+    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull ZutatDTO zutatDTO) {
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
         zutatRepo.put(id, zutat);
         return Response.ok().build();
@@ -64,7 +66,7 @@ public class ZutatenIdResource {
         summary = "Loeschen einer bestimmten Zutat",
         description = "Loeschen einer bestimmten Zutat ueber die uebergebene ID"
     )
-    public Response delete(@PathParam("id") Long id) {
+    public Response delete(@NotNull @PathParam("id") Long id) {
         zutatRepo.delete(id);
         return Response.noContent().build();
     }

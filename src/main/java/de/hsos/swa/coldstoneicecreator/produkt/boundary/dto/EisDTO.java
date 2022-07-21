@@ -22,10 +22,12 @@ public class EisDTO {
     public static class Converter{
 
         public static EisDTO toDTO(Eis eis){
+            if(eis == null) return null;
             return new EisDTO(eis.getId(), eis.getName(), eis.getAllergene());
         }
 
         public static Eis toEis(EisDTO eisDTO){
+            if(eisDTO == null) return null;
             return new Eis(eisDTO.id, eisDTO.name, eisDTO.allergene);
         }
     }    

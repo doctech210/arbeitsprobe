@@ -6,6 +6,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -53,7 +55,7 @@ public class HauskreationResource {
         summary = "Gibt alle Hauskreationen zurueck",
         description = "Gibt alle Hauskreationen mit dem angegebenen Filter zurueck"
     )
-    public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
+    public Response get(@Valid @QueryParam("Allergene") List<Allergene> allergene) {
         List<Hauskreation> alle = hauskreationRepo.get();
         if(allergene != null) {
             alle = hauskreationRepo.getOhneAllergene(allergene);
@@ -72,7 +74,7 @@ public class HauskreationResource {
         summary = "Erstellt eine neue Hauskreation",
         description = "Erstellt eine neue Hauskreation"
     )
-    public Response post(KreationIdDTO kreationIds) {
+    public Response post(@Valid @NotNull KreationIdDTO kreationIds) {
         Eis eissorte1 = eisRepo.getById(kreationIds.eissorte1Id);
         Eis eissorte2 = eisRepo.getById(kreationIds.eissorte2Id);
         Sauce sauce = sauceRepo.getById(kreationIds.sauceId);

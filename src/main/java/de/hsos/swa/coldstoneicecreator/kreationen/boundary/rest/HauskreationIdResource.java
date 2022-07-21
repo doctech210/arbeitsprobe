@@ -8,6 +8,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -60,7 +62,7 @@ public class HauskreationIdResource {
         summary = "Gibt eine bestimmte Hauskreation zurueck",
         description = "Gibt eine bestimmte Hauskreation mit der uebergebenen ID zurueck"
     )
-    public Response get(@PathParam("id") Long id) {
+    public Response get(@NotNull @PathParam("id") Long id) {
         Hauskreation hauskreation = hauskreationRepo.getById(id);
         if(hauskreation != null) {
             HauskreationDTO hauskreationDTO = HauskreationDTO.Converter.toDTO(hauskreation);
@@ -76,7 +78,7 @@ public class HauskreationIdResource {
         summary = "Aendern einer bestimmten Hauskreation",
         description = "Aendern einer bestimmmten Hauskreation ueber die uebergebene ID"
     )
-    public Response put(@PathParam("id") Long id, KreationIdDTO kreationIdDTO) {
+    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull KreationIdDTO kreationIdDTO) {
         Eis eissorte1 = eisRepo.getById(kreationIdDTO.eissorte1Id);
         Eis eissorte2 = eisRepo.getById(kreationIdDTO.eissorte2Id);
         List<Zutat> zutaten = new ArrayList<>();
@@ -96,7 +98,7 @@ public class HauskreationIdResource {
         summary = "Fuegt eine bestimmte Hauskreation der Bestellung hinzu",
         description = "Fuegt eine bestimmte Hauskreation über die uerbergebenen ID der aktuellen Bestellung hinzu"
     )
-    public Response post(@Context SecurityContext sec, @PathParam("id") Long id, Long anzahl) {
+    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         Hauskreation hauskreation = hauskreationRepo.getById(id);
@@ -111,7 +113,7 @@ public class HauskreationIdResource {
         summary = "Loeschen einer bestimmten Hauskreation",
         description = "Loeschen einer bestimmten Hauskreation ueber die uebergebene ID"
     )
-    public Response delete(@PathParam("id") Long id) {
+    public Response delete(@NotNull @PathParam("id") Long id) {
         hauskreationRepo.delete(id);
         return Response.noContent().build();
     }

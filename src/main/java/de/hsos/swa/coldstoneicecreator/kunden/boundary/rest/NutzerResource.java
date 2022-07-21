@@ -7,6 +7,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -53,7 +55,7 @@ public class NutzerResource {
         summary = "Erstellt einen neuen Nutzer",
         description = "Erstellt einen neuen Nutzer"
     )
-    public Response post(NutzerImportDTO nutzerImportDTO) {
+    public Response post(@Valid @NotNull NutzerImportDTO nutzerImportDTO) {
         Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(nutzerImportDTO);
         nutzerRepo.create(nutzer);
         return Response.ok().build();

@@ -4,6 +4,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -36,7 +38,7 @@ public class EisIdResource {
         summary = "Gibt eine bestimmte Eissorte zurueck",
         description = "Gibt eine bestimmte Eissorte ueber die uebergebene ID zureuck"
     )
-    public Response get(@PathParam("id") Long id) {
+    public Response get(@NotNull @PathParam("id") Long id) {
         Eis eis = eisRepo.getById(id);
         if(eis != null) {
             EisDTO eisDTO = EisDTO.Converter.toDTO(eis);
@@ -52,7 +54,7 @@ public class EisIdResource {
         summary = "Aendern einer bestimmten Eissorte",
         description = "Aendern einer bestimmten Eissorte ueber die uebergebene ID"
     )
-    public Response put(@PathParam("id") Long id, EisDTO eisDTO) {
+    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull EisDTO eisDTO) {
         Eis eis = EisDTO.Converter.toEis(eisDTO);
         eisRepo.put(id, eis);
         return Response.ok().build();
@@ -65,7 +67,7 @@ public class EisIdResource {
         summary = "Loeschen einer bestimmten Eissorte",
         description = "Loeschen einer bestimmten Eissorte ueber die uebergebene ID"
     )
-    public Response delete(@PathParam("id") Long id) {
+    public Response delete(@NotNull @PathParam("id") Long id) {
         eisRepo.delete(id);
         return Response.noContent().build();
     }

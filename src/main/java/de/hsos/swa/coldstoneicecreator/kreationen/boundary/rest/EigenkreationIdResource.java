@@ -8,6 +8,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -60,7 +62,7 @@ public class EigenkreationIdResource {
         summary = "Gibt eine bestimmte Eigenkreation zurueck",
         description = "Gibt eine bestimmte Eigenkreation des angemeldeten Nutzer ueber die uebergebene ID zurueck"
     )
-    public Response get(@Context SecurityContext sec, @PathParam("id") Long id) {
+    public Response get(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         Eigenkreation eigenkreation = null;
@@ -83,7 +85,7 @@ public class EigenkreationIdResource {
         summary = "Aendern einer bestimmten Eigenkreation",
         description = "Aendert eine bestimmte Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
-    public Response put(@Context SecurityContext sec, @PathParam("id") Long id, KreationIdDTO kreationIdDTO) {
+    public Response put(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @Valid KreationIdDTO kreationIdDTO) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         Eis eissorte1 = eisRepo.getById(kreationIdDTO.eissorte1Id);
@@ -106,7 +108,7 @@ public class EigenkreationIdResource {
         description = "Fuegt eine bereits existierende Eigenkreation ueber die uerbergebene ID, " + 
                         "eines angemeldeten Nutzers, der aktuellen Bestellung hinzu"
     )
-    public Response post(@Context SecurityContext sec, @PathParam("id") Long id, Long anzahl) {
+    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         eigenkreationRepo.post(id, anzahl, kunde);
@@ -121,7 +123,7 @@ public class EigenkreationIdResource {
         summary = "Aendern einer Zutat einer bestimmten Eigenkreation",
         description = "Aendern einer Zutaten einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
-    public Response putZutaten(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("zutatnummer") int zutatnummer, Long neueZutatId) {
+    public Response putZutaten(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("zutatnummer") int zutatnummer, @NotNull Long neueZutatId) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         eigenkreationRepo.putZutat(id, --zutatnummer, neueZutatId, kunde);
@@ -135,13 +137,18 @@ public class EigenkreationIdResource {
         summary = "Loeschen einer bestimmten Eigenkreation",
         description = "Loeschen einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
-    public Response delete(@Context SecurityContext sec, @PathParam("id") Long id) {
+    public Response delete(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         eigenkreationRepo.delete(id, kunde);
         return Response.ok().build();
     }
 
+    /**
+     * 
+     * @param sec
+     * @return
+     */
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;

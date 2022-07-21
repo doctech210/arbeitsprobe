@@ -11,7 +11,7 @@ import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
-public class HauskreationDTO implements KreationDTO{
+public class HauskreationDTO{
     
     public Long id;
     public EisDTO eissorte;
@@ -38,6 +38,7 @@ public class HauskreationDTO implements KreationDTO{
     public static class Converter{
 
         public static HauskreationDTO toDTO(Hauskreation hauskreation) {
+            if(hauskreation == null) return null;
             List<ZutatDTO> liste = new ArrayList<>();
             for(Zutat zutat : hauskreation.getZutaten()) {
                 liste.add(ZutatDTO.Converter.toDTO(zutat));
@@ -48,6 +49,7 @@ public class HauskreationDTO implements KreationDTO{
         }
 
         public static Hauskreation toHauskreation(HauskreationDTO hauskreationDTO) {
+            if(hauskreationDTO == null) return null;
             List<Zutat> liste = new ArrayList<>();
             for(ZutatDTO zutatDTO : hauskreationDTO.zutaten) {
                 liste.add(ZutatDTO.Converter.toZutat(zutatDTO));

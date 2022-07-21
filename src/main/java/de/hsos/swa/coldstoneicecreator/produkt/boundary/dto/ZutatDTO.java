@@ -24,10 +24,12 @@ public class ZutatDTO {
     public static class Converter{
 
         public static ZutatDTO toDTO(Zutat zutat) {
+            if(zutat == null) return null;
             return new ZutatDTO(zutat.getId(), zutat.getName(), zutat.isPremium(), zutat.getAllergene());
         }
 
         public static Zutat toZutat(ZutatDTO zutatDTO) {
+            if(zutatDTO == null) return null;
             return new Zutat(zutatDTO.id, zutatDTO.name, zutatDTO.premium, zutatDTO.allergene);
         }
     }

@@ -20,6 +20,7 @@ public class NutzerExportDTO {
     public static class Converter {
 
         public static NutzerExportDTO toDTO(Nutzer nutzer){
+            if(nutzer == null) return null;
             return new NutzerExportDTO(nutzer.getId(), nutzer.getName(), nutzer.getRole());
         }
 

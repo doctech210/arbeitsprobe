@@ -6,6 +6,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,7 +41,7 @@ public class ZutatenResource {
         summary = "Gibt alle Zutaten zureuck",
         description = "Gibt alle Zutaten mit dem eingegebenen Filter zurueck"
     )
-    public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
+    public Response get(@Valid @QueryParam("Allergene") List<Allergene> allergene) {
         List<Zutat> alle = zutatRepo.get();
         if(allergene != null) {
             alle = zutatRepo.getOhneAllergene(allergene);
@@ -58,7 +60,7 @@ public class ZutatenResource {
         summary = "Erstellen einer neuen Zutat",
         description = "Erstellen einer neuen Zutat"
     )
-    public Response post(ZutatDTO zutatDTO) {
+    public Response post(@Valid @NotNull ZutatDTO zutatDTO) {
         if(zutatDTO == null) return Response.status(Status.NOT_FOUND).build();
         Zutat zutat = ZutatDTO.Converter.toZutat(zutatDTO);
         zutatRepo.create(zutat); 

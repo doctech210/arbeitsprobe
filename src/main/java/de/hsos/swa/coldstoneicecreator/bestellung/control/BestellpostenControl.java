@@ -12,4 +12,8 @@ public interface BestellpostenControl {
     public boolean postenAendernEigen(Long bestellId, Long postenId, Long anzahl);
     
     public boolean postenAendernHaus(Long bestellId, Long postenId, Long anzahl);
+
+    public boolean postenLoeschenEigen(Long postenId);
+
+    public boolean postenLoeschenHaus(Long postenId);
 }

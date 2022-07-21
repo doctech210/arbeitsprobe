@@ -7,6 +7,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,7 +41,7 @@ public class EisResource {
         summary = "Gibt alle Eissorten zurueck",
         description = "Gibt alle Eissorten ueber den eingestellten Filter zurueck"
     )
-    public Response get(@QueryParam("Allergene") List<Allergene> allergene) {
+    public Response get(@Valid @QueryParam("Allergene") List<Allergene> allergene) {
         List<Eis> alle = eisRepo.get();
         if(allergene != null) {
             alle = eisRepo.getOhneAllergene(allergene);
@@ -58,7 +60,7 @@ public class EisResource {
         summary = "Erstellen eine neue Eissorte",
         description = "Erstellen einer neuen Eissorte"
     )
-    public Response post(EisDTO eisDTO) {
+    public Response post(@Valid @NotNull EisDTO eisDTO) {
         if(eisDTO == null) return Response.status(Status.NOT_FOUND).build();
         Eis eis = EisDTO.Converter.toEis(eisDTO);
         eisRepo.create(eis);

@@ -22,10 +22,12 @@ public class SauceDTO {
     public static class Converter{
 
         public static SauceDTO toDTO(Sauce sauce){
+            if(sauce == null) return null;
             return new SauceDTO(sauce.getId(), sauce.getName(), sauce.getAllergene());
         }
 
         public static Sauce toSauce(SauceDTO sauceDTO){
+            if(sauceDTO == null) return null;
             return new Sauce(sauceDTO.id, sauceDTO.name, sauceDTO.allergene);
         }
     }

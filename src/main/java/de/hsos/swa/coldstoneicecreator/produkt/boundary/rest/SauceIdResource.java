@@ -5,6 +5,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Status;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -36,7 +38,7 @@ public class SauceIdResource {
         summary = "Gibt eine bestimmte Sauce zurueck",
         description = "Gibt eine bestimmte Sauce ueber die uebergebene ID zurueck"
     )
-    public Response get(@PathParam("id") Long id) {
+    public Response get(@NotNull @PathParam("id") Long id) {
         Sauce sauce = sauceRepo.getById(id);
         if(sauce != null) {
             SauceDTO sauceDTO = SauceDTO.Converter.toDTO(sauce);
@@ -52,7 +54,7 @@ public class SauceIdResource {
         summary = "Aendern einer bestimmten Sauce",
         description = "Aendern einer bestimmte Sauce ueber die uebergebene ID"
     )
-    public Response put(@PathParam("id") Long id, SauceDTO sauceDTO) {
+    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull SauceDTO sauceDTO) {
         Sauce sauce = SauceDTO.Converter.toSauce(sauceDTO);
         sauceRepo.put(id, sauce);
         return Response.ok().build();
@@ -65,7 +67,7 @@ public class SauceIdResource {
         summary = "Loeschen einer bestimmten Sauce",
         description = "Loeschen einer bestimmten Sauce ueber die uebergebene ID"
     )
-    public Response delete(@PathParam("id") Long id) {
+    public Response delete(@NotNull @PathParam("id") Long id) {
         sauceRepo.delete(id);
         return Response.noContent().build();
     }

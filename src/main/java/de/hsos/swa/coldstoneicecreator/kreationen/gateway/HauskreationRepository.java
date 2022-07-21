@@ -125,5 +125,4 @@ public class HauskreationRepository implements HauskreationControl{
             }
         }
     }
-
 }

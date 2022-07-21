@@ -21,11 +21,13 @@ public class BestellpostenEigenDTO {
     public static class Converter {
 
         public static BestellpostenEigenDTO toDTO(BestellpostenEigen bestellpostenEigen) {
+            if(bestellpostenEigen == null) return null;
             EigenkreationDTO eigenkreationDTO= EigenkreationDTO.Converter.toDTO((Eigenkreation)bestellpostenEigen.getEigenkreation());      
             return new BestellpostenEigenDTO(bestellpostenEigen.getId(), eigenkreationDTO, bestellpostenEigen.getAnzahl());
         }
 
         public static BestellpostenEigen toBestellposten(BestellpostenEigenDTO bestellpostenEigenDTO) {
+            if(bestellpostenEigenDTO == null) return null;
             Eigenkreation eigenkreation = EigenkreationDTO.Converter.toEigenkreation(bestellpostenEigenDTO.eigenkreationDTO);
             return new BestellpostenEigen(bestellpostenEigenDTO.id, eigenkreation, bestellpostenEigenDTO.anzahl);
         }

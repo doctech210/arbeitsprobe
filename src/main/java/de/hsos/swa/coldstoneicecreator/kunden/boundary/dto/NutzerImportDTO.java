@@ -18,11 +18,8 @@ public class NutzerImportDTO {
 
     public static class Converter {
 
-        /*public static toDTO(Kunde kunde){
-            return new KundeImportDTO(kunde.getId(), kunde.getName(), kunde.getPasswort())
-        }*/
-
         public static Nutzer toNutzer(NutzerImportDTO nutzerImportDTO) {
+            if(nutzerImportDTO == null) return null;
             return new Nutzer(nutzerImportDTO.name, nutzerImportDTO.passwort, null);
         }
     }

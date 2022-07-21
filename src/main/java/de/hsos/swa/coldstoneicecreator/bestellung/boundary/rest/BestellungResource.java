@@ -15,6 +15,7 @@ import java.security.Principal;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -102,7 +103,7 @@ public class BestellungResource {
      * @param kunde
      * @return
      */
-    private Bestellung offeneBestellung(Nutzer kunde) {
+    private Bestellung offeneBestellung(@NotNull Nutzer kunde) {
         for(Bestellung b : kunde.getBestellungen()){
             if(!b.isBestellt()) return b;
         } 

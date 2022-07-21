@@ -82,11 +82,11 @@ public class BestellpostenRepository implements BestellpostenControl {
         return false;
     }
 
-    private boolean postenLoeschenEigen(Long postenId) {
+    public boolean postenLoeschenEigen(Long postenId) {
         return BestellpostenEigen.deleteById(postenId);
     }
 
-    private boolean postenLoeschenHaus(Long postenId) {
+    public boolean postenLoeschenHaus(Long postenId) {
         return BestellpostenHaus.deleteById(postenId);
     }
     

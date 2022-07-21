@@ -13,6 +13,7 @@ import java.security.Principal;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -65,12 +66,12 @@ public class BestellungIdResource {
     @PUT
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    @Path("/{postenId:\\d+}/eigenkreationen")
+    @Path("/eigenposten/{eigenpostenId:\\d+}")
     @Operation(
         summary = "Aendert die Anzahl einer bestimmten Eigenkreation",
         description = "Aendert die Anzahl einer Eigenkreation mit der uebergebenen ID in der Bestellung"
     )
-    public Response putEigen(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("postenId") Long postenId, Long anzahl){
+    public Response putEigen(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("eigenpostenId") Long postenId, @NotNull Long anzahl){
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) Response.status(Status.NOT_FOUND).build();
         Bestellung bestellung = null;
@@ -87,14 +88,14 @@ public class BestellungIdResource {
     @PUT
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    @Path("/{postenId:\\d+}/hauskreationen")
+    @Path("/hausposten/{hauspostenId:\\d+}")
     @Operation(
         summary = "Aendert die Anzahl einer bestimmten Hauskreation",
         description = "Aendert die Anzahl einer Hauskreation mit der uebergebenen ID in der Bestellung"
     )
-    public Response putHaus(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("postenId") Long postenId, Long anzahl){
+    public Response putHaus(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("hauspostenId") Long postenId, @NotNull Long anzahl){
         Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) Response.status(Status.NOT_FOUND).build();
+        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         Bestellung bestellung = null;
         if(kunde.getRole().equals("Admin")){
             bestellung = bestellungRepo.bestellungAbfragen(id);
@@ -109,28 +110,52 @@ public class BestellungIdResource {
     @DELETE
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
+    @Path("/hausposten/{postenId:\\d+}")
     @Operation(
-        summary = "Loeschen eines bestimmten Bestellposten aus der Bestellung",
-        description = "Loeschen des Bestellposten mit der uebergebenen ID aus der Bestellung"
+        summary = "Loeschen eines bestimmten Hausbestellposten aus der Bestellung",
+        description = "Loeschen des Hausbestellposten mit der uebergebenen ID aus der Bestellung"
     )
-    public Response delete(@Context SecurityContext sec, @PathParam("id") Long id){
-        //TODO: aendern zu postenLoeschen
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) Response.status(Status.NOT_FOUND).build();
-        if(kunde.getRole().equals("Admin")){
-            bestellungRepo.bestellungLoeschen(id);
-        }else{
-            bestellungRepo.bestellungLoeschen(id, kunde.getId());
-        }
+    public Response deleteHauskreation(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("postenId") Long postenId){
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        Bestellung bestellung = this.offeneBestellung(nutzer);
+        if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
+        bestellpostenRepo.postenLoeschenHaus(postenId);
+        bestellung.removePostenHaus(postenId);
         return Response.noContent().build();
     }
+
+    @DELETE
+    @Transactional
+    @RolesAllowed({"Admin", "Kunde"})
+    @Path("/eigenposten/{postenId:\\d+}")
+    @Operation(
+        summary = "Loeschen eines bestimmten Eigenbestellposten aus der Bestellung",
+        description = "Loeschen des Eigenbestellposten mit der uebergebenen ID aus der Bestellung"
+    )
+    public Response deleteEigenkreation(@Context SecurityContext sec, @PathParam("id") Long id, @PathParam("postenId") Long postenId){
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        Bestellung bestellung = this.offeneBestellung(nutzer);
+        if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
+        bestellpostenRepo.postenLoeschenEigen(postenId);
+        bestellung.removePostenEigen(postenId);
+        return Response.noContent().build();
+    }
+
+    private Bestellung offeneBestellung(@NotNull Nutzer nutzer) {
+            for(Bestellung b : nutzer.getBestellungen()){
+                if(!b.isBestellt()) return b;
+            } 
+            return null;
+        }
 
     /**
      * 
      * @param sec
      * @return
      */
-    private Nutzer eingeloggterKunde(SecurityContext sec) {
+    private Nutzer eingeloggterKunde(@NotNull SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
         Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();

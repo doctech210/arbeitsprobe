@@ -26,6 +26,7 @@ public class NutzerDTO {
     public static class Converter {
 
         public static NutzerDTO toDTO(Nutzer nutzer) {
+            if(nutzer == null) return null;
             List<EigenkreationDTO> eigenkreationenDTO = new ArrayList<>();
             for(Eigenkreation eigenkreation : nutzer.getEigenkreationen()) {
                 eigenkreationenDTO.add(EigenkreationDTO.Converter.toDTO(eigenkreation));
@@ -34,6 +35,7 @@ public class NutzerDTO {
         }
 
         public static Nutzer toNutzer(NutzerDTO nutzerDTO) {
+            if(nutzerDTO == null) return null;
             List<Eigenkreation> eigenkreationen = new ArrayList<>();
             for(EigenkreationDTO eigenkreationDTO : nutzerDTO.eigenkreationenDTO) {
                 eigenkreationen.add(EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO));

@@ -8,6 +8,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -56,7 +58,7 @@ public class EigenkreationResource {
         summary = "Gibt alle Eigenkreationen des Nutzer zurueck",
         description = "Gibt alle Eigenkreationen des angemeldeten Nutzers mit dem eingestellten Filter zurueck"
     )
-    public Response get(@QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
+    public Response get(@Valid @QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         List<Eigenkreation> alle = kunde.getEigenkreationen();
@@ -76,7 +78,7 @@ public class EigenkreationResource {
         description = "Erstellt eine neue Eigenkreation für einen angemeldeten Nutzer und fuegt sie automatisch " +
                         "der aktuellen Bestellung hinzu"
     )
-    public Response post(@Context SecurityContext sec, KreationIdDTO eigenkreationIds) {
+    public Response post(@Context SecurityContext sec, @Valid @NotNull KreationIdDTO eigenkreationIds) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         Eis eissorte1 = eisRepo.getById(eigenkreationIds.eissorte1Id);
@@ -91,6 +93,11 @@ public class EigenkreationResource {
         return Response.ok().build();
     }
 
+    /**
+     * 
+     * @param sec
+     * @return
+     */
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
