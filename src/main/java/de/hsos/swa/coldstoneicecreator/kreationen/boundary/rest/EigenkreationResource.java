@@ -23,6 +23,8 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
@@ -35,9 +37,11 @@ import de.hsos.swa.coldstoneicecreator.produkt.gateway.SauceRepository;
 import de.hsos.swa.coldstoneicecreator.produkt.gateway.ZutatRepository;
 
 @RequestScoped
-@Path("/eigenkreationen")
+@Path("/api/eigenkreationen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Retry(maxRetries = 4)
+@Timeout(250)
 public class EigenkreationResource {
     
     @Inject

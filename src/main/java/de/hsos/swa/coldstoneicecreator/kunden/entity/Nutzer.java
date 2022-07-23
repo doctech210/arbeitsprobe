@@ -6,6 +6,8 @@ import java.util.List;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 
+import javax.validation.constraints.Pattern;
+
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,6 +25,9 @@ public class Nutzer extends PanacheEntityBase{
     @Id @GeneratedValue(generator = "kunde_seq")
     private Long id;
     //TODO: Name unique machen oder versuchen die "eingeloggterKunde" zu aendern
+
+    @Pattern(regexp = "^[a-zA-Z]*$",
+             message = "Use only letters for the name!")
     private String name;
     private String passwort;
     private String role = "Kunde";

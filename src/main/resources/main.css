@@ -1,0 +1,29 @@
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+h1 {
+    color: #4695EB;
+    font-size: 6vw;
+}
+
+h1 b {
+    color: #be9100;
+}
+
+p {
+    font-size: 2vw;
+}
+
+button {
+    margin: 20px 0;
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: #18A0FB;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: none;
+}

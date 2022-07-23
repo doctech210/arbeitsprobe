@@ -18,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.NutzerExportDTO;
 import de.hsos.swa.coldstoneicecreator.kunden.boundary.dto.NutzerImportDTO;
@@ -25,9 +27,11 @@ import de.hsos.swa.coldstoneicecreator.kunden.control.NutzerControl;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 @RequestScoped
-@Path("/nutzer")
+@Path("/api/nutzer")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Retry(maxRetries = 4)
+@Timeout(250)
 public class NutzerResource {
     
     @Inject

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Eine Bestellung</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Roboto, "Tahoma", Arial, sans-serif;
+        }
+        form{
+            float: left;
+        }
+        #just-line-break {
+            white-space: pre-line;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        h1 { font-size: 2.25rem; }
+        h2 { font-size: 1.6rem }
+        h3 { font-size: 1.5rem }
+        h4 { font-size: 1.4rem }
+        h5 { font-size: 1.25rem }
+        h6 { font-size: 1rem }
+        p {
+            padding: .15rem 0;
+            margin: 0;
+            line-height: 1.3rem;
+        }
+        a {
+            text-decoration: underline;
+            color: #1259A5;
+        }
+        a:hover, a:active { color: #c00; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            clear: both;
+        }        
+        .content-wrapper {
+            padding: 0 13rem;
+            background: white;
+        }
+        .left-column {
+            grid-column: span 8;
+            padding-right: 3rem;
+        }
+        .left-column p {
+            padding: .15rem 0;
+            margin: 0;
+            font-weight: 300;
+        }
+        .left-column ul {
+            margin: 0;
+            padding: 10px 0 0 25px;
+            list-style-type: "\1F680";
+            font-weight: 300;
+        }
+        .left-column li { padding-left: 10px; }
+        .left-column .cta-button {
+            margin: 20px 0;
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #18A0FB;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            text-transform: uppercase;
+            border: none;
+        }
+        .left-column .cta-input {
+            padding: 1rem;
+            margin: 20px 0;
+            background-color: white;
+            font-weight: 600;
+            color: #18A0FB;
+            /*border: none;*/
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="left-column">
+            <h1>Die gesuchte Bestellung</h1>
+            <ul>
+                <p>
+                    ID: {bestellung.id}
+                    {#for posten in bestellung.postenDTO}
+                        <p>{posten.anzahl} x {posten.pizzaDTO.name} 
+                        <form action="http://localhost:8080/bestellungen/{posten.id}/loeschen" method="POST" id="get_{posten.id}">
+                        <input type="hidden" name="postenId" id="get_{posten.id}" value="{posten.id}">
+                        </form>
+                        {#if bestellung.bestellt == false}
+                            <input type="submit" value="Loeschen" form="get_{posten.id}" class="cta-button"></p> 
+                        {/if}
+                    {/for}
+                    {#if bestellung.bestellt}
+                        Diese Bestellung ist bereits abgeschickt worden!
+                    {#else}
+                    <form action="http://localhost:8080/bestellungen/bestellen" method="POST" id="get_{bestellung.id}">
+                    </form>
+                    <input type="submit" value="Jetzt bestellen" form="get_{bestellung.id}" class="cta-button">
+                    {/if}
+                </p>
+            </ul>
+        </div>
+                    
+        <div class="left-column">
+            <p><a href="/" class="cta-button">Home</a></p>
+        </div>
+    </div>
+</body>
+</html>

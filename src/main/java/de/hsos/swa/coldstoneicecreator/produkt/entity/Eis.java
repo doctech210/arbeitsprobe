@@ -2,6 +2,8 @@ package de.hsos.swa.coldstoneicecreator.produkt.entity;
 
 import java.util.Set;
 
+import javax.validation.constraints.Pattern;
+
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -9,15 +11,18 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 @Entity @Vetoed
 public class Eis extends PanacheEntityBase {
     
-    @Id @GeneratedValue(generator = "eis_seq")
+    @Id @GeneratedValue(generator = "eis_seq") @SequenceGenerator(name = "id", initialValue = 10)
     private Long id;
 
+    @Pattern(regexp = "^[a-zA-Z]*$",
+             message = "Use only letters for the name!")
     private String name;
     
     @ElementCollection(targetClass = Allergene.class)

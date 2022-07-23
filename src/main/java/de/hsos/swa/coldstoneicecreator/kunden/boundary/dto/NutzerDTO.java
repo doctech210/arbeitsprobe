@@ -3,12 +3,16 @@ package de.hsos.swa.coldstoneicecreator.kunden.boundary.dto;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.validation.constraints.Pattern;
+
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 
 public class NutzerDTO {
     public Long id;
+    @Pattern(regexp = "^[a-zA-Z]*$",
+             message = "Use only letters for the name!")
     public String name;
     public String passwort;
     public List<EigenkreationDTO> eigenkreationenDTO;

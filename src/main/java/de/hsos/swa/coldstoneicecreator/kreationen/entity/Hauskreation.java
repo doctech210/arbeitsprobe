@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.Pattern;
+
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -13,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
@@ -23,7 +26,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 @Entity @Vetoed
 public class Hauskreation extends PanacheEntityBase implements Kreation{
     
-    @Id @GeneratedValue(generator = "hauskreation_seq")
+    @Id @GeneratedValue(generator = "hauskreation_seq") @SequenceGenerator(name = "id", initialValue = 16)
     private Long id;
     @ManyToOne
     private Eis eissorte;
@@ -33,6 +36,8 @@ public class Hauskreation extends PanacheEntityBase implements Kreation{
     private List<Zutat> zutaten;
     @ManyToOne
     private Sauce sauce;
+    @Pattern(regexp = "^[a-zA-Z]*$",
+             message = "Use only letters for the name!")
     private String name;
     
     @ElementCollection(targetClass = Allergene.class)

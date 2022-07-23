@@ -18,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.HauskreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
@@ -32,9 +34,11 @@ import de.hsos.swa.coldstoneicecreator.produkt.gateway.SauceRepository;
 import de.hsos.swa.coldstoneicecreator.produkt.gateway.ZutatRepository;
 
 @RequestScoped
-@Path("/hauskreationen")
+@Path("/api/hauskreationen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Retry(maxRetries = 4)
+@Timeout(250)
 public class HauskreationResource {
     
     @Inject

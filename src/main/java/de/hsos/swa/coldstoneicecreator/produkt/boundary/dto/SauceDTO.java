@@ -2,11 +2,15 @@ package de.hsos.swa.coldstoneicecreator.produkt.boundary.dto;
 
 import java.util.Set;
 
+import javax.validation.constraints.Pattern;
+
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 
 public class SauceDTO {
     public Long id;
+    @Pattern(regexp = "^[a-zA-Z]*$",
+             message = "Use only letters for the name!")
     public String name;
     public Set<Allergene> allergene;
     

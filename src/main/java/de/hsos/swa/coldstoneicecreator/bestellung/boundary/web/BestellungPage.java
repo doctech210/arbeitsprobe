@@ -1,17 +1,11 @@
-package de.hsos.swa.coldstoneicecreator.bestellung.boundary.rest;
-
-import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
-import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
-import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
-import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.ArrayList;
+package de.hsos.swa.coldstoneicecreator.bestellung.boundary.web;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -19,7 +13,6 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -27,25 +20,40 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
-import javax.annotation.security.RolesAllowed;
 
-import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+
+import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
+import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
+import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import io.quarkus.qute.CheckedTemplate;
+import io.quarkus.qute.TemplateInstance;
 
 @RequestScoped
-@Path("/api/bestellungen/")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+@Produces(MediaType.TEXT_HTML)
+@Path("/bestellungen/{id:\\d+}")
 @Retry(maxRetries = 4)
 @Timeout(250)
-public class BestellungResource {
-
+public class BestellungPage {
+    
     @Inject
     BestellungControl bestellungRepo;
 
     @Inject
     BestellpostenControl bestellpostenRepo;
+
+    @CheckedTemplate
+    static class Templates {
+        
+        static native TemplateInstance bestellungAlle(List<BestellungDTO> bestellungen);
+
+        static native TemplateInstance error(int errorCode, String errorMessage);
+    }
 
     @GET
     @RolesAllowed({"Admin", "Kunde"})
@@ -53,7 +61,7 @@ public class BestellungResource {
         summary = "Gibt alle Bestellungen des Nutzers zurueck",
         description = "Gibt alle Bestellungen des angemeldeten Nutzers zurueck"
     )
-    public Response get(@Context SecurityContext sec) {
+    public TemplateInstance get(@Context SecurityContext sec) {
         Nutzer nutzer = this.eingeloggterKunde(sec);
         if(nutzer == null) Response.status(Status.NOT_FOUND).build();
         List<Bestellung> alle = null;
@@ -66,7 +74,8 @@ public class BestellungResource {
         for(Bestellung bestellung : alle) {
             alleDTO.add(BestellungDTO.Converter.toDTO(bestellung));
         }
-        return Response.ok(alleDTO).build();
+        //return Response.ok(alleDTO).build();
+        return Templates.bestellungAlle(alleDTO);
     } 
 
     @POST
@@ -76,18 +85,20 @@ public class BestellungResource {
         summary = "Schickt die aktuelle Bestellung ab",
         description = "Schickt die aktuelle Bestellung des angemeldeten Nutzers ab"
     )
-    public Response post(@Context SecurityContext sec) {
+    public TemplateInstance post(@Context SecurityContext sec) {
         Nutzer nutzer = this.eingeloggterKunde(sec);
-        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        if(nutzer == null) return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Nutzer nicht gefunden");
         Bestellung bestellung = this.offeneBestellung(nutzer);
-        if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
+        if(bestellung == null) return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden");
         bestellung.setBestellt(true);        
-        BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
-        return Response.ok(bestellungDTO).build();
+        //BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
+        //return Response.ok(bestellungDTO).build();
+        return get(sec);
     }
 
-    @DELETE
+    @POST
     @Transactional
+    @Path("/delete/")
     @RolesAllowed("Kunde")
     @Operation(
         summary = "Loescht die aktuelle Bestellung",
@@ -95,11 +106,12 @@ public class BestellungResource {
     )
     public Response delete(@Context SecurityContext sec){
         Nutzer nutzer = this.eingeloggterKunde(sec);
-        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        if(nutzer == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Nutzer nicht gefunden")).build();
         Bestellung bestellung = this.offeneBestellung(nutzer);
-        if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
+        if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden")).build();
         bestellungRepo.bestellungLoeschen(bestellung.getId());
-        return Response.noContent().build();
+        //return Response.noContent().build();
+        return Response.ok().header("Refresh", "0; url=/bookings").build();
     }
 
     /**

@@ -23,10 +23,6 @@ public class NutzerExportDTO {
             if(nutzer == null) return null;
             return new NutzerExportDTO(nutzer.getId(), nutzer.getName(), nutzer.getRole());
         }
-
-        /*public static Kunde toKunde(KundeImportDTO kundeImportDTO) {
-            return new Kunde(kundeImportDTO.name, kundeImportDTO.passwort, null);
-        }*/
     }
 
 }

@@ -1,9 +1,13 @@
 package de.hsos.swa.coldstoneicecreator.kunden.boundary.dto;
 
+import javax.validation.constraints.Pattern;
+
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 public class NutzerImportDTO {
     public Long id;
+    @Pattern(regexp = "^[a-zA-Z]*$",
+             message = "Use only letters for the name!")
     public String name;
     public String passwort;
     

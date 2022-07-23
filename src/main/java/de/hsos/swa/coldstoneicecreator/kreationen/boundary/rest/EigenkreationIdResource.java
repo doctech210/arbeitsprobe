@@ -8,6 +8,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -25,6 +26,8 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
@@ -39,9 +42,11 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 
 @RequestScoped
-@Path("/eigenkreationen/{id:\\d+}")
+@Path("/api/eigenkreationen/{id:\\d+}")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Retry(maxRetries = 4)
+@Timeout(250)
 public class EigenkreationIdResource {
     
     @Inject 
@@ -108,7 +113,7 @@ public class EigenkreationIdResource {
         description = "Fuegt eine bereits existierende Eigenkreation ueber die uerbergebene ID, " + 
                         "eines angemeldeten Nutzers, der aktuellen Bestellung hinzu"
     )
-    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull Long anzahl) {
+    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PositiveOrZero Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         eigenkreationRepo.post(id, anzahl, kunde);
