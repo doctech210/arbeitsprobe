@@ -35,7 +35,7 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
     private List<Zutat> zutaten;
     @ManyToOne
     private Sauce sauce;
-    @Pattern(regexp = "^[a-zA-Z]*$",
+    @Pattern(regexp = "^[a-zA-Z\\s]*$",
              message = "Use only letters for the name!")
     private String name;
     

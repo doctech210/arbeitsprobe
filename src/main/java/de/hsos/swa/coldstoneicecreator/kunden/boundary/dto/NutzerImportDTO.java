@@ -6,7 +6,7 @@ import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 public class NutzerImportDTO {
     public Long id;
-    @Pattern(regexp = "^[a-zA-Z]*$",
+    @Pattern(regexp = "^[a-zA-Z\\s]*$",
              message = "Use only letters for the name!")
     public String name;
     public String passwort;

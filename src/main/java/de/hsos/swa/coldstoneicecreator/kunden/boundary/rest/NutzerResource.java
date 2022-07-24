@@ -16,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
@@ -61,7 +62,11 @@ public class NutzerResource {
     )
     public Response post(@Valid @NotNull NutzerImportDTO nutzerImportDTO) {
         Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(nutzerImportDTO);
-        nutzerRepo.create(nutzer);
-        return Response.ok().build();
+        if(nutzerRepo.nameVerfuegbar(nutzer.getName())){
+            nutzerRepo.create(nutzer);
+            return Response.ok().build();
+        } else {
+            return Response.status(Status.NOT_ACCEPTABLE).build();
+        }
     }
 }

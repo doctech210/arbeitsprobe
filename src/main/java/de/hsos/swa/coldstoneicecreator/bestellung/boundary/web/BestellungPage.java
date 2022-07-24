@@ -36,7 +36,7 @@ import io.quarkus.qute.TemplateInstance;
 @RequestScoped
 @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 @Produces(MediaType.TEXT_HTML)
-@Path("/bestellungen/{id:\\d+}")
+@Path("/bestellungen")
 @Retry(maxRetries = 4)
 @Timeout(250)
 public class BestellungPage {
@@ -50,7 +50,7 @@ public class BestellungPage {
     @CheckedTemplate
     static class Templates {
         
-        static native TemplateInstance bestellungAlle(List<BestellungDTO> bestellungen);
+        static native TemplateInstance bestellungAlle(List<BestellungDTO> bestellungenDTO);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }

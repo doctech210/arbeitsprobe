@@ -14,4 +14,6 @@ public interface NutzerControl {
     public boolean delete(Long id);
 
     public boolean put(Long id, Nutzer kunde);
+
+    public boolean nameVerfuegbar(String name);
 }

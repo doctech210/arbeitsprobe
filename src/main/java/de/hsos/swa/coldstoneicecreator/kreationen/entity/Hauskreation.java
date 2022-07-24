@@ -26,7 +26,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 @Entity @Vetoed
 public class Hauskreation extends PanacheEntityBase implements Kreation{
     
-    @Id @GeneratedValue(generator = "hauskreation_seq") @SequenceGenerator(name = "id", initialValue = 16)
+    @Id @GeneratedValue(generator = "hauskreation_seq") @SequenceGenerator(name = "hauskreation_seq", initialValue = 16)
     private Long id;
     @ManyToOne
     private Eis eissorte;
@@ -36,7 +36,7 @@ public class Hauskreation extends PanacheEntityBase implements Kreation{
     private List<Zutat> zutaten;
     @ManyToOne
     private Sauce sauce;
-    @Pattern(regexp = "^[a-zA-Z]*$",
+    @Pattern(regexp = "^[a-zA-Z\\s]*$",
              message = "Use only letters for the name!")
     private String name;
     

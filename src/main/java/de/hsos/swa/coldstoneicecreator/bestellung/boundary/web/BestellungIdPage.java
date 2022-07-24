@@ -50,7 +50,7 @@ public class BestellungIdPage {
     @CheckedTemplate
     static class Templates {
 
-        static native TemplateInstance bestellungEinzeln(BestellungDTO bestellung);
+        static native TemplateInstance bestellungEinzeln(BestellungDTO bestellungDTO);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }
@@ -125,7 +125,7 @@ public class BestellungIdPage {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    @Path("/delete/hausposten/{postenId:\\d+}")
+    @Path("/hausposten/{postenId:\\d+}/loeschen")
     @Operation(
         summary = "Loeschen eines bestimmten Hausbestellposten aus der Bestellung",
         description = "Loeschen des Hausbestellposten mit der uebergebenen ID aus der Bestellung"
@@ -144,7 +144,7 @@ public class BestellungIdPage {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    @Path("/delete/eigenposten/{postenId:\\d+}")
+    @Path("/eigenposten/{postenId:\\d+}/loeschen")
     @Operation(
         summary = "Loeschen eines bestimmten Eigenbestellposten aus der Bestellung",
         description = "Loeschen des Eigenbestellposten mit der uebergebenen ID aus der Bestellung"

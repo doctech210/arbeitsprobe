@@ -9,7 +9,7 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 
 public class EisDTO {
     public Long id;
-    @Pattern(regexp = "^[a-zA-Z]*$",
+    @Pattern(regexp = "^[a-zA-Z\\s]*$", 
              message = "Use only letters for the name!")
     public String name;
     public Set<Allergene> allergene;

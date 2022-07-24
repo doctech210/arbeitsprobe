@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    .capsToCapitalize {
+        text-transform: lowercase;
+        display: inline-block;
+    }
+        
+    .capsToCapitalize::first-line {
+        text-transform: capitalize;
+    }     
+</style>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Einzelkreation
+    </title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/src/main/resources/main.css'>
+    <script src='main.js'></script>
+</head>
+<body>
+    <p> 
+        {hauskreationDTO.name}
+        {hauskreationDTO.eissorte.name}
+        {hauskreationDTO.eissorte2.name}
+        {#for zutat in hauskreationDTO.zutaten}
+            {zutat.name}
+        {/for}
+        {hauskreationDTO.sauce.name}
+        {#for allergen in hauskreationDTO.allergene}
+            <div class="capsToCapitalize"> {allergen}</div>
+        {/for}
+    </p>
+</body>
+</html>

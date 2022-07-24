@@ -1,13 +1,14 @@
 package de.hsos.swa.coldstoneicecreator.kunden.gateway;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 
 import de.hsos.swa.coldstoneicecreator.kunden.control.NutzerControl;
 import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
-import io.quarkus.elytron.security.common.BcryptUtil;
+//import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
+//import io.quarkus.elytron.security.common.BcryptUtil;
 
 @ApplicationScoped
 public class NutzerRepository implements NutzerControl{
@@ -16,7 +17,7 @@ public class NutzerRepository implements NutzerControl{
     public boolean create(Nutzer kunde) {
         kunde.setId(null);
         kunde.persist();
-        UserLogin.add(kunde.getName(), kunde.getPasswort(), kunde.getRole());
+        //UserLogin.add(kunde.getName(), kunde.getPasswort(), kunde.getRole());
         return true;
     }
 
@@ -38,20 +39,26 @@ public class NutzerRepository implements NutzerControl{
     public boolean put(Long id, Nutzer kunde) {
         boolean geaendert = false;
         Nutzer alteKunde = Nutzer.findById(id);
-        UserLogin loginKunde = UserLogin.findById(id);
+        //UserLogin loginKunde = UserLogin.findById(id);
         String neuerName = kunde.getName();
         if(neuerName != "string" && neuerName != "") {
             alteKunde.setName(neuerName);
-            loginKunde.username = neuerName;
+            //loginKunde.username = neuerName;
             geaendert = true;
         }
         String neuesPasswort = kunde.getPasswort();
         if(neuesPasswort != "string" && neuesPasswort != "") {
             alteKunde.setPasswort(neuesPasswort);
-            loginKunde.password = BcryptUtil.bcryptHash(neuesPasswort);
+            //loginKunde.password = BcryptUtil.bcryptHash(neuesPasswort);
             geaendert = true;
         }
         return geaendert;
     }
     
+    @Override
+    public boolean nameVerfuegbar(String name){
+        Optional<Nutzer> nutzer = Nutzer.find("name", name).firstResultOptional();
+        if(nutzer.isEmpty()) return true;
+        return false;
+    }
 }

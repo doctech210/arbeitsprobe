@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+    .capsToCapitalize {
+        text-transform: lowercase;
+        display: inline-block;
+    }
+        
+    .capsToCapitalize::first-line {
+        text-transform: capitalize;
+    }     
+</style>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="left-column">
+            <h1>Hauskreationen</h1>
+            {#for hauskreation in hauskreationenDTO}
+            <p>
+                <h2>{hauskreationDTO.name}</h2>
+            </p>
+            <p>
+                <ul>
+                    <li>{hauskreationDTO.eissorte.name}</li>
+                    </li>{hauskreationDTO.eissorte2.name}</li>
+                    {#for zutat in hauskreationDTO.zutaten}
+                        <li>{zutat.name}</li>
+                    {/for}
+                    {hauskreationDTO.sauce.name}</li>
+                    {#for allergen in hauskreationDTO.allergene}
+                        <li><div class="capsToCapitalize"> {allergen}</div></li>
+                    </ul>
+                {/for}
+            </p>
+            {/for}
+        </div>
+    </div>   
+</body>
+</html>

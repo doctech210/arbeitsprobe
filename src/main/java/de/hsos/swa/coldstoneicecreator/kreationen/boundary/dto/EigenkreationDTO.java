@@ -20,7 +20,7 @@ public class EigenkreationDTO{
     public EisDTO eissorte2;
     public List<ZutatDTO> zutaten;
     public SauceDTO sauce;
-    @Pattern(regexp = "^[a-zA-Z]*$",
+    @Pattern(regexp = "^[a-zA-Z\\s]*$",
              message = "Use only letters for the name!")
     public String name;
     public Set<Allergene> allergene;

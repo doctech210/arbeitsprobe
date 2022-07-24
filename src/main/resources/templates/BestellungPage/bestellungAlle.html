@@ -64,7 +64,7 @@
             margin: 20px 0;
             display: inline-block;
             padding: 1rem 2rem;
-            background-color: #18A0FB;
+            background-color: #0693e3;
             font-weight: 600;
             color: white;
             text-decoration: none;
@@ -76,7 +76,7 @@
             margin: 20px 0;
             background-color: white;
             font-weight: 600;
-            color: #18A0FB;
+            color: #0693e3;
             /*border: none;*/
         }
     </style>
@@ -86,21 +86,34 @@
     <div class="left-column">
         <h1>Liste aller Bestellungen</h1>
         <ul>
-            {#for bestellung in bestellungen}
-            <p>
-            <h2>
-            {#if bestellung.postenDTO.size() > 0}
-                Bestell ID:{bestellung.id}
-                {#for posten in bestellung.postenDTO}
-                    <p>{posten.anzahl} x {posten.pizzaDTO.name} </p>
-                {/for}
+            {#for bestellung in bestellungenDTO}
+                <p>
+                    <h1>Bestellung</h1>
+                    <h2>
+                        {#if bestellung.bestellpostenEigenDTO.size() > 0}
+                            {#for posten in bestellung.bestellpostenEigenDTO}
+                                <p>
+                                    {posten.anzahl} x {posten.eigenkreationDTO.name}
+                                </p>
+                            {/for}
+                        {/if}
+                        {#if bestellung.bestellpostenHausDTO.size() > 0}
+                            {#for posten in bestellung.bestellpostenHausDTO}
+                                <p>
+                                    {posten.anzahl} x {posten.hauskreationDTO.name}
+                                </p>
+                            {/for}
+                        {/if}                       
+                    </h2>
+                </p>
+                <input type="submit" value="Loeschen" form="delete_{bestellung.id}" class="cta-button">
+                <form action="http://localhost:8080/bestellungen/{bestellung.id}/loeschen" method="POST" id="delete_{bestellung.id}">
+                    <input type="hidden" name="BestellungId" id="delete_{bestellung.id}" value="{bestellung.id}">
+                </form>
+                <input type="submit" value="Ansehen" form="get_{bestellung.id}" class="cta-button">
                 <form action="http://localhost:8080/bestellungen/{bestellung.id}" method="GET" id="get_{bestellung.id}">
-                        <input type="hidden" value="{bestellung.id}" name="bestellungSuchId">
-                    </form>
-                    <input type="submit" value="Ansehen" form="get_{bestellung.id}" class="cta-button">
-            {/if}
-            </h2>
-            </p>
+                    <input type="hidden" name="bestellungEinzeln" id="get_{bestellung.id}" value="{bestellung.id}">
+                </form>
             {/for}
         </ul>
             <p><a href="/" class="cta-button">Home</a></p>

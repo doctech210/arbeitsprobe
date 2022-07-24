@@ -18,10 +18,10 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 @Entity @Vetoed
 public class Sauce extends PanacheEntityBase {
     
-    @Id @GeneratedValue(generator = "sauce_seq") @SequenceGenerator(name = "id", initialValue = 15)
+    @Id @GeneratedValue(generator = "sauce_seq") @SequenceGenerator(name = "sauce_seq", initialValue = 15)
     private Long id;
 
-    @Pattern(regexp = "^[a-zA-Z]*$",
+    @Pattern(regexp = "^[a-zA-Z\\s]*$",
              message = "Use only letters for the name!")
     private String name;
     

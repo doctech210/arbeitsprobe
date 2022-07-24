@@ -87,23 +87,27 @@
             <h1>Die gesuchte Bestellung</h1>
             <ul>
                 <p>
-                    ID: {bestellung.id}
-                    {#for posten in bestellung.postenDTO}
-                        <p>{posten.anzahl} x {posten.pizzaDTO.name} 
-                        <form action="http://localhost:8080/bestellungen/{posten.id}/loeschen" method="POST" id="get_{posten.id}">
-                        <input type="hidden" name="postenId" id="get_{posten.id}" value="{posten.id}">
-                        </form>
-                        {#if bestellung.bestellt == false}
-                            <input type="submit" value="Loeschen" form="get_{posten.id}" class="cta-button"></p> 
-                        {/if}
+                    <h3>Eigenkreationen:</h3>
+                    {#for postenEigen in bestellungDTO.bestellpostenEigenDTO}
+                        <p>
+                            <h4>{postenEigen.eigenkreationDTO.name}</h4>
+                            <input type="submit" value="Ansehen" form="get_{postenEigen.id}" class="cta-button">
+                            <form action="http://localhost:8080/eigenkreationen/{postenEigen.eigenkreationDTO.id}" method="GET" id="get_{postenEigen.id}">
+                                <input type="hidden" name="EigenkreationsId" id="get_{postenEigen.id}" value="{postenEigen.id}">
+                            </form>
+                        </p> 
                     {/for}
-                    {#if bestellung.bestellt}
-                        Diese Bestellung ist bereits abgeschickt worden!
-                    {#else}
-                    <form action="http://localhost:8080/bestellungen/bestellen" method="POST" id="get_{bestellung.id}">
-                    </form>
-                    <input type="submit" value="Jetzt bestellen" form="get_{bestellung.id}" class="cta-button">
-                    {/if}
+                    <h3>Hauskreationen:</h3>
+                    {#for postenHaus in bestellungDTO.bestellpostenHausDTO}
+                        <p>
+                            <h4>{postenHaus.hauskreationDTO.name}</h4>
+                            <input type="submit" value="Ansehen" form="get_{postenHaus.id}" class="cta-button">
+                            <form action="http://localhost:8080/hauskreationen/{postenHaus.hauskreationDTO.id}" method="GET" id="get_{postenHaus.id}">
+                                <input type="hidden" name="HauskreationsId" id="get_{postenHaus.id}" value="{postenHaus.id}">
+                            </form>
+                        </p> 
+                    {/for}
+                    
                 </p>
             </ul>
         </div>

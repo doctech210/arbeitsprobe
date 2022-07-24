@@ -15,21 +15,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
+import io.quarkus.security.jpa.Password;
+import io.quarkus.security.jpa.Roles;
+import io.quarkus.security.jpa.UserDefinition;
+import io.quarkus.security.jpa.Username;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 @Entity
 @Vetoed
+@UserDefinition
 public class Nutzer extends PanacheEntityBase{
     
     @Id @GeneratedValue(generator = "kunde_seq")
+    @SequenceGenerator(name = "kunde_seq", initialValue = 2)
     private Long id;
-    //TODO: Name unique machen oder versuchen die "eingeloggterKunde" zu aendern
 
-    @Pattern(regexp = "^[a-zA-Z]*$",
+    @Pattern(regexp = "^[a-zA-Z\\s]*$",
              message = "Use only letters for the name!")
+    @Username
     private String name;
+    @Password
     private String passwort;
+    @Roles
     private String role = "Kunde";
     
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
