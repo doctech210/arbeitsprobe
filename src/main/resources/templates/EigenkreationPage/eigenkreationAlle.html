@@ -1,14 +1,127 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Eigenkreation</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
+
+<style>
+    .capsToCapitalize {
+        text-transform: lowercase;
+        display: inline-block;
+    }
+        
+    .capsToCapitalize::first-line {
+        text-transform: capitalize;
+    }    
+    /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
+
+        /* The navigation bar */
+    .navbar {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+    }
+
+    .navbar .button {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    }
+
+    /* Change background on mouse-over */
+    .navbar a:hover {
+    background: #ddd;
+    color: black;
+    } 
+</style>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<title>Eigenkreationen</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+<script src='main.js'></script>
 </head>
 <body>
-    
+    <div class="content-wrapper">
+        <div class="left-column">
+
+            <div class="navbar">
+                <input type="button" onclick="insertParam('Allergene','ALKOHOL')" value = 'Alkohol'>
+                <input type="button" onclick="insertParam('Allergene','EI')" value = 'Ei'>
+                <input type="button" onclick="insertParam('Allergene','GELANTINE')" value = 'Gelantine'>
+                <input type="button" onclick="insertParam('Allergene','GLUTEN')" value = 'Gluten'>
+                <input type="button" onclick="insertParam('Allergene','HONIG')" value = 'Honig'>
+                <input type="button" onclick="insertParam('Allergene','KOFFEIN')" value = 'Koffein'>
+                <input type="button" onclick="insertParam('Allergene','LAKTOSE')" value = 'Laktose'>
+                <input type="button" onclick="insertParam('Allergene','NUSS')" value = 'Nuss'>
+                <input type="button" onclick="insertParam('Allergene','SUESSSTOFF')" value = 'Suessstoff'>
+                <input type="button" onclick="insertParam('Allergene','VEGAN')" value = 'Vegan'>
+            </div>
+
+            <h1>Eigenkreationen</h1>
+            {#for eigenkreation in eigenkreationenDTO}
+            <p>
+                <h2>{eigenkreation.name}</h2>
+            </p>
+            <p>
+                <ul>
+                    <strong>Eissorte</strong>
+                    <li>{eigenkreation.eissorte.name}</li>
+                    {#if eigenkreation.eissorte.id != eigenkreation.eissorte2.id}
+                        <li>{eigenkreation.eissorte2.name}</li>
+                    {/if}
+                    <strong>Toppings</strong>
+                    {#for zutat in eigenkreation.zutaten}
+                        <li>
+                            {zutat.name}
+                        </li>
+                    {/for}
+                    {#if eigenkreation.sauce != null}
+                        <strong>Soße</strong>
+                        <li>
+                            {eigenkreation.sauce.name}
+                        </li>
+                    {/if}
+                    <strong>Allergene</strong>
+                    {#for allergen in eigenkreation.allergene}
+                        <li><div class="capsToCapitalize"> {allergen}</div></li>
+                    {/for}
+                </ul>
+            </p>
+            {/for}
+            <p>
+                <script>
+                    function insertParam(key, value) {
+                        key = escape(key); value = escape(value);
+
+                        var currentURL = window.location.href;
+                            if(currentURL.includes(value)){
+                                var zuEntfernen = key + "=" + value;
+                                if(currentURL.includes("&" + zuEntfernen)){
+                                    currentURL = currentURL.replace("&" + zuEntfernen,'');
+                                }else{
+                                    if(currentURL.includes("&")){
+                                        currentURL = currentURL.replace(zuEntfernen + "&", '');
+                                    }else{
+                                        currentURL = currentURL.replace("?" + zuEntfernen, '');
+                                    }
+                                }
+                            }else{
+                            if(currentURL.includes("?")){
+                                currentURL += "&";
+                            }else{
+                                currentURL += "?";
+                            }
+                        currentURL +=  key + "=" + value
+                        }
+                        window.location.href = currentURL;
+                    }
+                </script>
+            </p>
+        </div>
+    </div>   
 </body>
 </html>

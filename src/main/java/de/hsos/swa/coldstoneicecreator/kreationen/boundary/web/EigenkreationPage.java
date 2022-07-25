@@ -18,13 +18,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
+
+import io.quarkus.qute.CheckedTemplate;
+import io.quarkus.qute.TemplateInstance;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
@@ -56,22 +58,31 @@ public class EigenkreationPage {
     @Inject
     ZutatRepository ZutatRepo;
 
+    @CheckedTemplate
+    static class Templates {
+
+        static native TemplateInstance eigenkreationAlle(List<EigenkreationDTO> eigenkreationenDTO);
+
+        static native TemplateInstance error(int errorCode, String errorMessage);
+    }
+
     @GET
     @RolesAllowed({"Admin", "Kunde"})
     @Operation(
         summary = "Gibt alle Eigenkreationen des Nutzer zurueck",
         description = "Gibt alle Eigenkreationen des angemeldeten Nutzers mit dem eingestellten Filter zurueck"
     )
-    public Response get(@Valid @QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
+    public TemplateInstance get(@Valid @QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
         Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        if(kunde == null) return Templates.error(Status.FORBIDDEN.getStatusCode(), "Bitte erst einloggen");
         List<Eigenkreation> alle = kunde.getEigenkreationen();
         if(allergene != null) alle = eigenkreationRepo.getOhneAllergene(allergene);
         List<EigenkreationDTO> alleDTO = new ArrayList<>();
         for(Eigenkreation eigenkreation : alle) {
             alleDTO.add(EigenkreationDTO.Converter.toDTO(eigenkreation));
         }
-        return Response.ok(alleDTO).build();
+        //return Response.ok(alleDTO).build();
+        return Templates.eigenkreationAlle(alleDTO);
     }
     
     @POST
@@ -82,9 +93,9 @@ public class EigenkreationPage {
         description = "Erstellt eine neue Eigenkreation für einen angemeldeten Nutzer und fuegt sie automatisch " +
                         "der aktuellen Bestellung hinzu"
     )
-    public Response post(@Context SecurityContext sec, @Valid @NotNull KreationIdDTO eigenkreationIds) {
+    public TemplateInstance post(@Context SecurityContext sec, @Valid @NotNull KreationIdDTO eigenkreationIds) {
         Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        if(kunde == null) return Templates.error(Status.FORBIDDEN.getStatusCode(), "Bitte erst einloggen");
         Eis eissorte1 = eisRepo.getById(eigenkreationIds.eissorte1Id);
         Eis eissorte2 = eisRepo.getById(eigenkreationIds.eissorte2Id);
         Sauce sauce = sauceRepo.getById(eigenkreationIds.sauceId);
@@ -94,7 +105,8 @@ public class EigenkreationPage {
         }
         Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, eigenkreationIds.name);
         eigenkreationRepo.create(kunde, eigenkreation, eigenkreationIds.anzahl);
-        return Response.ok().build();
+        //return Response.ok().build();
+        return get(null, sec);
     }
 
     /**

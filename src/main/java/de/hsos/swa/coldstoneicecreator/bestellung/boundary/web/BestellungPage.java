@@ -63,7 +63,7 @@ public class BestellungPage {
     )
     public TemplateInstance get(@Context SecurityContext sec) {
         Nutzer nutzer = this.eingeloggterKunde(sec);
-        if(nutzer == null) Response.status(Status.NOT_FOUND).build();
+        if(nutzer == null) return Templates.error(Status.FORBIDDEN.getStatusCode(), "Bitte erst einloggen");
         List<Bestellung> alle = null;
         if(nutzer.getRole().equals("Admin")){
             alle = bestellungRepo.bestellungenAbfragen();

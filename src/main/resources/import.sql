@@ -353,7 +353,7 @@ INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (5, 17);
 INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (5, 37);
 INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (5, 73);
 
-INSERT INTO Hauskreation (eissorte_id, eissorte2_id, name, sauce_id, id) VALUES (3, 1, 'Banana Joe', 9, 6);
+INSERT INTO Hauskreation (eissorte_id, eissorte2_id, name, sauce_id, id) VALUES (2, 1, 'Banana Joe', 9, 6);
 INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (6, 'LAKTOSE');
 INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (6, 'GLUTEN');
 INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (6, 17);

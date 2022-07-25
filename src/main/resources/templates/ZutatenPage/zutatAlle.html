@@ -42,7 +42,7 @@
 </style>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Hauskreationen</title>
+    <title>Zutaten</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src='main.js'></script>
@@ -62,34 +62,22 @@
                 <input type="button" onclick="insertParam('Allergene','SUESSSTOFF')" value = 'Suessstoff'>
                 <input type="button" onclick="insertParam('Allergene','VEGAN')" value = 'Vegan'>
             </div>
-            <h1>Hauskreationen</h1>
-            {#for hauskreation in hauskreationenDTO}
+            <h1>Zutaten</h1>
+            {#for zutat in zutatenDTO}
             <p>
-                <h2>{hauskreation.name}</h2>
+                <h2>{zutat.name}</h2>
             </p>
             <p>
                 <ul>
-                    <strong>Eissorte</strong>
-                    <li>{hauskreation.eissorte.name}</li>
-                    {#if hauskreation.eissorte.id != hauskreation.eissorte2.id}
-                        <li>{hauskreation.eissorte2.name}</li>
+                    {#if zutat.premium}
+                        Dies ist eine Premiumzutat <br />
                     {/if}
-                    <strong>Toppings</strong>
-                    {#for zutat in hauskreation.zutaten}
-                        <li>
-                            {zutat.name}
-                        </li>
-                    {/for}
-                    {#if hauskreation.sauce != null}
-                        <strong>Soße</strong>
-                        <li>
-                            {hauskreation.sauce.name}
-                        </li>
+                    {#if zutat.allergene.size > 0}
+                        <strong>Allergene</strong>
+                        {#for allergen in zutat.allergene}
+                            <li><div class="capsToCapitalize"> {allergen}</div></li>
+                        {/for}
                     {/if}
-                    <strong>Allergene</strong>
-                    {#for allergen in hauskreation.allergene}
-                        <li><div class="capsToCapitalize"> {allergen}</div></li>
-                    {/for}
                 </ul>
             </p>
             {/for}
