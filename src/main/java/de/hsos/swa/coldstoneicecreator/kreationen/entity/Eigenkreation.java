@@ -38,7 +38,8 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
     @Pattern(regexp = "^[a-zA-Z\\s]*$",
              message = "Use only letters for the name!")
     private String name;
-    
+    private boolean bestellbar;
+
     @ElementCollection(targetClass = Allergene.class)
     @Enumerated(EnumType.STRING)
     private Set<Allergene> allergene;
@@ -53,6 +54,7 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
         this.zutaten = zutaten;
         this.sauce = sauce;
         this.name = name;
+        this.bestellbar = true;
         this.checkAllergene();
     }
 
@@ -143,6 +145,14 @@ public class Eigenkreation extends PanacheEntityBase implements Kreation{
     @Override
     public void setAllergene(Set<Allergene> allergene) {
         this.allergene = allergene;
+    }
+
+    public boolean isBestellbar() {
+        return bestellbar;
+    }
+
+    public void setBestellbar(boolean bestellbar) {
+        this.bestellbar = bestellbar;
     }
 }
 

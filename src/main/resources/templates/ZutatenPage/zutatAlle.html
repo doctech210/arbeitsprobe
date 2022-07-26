@@ -15,27 +15,63 @@
 /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
 
     /* The navigation bar */
-.navbar {
+.navbarallergene {
   overflow: hidden;
   background-color: #333;
   position: fixed; /* Set the navbar to fixed position */
-  top: 0; /* Position the navbar at the top of the page */
+  bottom: 0; /* Position the navbar at the top of the page */
   width: 100%; /* Full width */
 }
 
-.navbar .button {
+.navbarallergene input[type=button] {
+  float: left;
+  display: block;
+  background-color: #333;
+  color:#f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  border: none;
+  width: 10%;
+}
+
+/* Change background on mouse-over */
+.navbarallergene input[type=button]:hover {
+  background: #ddd;
+  color: black;
+  width: 10%;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.navbar a {
   float: left;
   display: block;
   color: #f2f2f2;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
+  text-align: center;
+  font-size: 17px;
+  width:8%;
 }
 
-/* Change background on mouse-over */
 .navbar a:hover {
   background: #ddd;
   color: black;
+  width:8%;
+}
+
+.main {
+  padding: 16px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 
@@ -51,6 +87,66 @@
     <div class="content-wrapper">
         <div class="left-column">
             <div class="navbar">
+                <a href="/hauskreationen/">Hauskreationen</a>
+                <a href="/eigenkreationen/">Eigenkreationen</a>
+                <a href="/bestellungen/">Bestellungen</a>
+                <a href="/eis/">Eissorten</a>
+                <a href="/zutaten/">Zutaten</a>
+                <a href="/saucen/">Saucen</a>
+                <a href="/kunden/">Kunden</a>
+            </div>
+            <div class="main">
+                <h1>Zutaten</h1>
+                {#for zutat in zutatenDTO}
+                <p>
+                    <h2>{zutat.name}</h2>
+                </p>
+                <p>
+                    <ul>
+                        {#if zutat.premium}
+                            Dies ist eine Premiumzutat <br />
+                        {/if}
+                        {#if zutat.allergene.size > 0}
+                            <strong>Allergene</strong>
+                            {#for allergen in zutat.allergene}
+                                <li><div class="capsToCapitalize"> {allergen}</div></li>
+                            {/for}
+                        {/if}
+                    </ul>
+                </p>
+                {/for}
+                <p>
+                    <script>
+                        function insertParam(key, value) {
+                            key = escape(key); value = escape(value);
+
+                            var currentURL = window.location.href;
+                                if(currentURL.includes(value)){
+                                    var zuEntfernen = key + "=" + value;
+                                    if(currentURL.includes("&" + zuEntfernen)){
+                                        currentURL = currentURL.replace("&" + zuEntfernen,'');
+                                    }else{
+                                        if(currentURL.includes("&")){
+                                            currentURL = currentURL.replace(zuEntfernen + "&", '');
+                                        }else{
+                                            currentURL = currentURL.replace("?" + zuEntfernen, '');
+                                        }
+                                    }
+                                }else{
+                                if(currentURL.includes("?")){
+                                    currentURL += "&";
+                                }else{
+                                    currentURL += "?";
+                                }
+                            currentURL +=  key + "=" + value
+                            }
+                            window.location.href = currentURL;
+                        }
+                    </script>
+                </p>
+            </div> 
+        
+            <div class="navbarallergene">
                 <input type="button" onclick="insertParam('Allergene','ALKOHOL')" value = 'Alkohol'>
                 <input type="button" onclick="insertParam('Allergene','EI')" value = 'Ei'>
                 <input type="button" onclick="insertParam('Allergene','GELANTINE')" value = 'Gelantine'>
@@ -62,56 +158,7 @@
                 <input type="button" onclick="insertParam('Allergene','SUESSSTOFF')" value = 'Suessstoff'>
                 <input type="button" onclick="insertParam('Allergene','VEGAN')" value = 'Vegan'>
             </div>
-            <h1>Zutaten</h1>
-            {#for zutat in zutatenDTO}
-            <p>
-                <h2>{zutat.name}</h2>
-            </p>
-            <p>
-                <ul>
-                    {#if zutat.premium}
-                        Dies ist eine Premiumzutat <br />
-                    {/if}
-                    {#if zutat.allergene.size > 0}
-                        <strong>Allergene</strong>
-                        {#for allergen in zutat.allergene}
-                            <li><div class="capsToCapitalize"> {allergen}</div></li>
-                        {/for}
-                    {/if}
-                </ul>
-            </p>
-            {/for}
-            <p>
-                <script>
-                    function insertParam(key, value) {
-                        key = escape(key); value = escape(value);
-
-                        var currentURL = window.location.href;
-                            if(currentURL.includes(value)){
-                                var zuEntfernen = key + "=" + value;
-                                if(currentURL.includes("&" + zuEntfernen)){
-                                    currentURL = currentURL.replace("&" + zuEntfernen,'');
-                                }else{
-                                    if(currentURL.includes("&")){
-                                        currentURL = currentURL.replace(zuEntfernen + "&", '');
-                                    }else{
-                                        currentURL = currentURL.replace("?" + zuEntfernen, '');
-                                    }
-                                }
-                            }else{
-                            if(currentURL.includes("?")){
-                                currentURL += "&";
-                            }else{
-                                currentURL += "?";
-                            }
-                        currentURL +=  key + "=" + value
-                        }
-                        window.location.href = currentURL;
-                    }
-                </script>
-                
-            </p>
         </div>
-    </div>   
+    </div>
 </body>
 </html>

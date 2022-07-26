@@ -28,7 +28,7 @@ public class BestellungDTO {
         public static BestellungDTO toDTO(Bestellung bestellung) {
             if(bestellung == null) return null;
             List<BestellpostenEigenDTO> bestellpostenEigenDTO = new ArrayList<>();
-            for(BestellpostenEigen bestellposten : bestellung.getBestellposten()) {
+            for(BestellpostenEigen bestellposten : bestellung.getBestellpostenEigen()) {
                 bestellpostenEigenDTO.add(BestellpostenEigenDTO.Converter.toDTO(bestellposten));
             }
             List<BestellpostenHausDTO> bestellpostenHausDTO = new ArrayList<>();

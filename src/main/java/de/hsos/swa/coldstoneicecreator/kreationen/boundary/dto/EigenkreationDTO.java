@@ -23,19 +23,21 @@ public class EigenkreationDTO{
     @Pattern(regexp = "^[a-zA-Z\\s]*$",
              message = "Use only letters for the name!")
     public String name;
+    public boolean bestellbar;
     public Set<Allergene> allergene;
     
     public EigenkreationDTO() {
     }
 
     public EigenkreationDTO(Long id, EisDTO eissorte, EisDTO eissorte2, List<ZutatDTO> zutaten, SauceDTO sauce,
-            String name, Set<Allergene> allergene) {
+            String name, boolean bestellbar, Set<Allergene> allergene) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
         this.zutaten = zutaten;
         this.sauce = sauce;
         this.name = name;
+        this.bestellbar = bestellbar;
         this.allergene = allergene;
     }
 
@@ -49,7 +51,7 @@ public class EigenkreationDTO{
             }
             return new EigenkreationDTO(eigenkreation.getId(), EisDTO.Converter.toDTO(eigenkreation.getEissorte()), 
              EisDTO.Converter.toDTO(eigenkreation.getEissorte2()), liste, SauceDTO.Converter.toDTO(eigenkreation.getSauce()), 
-             eigenkreation.getName(), eigenkreation.getAllergene());
+             eigenkreation.getName(), eigenkreation.isBestellbar(), eigenkreation.getAllergene());
         }
 
         public static Eigenkreation toEigenkreation(EigenkreationDTO eigenkreationDTO) {

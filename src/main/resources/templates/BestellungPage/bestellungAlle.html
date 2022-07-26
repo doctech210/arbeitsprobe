@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Alle Bestellungen</title>
     <style>
-        body {
+        
+        /* body {
             margin: 0;
             font-family: Roboto, "Tahoma", Arial, sans-serif;
         }
@@ -77,46 +78,92 @@
             background-color: white;
             font-weight: 600;
             color: #0693e3;
-            /*border: none;*/
-        }
-    </style>
+            /*border: none;
+        } */
+
+        /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
+
+    /* The navigation bar */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 17px;
+  width:8%;
+}
+
+.navbar a:hover {
+  background: #ddd;
+  color: black;
+  width:8%;
+}
+
+.main {
+  padding: 16px;
+  margin-top: 30px;
+}
+</style>
 </head>
 <body>
     <div class="content-wrapper">
-    <div class="left-column">
-        <h1>Liste aller Bestellungen</h1>
-        <ul>
-            {#for bestellung in bestellungenDTO}
-                <p>
-                    <h1>Bestellung</h1>
-                    <h2>
-                        {#if bestellung.bestellpostenEigenDTO.size() > 0}
-                            {#for posten in bestellung.bestellpostenEigenDTO}
-                                <p>
-                                    {posten.anzahl} x {posten.eigenkreationDTO.name}
-                                </p>
-                            {/for}
+        <div class="left-column">
+            <div class="navbar">
+                <a href="/hauskreationen/">Hauskreationen</a>
+                <a href="/eigenkreationen/">Eigenkreationen</a>
+                <a href="/bestellungen/">Bestellungen</a>
+                <a href="/eis/">Eissorten</a>
+                <a href="/zutaten/">Zutaten</a>
+                <a href="/saucen/">Saucen</a>
+                <a href="/kunden/">Kunden</a>
+            </div>
+            <div class="main">
+                <h1>Liste aller Bestellungen</h1>
+                <ul>
+                    {#for bestellung in bestellungenDTO}
+                        <p>
+                            <h1>Bestellung</h1>
+                            <h2>
+                                {#if bestellung.bestellpostenEigenDTO.size() > 0}
+                                    {#for posten in bestellung.bestellpostenEigenDTO}
+                                        <p>
+                                            {posten.anzahl} x {posten.eigenkreationDTO.name}
+                                        </p>
+                                    {/for}
+                                {/if}
+                                {#if bestellung.bestellpostenHausDTO.size() > 0}
+                                    {#for posten in bestellung.bestellpostenHausDTO}
+                                        <p>
+                                            {posten.anzahl} x {posten.hauskreationDTO.name}
+                                        </p>
+                                    {/for}
+                                {/if}                       
+                            </h2>
+                        </p>
+                        {#if bestellung.bestellt == false}
+                            <input type="submit" value="Loeschen" form="delete_{bestellung.id}" class="cta-button">
+                            <form action="http://localhost:8080/bestellungen/{bestellung.id}/loeschen" method="POST" id="delete_{bestellung.id}">
+                                <input type="hidden" name="BestellungId" id="delete_{bestellung.id}" value="{bestellung.id}">
+                            </form>
                         {/if}
-                        {#if bestellung.bestellpostenHausDTO.size() > 0}
-                            {#for posten in bestellung.bestellpostenHausDTO}
-                                <p>
-                                    {posten.anzahl} x {posten.hauskreationDTO.name}
-                                </p>
-                            {/for}
-                        {/if}                       
-                    </h2>
-                </p>
-                <input type="submit" value="Loeschen" form="delete_{bestellung.id}" class="cta-button">
-                <form action="http://localhost:8080/bestellungen/{bestellung.id}/loeschen" method="POST" id="delete_{bestellung.id}">
-                    <input type="hidden" name="BestellungId" id="delete_{bestellung.id}" value="{bestellung.id}">
-                </form>
-                <input type="submit" value="Ansehen" form="get_{bestellung.id}" class="cta-button">
-                <form action="http://localhost:8080/bestellungen/{bestellung.id}" method="GET" id="get_{bestellung.id}">
-                    <input type="hidden" name="bestellungEinzeln" id="get_{bestellung.id}" value="{bestellung.id}">
-                </form>
-            {/for}
-        </ul>
-            <p><a href="/" class="cta-button">Home</a></p>
+                        <form action="http://localhost:8080/bestellungen/{bestellung.id}" method="GET" id="get_{bestellung.id}">
+                            <input type="hidden" name="bestellungEinzeln" id="get_{bestellung.id}" value="{bestellung.id}">
+                            <input type="submit" value="Ansehen" form="get_{bestellung.id}" class="cta-button">
+                        </form>
+                    {/for}
+                </ul>
+            </div>
         </div>
     </div>
 </body>

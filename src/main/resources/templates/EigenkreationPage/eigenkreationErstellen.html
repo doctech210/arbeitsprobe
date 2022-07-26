@@ -95,68 +95,8 @@
             </div>
             <div class="main">
 
-                <h1>Eigenkreationen</h1>
-                {#for eigenkreation in eigenkreationenDTO}
-                {#if eigenkreation.bestellbar}
-                    <p>
-                        <h2>{eigenkreation.name}</h2>
-                    </p>
-                    <p>
-                        <ul>
-                        <strong>Eissorte</strong>
-                            <li>{eigenkreation.eissorte.name}</li>
-                            {#if eigenkreation.eissorte.id != eigenkreation.eissorte2.id}
-                                <li>{eigenkreation.eissorte2.name}</li>
-                            {/if}
-                            <strong>Toppings</strong>
-                            {#for zutat in eigenkreation.zutaten}
-                                <li>
-                                    {zutat.name}
-                                </li>
-                            {/for}
-                            {#if eigenkreation.sauce != null}
-                                <strong>Soße</strong>
-                                <li>
-                                    {eigenkreation.sauce.name}
-                                </li>
-                            {/if}
-                            <strong>Allergene</strong>
-                            {#for allergen in eigenkreation.allergene}
-                                <li><div class="capsToCapitalize"> {allergen}</div></li>
-                            {/for}
-                        {/if}
-                    </ul>
-                </p>
-                {/for}
-                <p>
-                    <script>
-                        function insertParam(key, value) {
-                            key = escape(key); value = escape(value);
-
-                            var currentURL = window.location.href;
-                                if(currentURL.includes(value)){
-                                    var zuEntfernen = key + "=" + value;
-                                    if(currentURL.includes("&" + zuEntfernen)){
-                                        currentURL = currentURL.replace("&" + zuEntfernen,'');
-                                    }else{
-                                        if(currentURL.includes("&")){
-                                            currentURL = currentURL.replace(zuEntfernen + "&", '');
-                                        }else{
-                                            currentURL = currentURL.replace("?" + zuEntfernen, '');
-                                        }
-                                    }
-                                }else{
-                                if(currentURL.includes("?")){
-                                    currentURL += "&";
-                                }else{
-                                    currentURL += "?";
-                                }
-                            currentURL +=  key + "=" + value
-                            }
-                            window.location.href = currentURL;
-                        }
-                    </script>
-                </p>
+                TODO: erstellen von neuen Eigenkreationen ermoeglichen, fuehrt zu der normalen Eigenkreation POST Methode -> Danach auf Bestellungen
+                
             </div>
             <div class="navbarallergene">
                 <input type="button" onclick="insertParam('Allergene','ALKOHOL')" value = 'Alkohol'>

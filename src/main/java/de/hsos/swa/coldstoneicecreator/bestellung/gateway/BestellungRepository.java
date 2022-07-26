@@ -87,7 +87,7 @@ public class BestellungRepository implements BestellungControl {
         List<Bestellung> bestellungen = this.bestellungenAbfragen(kreationDAO.getKunde().getId());
         for(Bestellung bestellung : bestellungen){
             if(!(bestellung.isBestellt())){
-                neueKreation.fire(new KreationIdDAO(kreationDAO, bestellung.getId()));
+                neueKreation.fire(new KreationIdDAO(kreationDAO, bestellung.getId())); //Geht an das BestellpostenRepository
                 return;
             }
         }

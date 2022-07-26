@@ -29,6 +29,8 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
 
+import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
@@ -53,6 +55,9 @@ public class EigenkreationIdPage {
     
     @Inject 
     EigenkreationControl eigenkreationRepo;
+
+    @Inject
+    BestellpostenControl bestellpostenRepo;
 
     @Inject
     EisControl eisRepo;
@@ -154,9 +159,20 @@ public class EigenkreationIdPage {
         description = "Loeschen einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
     public Response delete(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
-        eigenkreationRepo.delete(id, kunde);
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        Eigenkreation eigenkreation = eigenkreationRepo.getById(id);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        List<BestellpostenEigen> bestellpostenEigen = bestellpostenRepo.getAllEigen();
+        Long postenId = null;
+        for(BestellpostenEigen eigen : bestellpostenEigen) {
+            
+            if(eigen.getEigenkreation().equals(eigenkreation)) {
+                postenId = eigen.getId();
+            }
+                
+        }
+        if(postenId == null) return Response.status(Status.NOT_FOUND).build();
+        nutzer.deleteEigenkreation(eigenkreation, postenId);
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
 

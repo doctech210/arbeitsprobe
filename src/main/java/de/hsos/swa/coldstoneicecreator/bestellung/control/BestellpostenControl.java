@@ -1,9 +1,13 @@
 package de.hsos.swa.coldstoneicecreator.bestellung.control;
 
+import java.util.List;
+
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 
 public interface BestellpostenControl {
+
+    public List<BestellpostenEigen> getAllEigen();
     
     public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId, Long anzahl);
 

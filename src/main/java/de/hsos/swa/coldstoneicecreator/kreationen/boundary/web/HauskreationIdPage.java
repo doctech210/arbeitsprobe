@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -109,11 +110,12 @@ public class HauskreationIdPage {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Fuegt eine bestimmte Hauskreation der Bestellung hinzu",
         description = "Fuegt eine bestimmte Hauskreation über die uerbergebenen ID der aktuellen Bestellung hinzu"
     )
-    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PositiveOrZero Long anzahl) {
+    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PositiveOrZero @FormParam("anzahl") Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         Hauskreation hauskreation = hauskreationRepo.getById(id);

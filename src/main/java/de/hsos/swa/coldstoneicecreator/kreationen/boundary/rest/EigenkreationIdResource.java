@@ -29,6 +29,8 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
 
+import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
@@ -53,6 +55,9 @@ public class EigenkreationIdResource {
     EigenkreationControl eigenkreationRepo;
 
     @Inject
+    BestellpostenControl bestellpostenRepo;
+
+    @Inject
     EisControl eisRepo;
 
     @Inject
@@ -68,13 +73,13 @@ public class EigenkreationIdResource {
         description = "Gibt eine bestimmte Eigenkreation des angemeldeten Nutzer ueber die uebergebene ID zurueck"
     )
     public Response get(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
         Eigenkreation eigenkreation = null;
-        if(kunde.getRole().equals("Admin")){
+        if(nutzer.getRole().equals("Admin")){
             eigenkreation = eigenkreationRepo.getById(id);
         }else{
-            eigenkreation = eigenkreationRepo.getById(id, kunde);
+            eigenkreation = eigenkreationRepo.getById(id, nutzer);
         }
         if(eigenkreation != null) { 
             EigenkreationDTO eigenkreationDTO = EigenkreationDTO.Converter.toDTO(eigenkreation);
@@ -91,8 +96,8 @@ public class EigenkreationIdResource {
         description = "Aendert eine bestimmte Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
     public Response put(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @Valid KreationIdDTO kreationIdDTO) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
         Eis eissorte1 = eisRepo.getById(kreationIdDTO.eissorte1Id);
         Eis eissorte2 = eisRepo.getById(kreationIdDTO.eissorte2Id);
         List<Zutat> zutaten = new ArrayList<>();
@@ -101,7 +106,7 @@ public class EigenkreationIdResource {
         }
         Sauce sauce = sauceRepo.getById(kreationIdDTO.sauceId);
         Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, kreationIdDTO.name);
-        eigenkreationRepo.put(id, eigenkreation, kunde);
+        eigenkreationRepo.put(id, eigenkreation, nutzer);
         return Response.ok().build();
     }
     
@@ -114,9 +119,9 @@ public class EigenkreationIdResource {
                         "eines angemeldeten Nutzers, der aktuellen Bestellung hinzu"
     )
     public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PositiveOrZero Long anzahl) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
-        eigenkreationRepo.post(id, anzahl, kunde);
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        eigenkreationRepo.post(id, anzahl, nutzer);
         return Response.ok().build();
     }
     
@@ -129,9 +134,9 @@ public class EigenkreationIdResource {
         description = "Aendern einer Zutaten einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
     public Response putZutaten(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("zutatnummer") int zutatnummer, @NotNull Long neueZutatId) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
-        eigenkreationRepo.putZutat(id, --zutatnummer, neueZutatId, kunde);
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        eigenkreationRepo.putZutat(id, --zutatnummer, neueZutatId, nutzer);
         return Response.ok().build();
     }
 
@@ -143,9 +148,20 @@ public class EigenkreationIdResource {
         description = "Loeschen einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
     public Response delete(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
-        eigenkreationRepo.delete(id, kunde);
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        Eigenkreation eigenkreation = eigenkreationRepo.getById(id);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        List<BestellpostenEigen> bestellpostenEigen = bestellpostenRepo.getAllEigen();
+        Long postenId = null;
+        for(BestellpostenEigen eigen : bestellpostenEigen) {
+            
+            if(eigen.getEigenkreation().equals(eigenkreation)) {
+                postenId = eigen.getId();
+            }
+                
+        }
+        if(postenId == null) return Response.status(Status.NOT_FOUND).build();
+        nutzer.deleteEigenkreation(eigenkreation, postenId);
         return Response.ok().build();
     }
 
@@ -161,4 +177,5 @@ public class EigenkreationIdResource {
         if(optKunde.isEmpty()) return null;
         return optKunde.get();
     }
+    
 }

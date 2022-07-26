@@ -8,6 +8,8 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
+import de.hsos.swa.coldstoneicecreator.bestellung.gateway.BestellpostenRepository;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.ZutatenIdDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
@@ -17,6 +19,7 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
+import io.smallrye.common.constraint.NotNull;
 
 @ApplicationScoped
 public class EigenkreationRepository implements EigenkreationControl{
@@ -26,6 +29,9 @@ public class EigenkreationRepository implements EigenkreationControl{
 
     @Inject
     Event<ZutatenIdDAO> zutatWechseln;
+
+    @Inject
+    BestellpostenRepository postenRepo;
 
     @Override
     public boolean create(Nutzer kunde, Eigenkreation eigenkreation, Long anzahl) {
@@ -57,10 +63,22 @@ public class EigenkreationRepository implements EigenkreationControl{
     }
 
     @Override
-    public boolean delete(Long id, Nutzer kunde) {
-        List<Eigenkreation> eigenkreationen = kunde.getEigenkreationen();
+    public boolean delete(Long id, Nutzer nutzer) {
+        List<Eigenkreation> eigenkreationen = nutzer.getEigenkreationen();
+        if(eigenkreationen == null) return false;
         for(Eigenkreation ek : eigenkreationen) {
-            if(Long.compare(ek.getId(), id) == 0) ek.delete(); return true;
+            if(Long.compare(ek.getId(), id) == 0){
+                nutzer.deleteEigenkreation(ek, null);
+                // Bestellung bestellung = this.offeneBestellung(nutzer);
+                // //TODO lose Kopplung
+                // List<BestellpostenEigen> eigen = bestellung.getBestellpostenEigen();
+                // for(BestellpostenEigen bpe : eigen){
+                //     if(bpe.getEigenkreation().getId() == id){
+                //         postenRepo.postenLoeschenEigen(bpe.getId());
+                //         ek.delete();
+                //     }
+                // }
+            }
         }
         return false;
     }
@@ -169,5 +187,12 @@ public class EigenkreationRepository implements EigenkreationControl{
                 }
             }
         }
+    }
+
+    private Bestellung offeneBestellung(@NotNull Nutzer nutzer) {
+        for(Bestellung b : nutzer.getBestellungen()){
+            if(!b.isBestellt()) return b;
+        } 
+        return null;
     }
 }

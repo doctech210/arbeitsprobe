@@ -1,7 +1,9 @@
 package de.hsos.swa.coldstoneicecreator.bestellung.entity;
 
 import javax.enterprise.inject.Vetoed;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -14,7 +16,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 public class BestellpostenEigen extends PanacheEntityBase{
     @Id @GeneratedValue(generator = "bestellposten_seq")
     private Long id;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Eigenkreation kreation;
     private Long anzahl;
     

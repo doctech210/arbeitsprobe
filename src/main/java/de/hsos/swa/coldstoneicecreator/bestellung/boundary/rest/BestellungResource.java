@@ -82,8 +82,7 @@ public class BestellungResource {
         Bestellung bestellung = this.offeneBestellung(nutzer);
         if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
         bestellung.setBestellt(true);        
-        BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
-        return Response.ok(bestellungDTO).build();
+        return Response.ok().build();
     }
 
     @DELETE

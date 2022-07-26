@@ -17,6 +17,11 @@ import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
 public class BestellpostenRepository implements BestellpostenControl {
 
     @Override
+    public List<BestellpostenEigen> getAllEigen() {
+        return BestellpostenEigen.listAll();
+    }
+
+    @Override
     public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId, Long anzahl) {
         Eigenkreation kreation = Eigenkreation.findById(kreationId);
         Bestellung bestellung = Bestellung.findById(bestellId);
@@ -24,7 +29,7 @@ public class BestellpostenRepository implements BestellpostenControl {
         List<BestellpostenEigen> bestellposten = BestellpostenEigen.listAll();
         for(BestellpostenEigen bp : bestellposten){
             if(bp.getEigenkreation() == kreation){
-                bp.setAnzahl(anzahl);
+                bp.setAnzahl(bp.getAnzahl() + anzahl);
                 return null;
             }
         }
@@ -42,7 +47,7 @@ public class BestellpostenRepository implements BestellpostenControl {
         List<BestellpostenHaus> bestellposten = BestellpostenHaus.listAll();
         for(BestellpostenHaus bp : bestellposten){
             if(bp.getHauskreation() == kreation){
-                bp.setAnzahl(anzahl);
+                bp.setAnzahl(bp.getAnzahl() + anzahl);
                 return null;
             }
         }

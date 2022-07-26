@@ -42,7 +42,7 @@ public class Bestellung extends PanacheEntityBase{
         this.id = id;
     }
 
-    public List<BestellpostenEigen> getBestellposten() {
+    public List<BestellpostenEigen> getBestellpostenEigen() {
         return bestellpostenEigen;
     }
 
@@ -75,6 +75,7 @@ public class Bestellung extends PanacheEntityBase{
         for(int i = 0; i < bestellpostenEigen.size(); i++){
             if(Long.compare(postenId, bestellpostenEigen.get(i).getId()) == 0){
                 bestellpostenEigen.remove(i);
+                //BestellpostenEigen.deleteById(id);
             }
         }
     }

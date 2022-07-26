@@ -9,7 +9,40 @@
 
     .capsToCapitalize::first-line {
         text-transform: capitalize;
-    }     
+    }    
+    /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
+
+    /* The navigation bar */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 17px;
+  width:8%;
+}
+
+.navbar a:hover {
+  background: #ddd;
+  color: black;
+  width:8%;
+}
+
+.main {
+  padding: 16px;
+  margin-top: 30px;
+} 
 </style>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -21,16 +54,27 @@
 </head>
 <body>
     <p> 
-        {eigenkreationDTO.name}
-        {eigenkreationDTO.eissorte.name}
-        {eigenkreationDTO.eissorte2.name}
-        {#for zutat in eigenkreationDTO.zutaten}
-            {zutat.name}
-        {/for}
-        {eigenkreationDTO.sauce.name}
-        {#for allergen in eigenkreationDTO.allergene}
-            <div class="capsToCapitalize"> {allergen}</div>
-        {/for}
+        <div class="navbar">
+            <a href="/hauskreationen/">Hauskreationen</a>
+            <a href="/eigenkreationen/">Eigenkreationen</a>
+            <a href="/bestellungen/">Bestellungen</a>
+            <a href="/eis/">Eissorten</a>
+            <a href="/zutaten/">Zutaten</a>
+            <a href="/saucen/">Saucen</a>
+            <a href="/kunden/">Kunden</a>
+        </div>
+        <div class="main"> 
+            {eigenkreationDTO.name}
+            {eigenkreationDTO.eissorte.name}
+            {eigenkreationDTO.eissorte2.name}
+            {#for zutat in eigenkreationDTO.zutaten}
+                {zutat.name}
+            {/for}
+            {eigenkreationDTO.sauce.name}
+            {#for allergen in eigenkreationDTO.allergene}
+                <div class="capsToCapitalize"> {allergen}</div>
+            {/for}
+        </div>
     </p>
 </body>
 </html>
