@@ -117,31 +117,31 @@
                         <input type="hidden" name="SauceId" id="delete_{sauce.id}" value="{sauce.id}">
                     </form>
                 {/if} -->
-                
-                {/for}
-                <p>
-                <form action="erstellen" autocomplete="off">
-                  <div class="form-group py-3">
-                        <input type="text" class="cta-input" name="name" placeholder="Name" id="name" required>
-                  </div>
-                  <details>
-                    <summary>Allergene:</summary>
-                      <fieldset>
-                      {#for allergen in allergene}
-                        <div class="form-group py-3">
-                            {#if allergen.name() != "VEGAN"}
-                                <input type="checkbox" id="{allergen.name().toString()}" name="allergene" value="{allergen.name().toString()}">
-                                {allergen.name()}<br />
-                            {/if}
-                        </div>
-                      {/for}
-                      </fieldset>
-                  </details>
-
-                    <div class="row px-3 py-3">
-                        <input type="submit" formaction="http://localhost:8080/saucen/" formmethod="post">
+                {#if nutzer.role == "Admin"}
+                    {/for}
+                    <p>
+                    orm action="erstellen" autocomplete="off">
+                            lass="form-group py-3">
+                          <input type="text" class="cta-input" name="name" placeholder="Name" id="name" required>
                     </div>
-                </form>
+                        etails>
+                        ummary>Allergene:</summary>
+                        <fieldset>
+                            for allergen in allergene}
+                                 class="form-group py-3">
+                                     allergen.name() != "VEGAN"}
+                                    <input type="checkbox" id="{allergen.name().toString()}" name="allergene" value="{allergen.name().toString()}">
+                                    {allergen.name()}<br />
+                                {/if}
+                          </div>
+                        {/for}
+                        </fieldset>
+                  </details>
+                                                     class="row px-3 py-3">
+                            <input type="submit" formaction="http://localhost:8080/saucen/" formmethod="post">
+                        </div>
+                    </fo
+                {/if}rm>
                 </p>
                 <p>
                     <script>
