@@ -15,7 +15,7 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
 @RequestScoped
 public class HauskreationRepository implements HauskreationControl{

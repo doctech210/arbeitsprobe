@@ -1,8 +1,9 @@
-package de.hsos.swa.coldstoneicecreator.kunden.control;
+package de.hsos.swa.coldstoneicecreator.nutzer.control;
 
 import java.util.List;
 
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
+
 
 public interface NutzerControl {
     public boolean create(Nutzer kunde);

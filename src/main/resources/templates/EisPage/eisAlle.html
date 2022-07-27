@@ -92,7 +92,7 @@
                 <a href="/eis/">Eissorten</a>
                 <a href="/zutaten/">Zutaten</a>
                 <a href="/saucen/">Saucen</a>
-                <a href="/kunden/">Kunden</a>
+                <a href="/nutzer/">Nutzer</a>
             </div>
             <div class="main">
                 <h1>Eis</h1>
@@ -110,8 +110,39 @@
                         {/if}
                     </ul>
                 </p>
+                <!-- {#if nutzer.role == "Admin"}
+                    <input type="submit" value="Loeschen" form="delete_{eis.id}" class="cta-button">
+                    <form action="http://localhost:8080/eis/{eis.id}/loeschen" method="POST" id="delete_{eis.id}">
+                        <input type="hidden" name="EisId" id="delete_{eis.id}" value="{eis.id}">
+                    </form>
+                {/if} -->
                 {/for}
-                <p>
+                {#if nutzer.role == "Admin"}
+                    <p>
+                    <form action="erstellen" autocomplete="off">
+                    <div class="form-group py-3">
+                            <input type="text" class="cta-input" name="name" placeholder="Name" id="name" required>
+                    </div>
+                    <details>
+                        <summary>Allergene:</summary>
+                        <fieldset>
+                        {#for allergen in allergene}
+                            <div class="form-group py-3">
+                                {#if allergen.name() != "VEGAN"}
+                                    <input type="checkbox" id="{allergen.name().toString()}" name="allergene" value="{allergen.name().toString()}">
+                                    {allergen.name()}<br />
+                                {/if}
+                            </div>
+                        {/for}
+                        </fieldset>
+                    </details>
+
+                        <div class="row px-3 py-3">
+                            <input type="submit" formaction="http://localhost:8080/eis/" formmethod="post">
+                        </div>
+                    </form>
+                    </p>
+                {/if}
                     <script>
                         function insertParam(key, value) {
                             key = escape(key); value = escape(value);

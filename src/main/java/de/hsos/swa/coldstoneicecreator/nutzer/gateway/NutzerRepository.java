@@ -1,14 +1,12 @@
-package de.hsos.swa.coldstoneicecreator.kunden.gateway;
+package de.hsos.swa.coldstoneicecreator.nutzer.gateway;
 
 import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import de.hsos.swa.coldstoneicecreator.kunden.control.NutzerControl;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
-//import de.hsos.swa.coldstoneicecreator.kunden.entity.UserLogin;
-//import io.quarkus.elytron.security.common.BcryptUtil;
+import de.hsos.swa.coldstoneicecreator.nutzer.control.NutzerControl;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
 @ApplicationScoped
 public class NutzerRepository implements NutzerControl{

@@ -1,12 +1,12 @@
-package de.hsos.swa.coldstoneicecreator.kunden.boundary.dto;
+package de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto;
 
 import java.util.List;
 import java.util.ArrayList;
 
 import javax.validation.constraints.Pattern;
 
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 
 public class NutzerDTO {

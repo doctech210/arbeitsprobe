@@ -1,3 +1,4 @@
+package de.hsos.swa.coldstoneicecreator.nutzer.entity;
 // package de.hsos.swa.coldstoneicecreator.kunden.entity;
 
 // import javax.persistence.Entity;

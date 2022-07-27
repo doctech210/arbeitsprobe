@@ -65,7 +65,9 @@ public class Hauskreation extends PanacheEntityBase implements Kreation{
         for(Zutat zutat : zutaten) {
             neueAllergene.addAll(zutat.getAllergene());
         }
-        neueAllergene.addAll(sauce.getAllergene());
+        if(sauce != null) {
+            neueAllergene.addAll(sauce.getAllergene());
+        }
         this.allergene = neueAllergene;
     }
 

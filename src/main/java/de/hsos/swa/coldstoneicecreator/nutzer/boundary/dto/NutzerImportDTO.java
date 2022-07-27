@@ -1,8 +1,8 @@
-package de.hsos.swa.coldstoneicecreator.kunden.boundary.dto;
+package de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto;
 
 import javax.validation.constraints.Pattern;
 
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
 public class NutzerImportDTO {
     public Long id;

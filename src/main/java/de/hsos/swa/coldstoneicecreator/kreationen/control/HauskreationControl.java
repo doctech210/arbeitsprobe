@@ -3,7 +3,7 @@ package de.hsos.swa.coldstoneicecreator.kreationen.control;
 import java.util.List;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 
 public interface HauskreationControl {

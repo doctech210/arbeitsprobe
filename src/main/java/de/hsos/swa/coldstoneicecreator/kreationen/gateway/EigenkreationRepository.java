@@ -14,7 +14,7 @@ import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.ZutatenIdDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;

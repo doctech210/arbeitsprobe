@@ -22,6 +22,11 @@ public class BestellpostenRepository implements BestellpostenControl {
     }
 
     @Override
+    public List<BestellpostenHaus> getAllHaus(){
+        return BestellpostenHaus.listAll();
+    }
+
+    @Override
     public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId, Long anzahl) {
         Eigenkreation kreation = Eigenkreation.findById(kreationId);
         Bestellung bestellung = Bestellung.findById(bestellId);

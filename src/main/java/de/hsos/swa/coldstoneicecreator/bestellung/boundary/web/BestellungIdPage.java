@@ -29,7 +29,7 @@ import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 
@@ -42,7 +42,7 @@ import io.quarkus.qute.TemplateInstance;
 public class BestellungIdPage {
     
     @Inject
-    BestellungControl bestellungRepo;
+    BestellungControl bestellRepo;
 
     @Inject
     BestellpostenControl bestellpostenRepo;
@@ -66,9 +66,9 @@ public class BestellungIdPage {
         if(nutzer == null) return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Booking not found");
         Bestellung bestellung = null;
         if(nutzer.getRole().equals("Admin")){
-            bestellung = bestellungRepo.bestellungAbfragen(id);
+            bestellung = bestellRepo.bestellungAbfragen(id);
         }else{
-            bestellung = bestellungRepo.bestellungAbfragen(id, nutzer.getId());
+            bestellung = bestellRepo.bestellungAbfragen(id, nutzer.getId());
         }
         if(bestellung == null) return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden");
         BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
@@ -89,9 +89,9 @@ public class BestellungIdPage {
         if(nutzer == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Nutzer nicht gefunden")).build();
         Bestellung bestellung = null;
         if(nutzer.getRole().equals("Admin")){
-            bestellung = bestellungRepo.bestellungAbfragen(id);
+            bestellung = bestellRepo.bestellungAbfragen(id);
         }else{
-            bestellung = bestellungRepo.bestellungAbfragen(id, nutzer.getId());
+            bestellung = bestellRepo.bestellungAbfragen(id, nutzer.getId());
         }
         if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Booking not found")).build();
         bestellpostenRepo.postenAendernEigen(id, postenId, anzahl);
@@ -112,9 +112,9 @@ public class BestellungIdPage {
         if(nutzer == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Nutzer nicht gefunden")).build();
         Bestellung bestellung = null;
         if(nutzer.getRole().equals("Admin")){
-            bestellung = bestellungRepo.bestellungAbfragen(id);
+            bestellung = bestellRepo.bestellungAbfragen(id);
         }else{
-            bestellung = bestellungRepo.bestellungAbfragen(id, nutzer.getId());
+            bestellung = bestellRepo.bestellungAbfragen(id, nutzer.getId());
         }
         if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden")).build();
         bestellpostenRepo.postenAendernHaus(id, postenId, anzahl);
@@ -137,6 +137,10 @@ public class BestellungIdPage {
         if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden")).build();
         bestellpostenRepo.postenLoeschenHaus(postenId);
         bestellung.removePostenHaus(postenId);
+        if(bestellRepo.isBestellungLeer(bestellung.getId())){
+            bestellRepo.bestellungLoeschen(bestellung.getId(), nutzer.getId());
+            nutzer.deleteBestellung();
+        }
         //return Response.noContent().build();
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
@@ -153,10 +157,18 @@ public class BestellungIdPage {
         Nutzer nutzer = this.eingeloggterKunde(sec);
         if(nutzer == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Nutzer nicht gefunden")).build();
         Bestellung bestellung = this.offeneBestellung(nutzer);
-        if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden")).build();
+        if(nutzer.getRole().equals("Kunde")){
+            if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden")).build();
+        }else{
+            if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Admins koennen Bestellungen nicht loeschen!")).build();
+        }
         bestellpostenRepo.postenLoeschenEigen(postenId);
         bestellung.removePostenEigen(postenId);
-        return Response.ok().header("Refresh", "0; url=/bookings").build();
+        if(bestellRepo.isBestellungLeer(bestellung.getId())){
+            bestellRepo.bestellungLoeschen(bestellung.getId(), nutzer.getId());
+            nutzer.deleteBestellung();
+        }
+        return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
 
     private Bestellung offeneBestellung(@NotNull Nutzer nutzer) {

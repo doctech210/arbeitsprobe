@@ -1,3 +1,4 @@
+package de.hsos.swa.coldstoneicecreator.nutzer.control;
 // package de.hsos.swa.coldstoneicecreator.kunden.control;
 
 // import javax.enterprise.event.Observes;

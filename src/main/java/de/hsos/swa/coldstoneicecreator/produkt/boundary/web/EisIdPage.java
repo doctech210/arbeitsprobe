@@ -77,6 +77,7 @@ public class EisIdPage {
     @POST
     @Transactional
     @RolesAllowed({"Admin"})
+    @Path("/loeschen")
     @Operation(
         summary = "Loeschen einer bestimmten Eissorte",
         description = "Loeschen einer bestimmten Eissorte ueber die uebergebene ID"

@@ -1,7 +1,12 @@
 package de.hsos.swa.coldstoneicecreator.produkt.boundary.web;
 
+import java.security.Principal;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -10,13 +15,16 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
@@ -25,6 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
 
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
@@ -44,7 +53,7 @@ public class EisPage {
     @CheckedTemplate
     static class Templates {
         
-        static native TemplateInstance eisAlle(List<EisDTO> eisDTO);
+        static native TemplateInstance eisAlle(List<EisDTO> eisDTO, Nutzer nutzer, List<Allergene> allergene);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }
@@ -55,8 +64,9 @@ public class EisPage {
         summary = "Gibt alle Eissorten zurueck",
         description = "Gibt alle Eissorten ueber den eingestellten Filter zurueck"
     )
-    public TemplateInstance get(@Valid @QueryParam("Allergene") List<Allergene> allergene) {
+    public TemplateInstance get(@Context SecurityContext sec, @Valid @QueryParam("Allergene") List<Allergene> allergene) {
         List<Eis> alle = eisRepo.get();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
         if(allergene != null) {
             alle = eisRepo.getOhneAllergene(allergene);
         }
@@ -64,7 +74,8 @@ public class EisPage {
         for(Eis eis : alle) {
             alleDTO.add(EisDTO.Converter.toDTO(eis));
         }
-        return Templates.eisAlle(alleDTO);
+        List<Allergene> alleAllergene = new ArrayList<Allergene>(EnumSet.allOf(Allergene.class));
+        return Templates.eisAlle(alleDTO, nutzer, alleAllergene);
     }
 
     @POST
@@ -74,11 +85,25 @@ public class EisPage {
         summary = "Erstellen eine neue Eissorte",
         description = "Erstellen einer neuen Eissorte"
     )
-    public TemplateInstance post(@Valid @NotNull EisDTO eisDTO) {
-        if(eisDTO == null) return Templates.error(Status.NOT_ACCEPTABLE.getStatusCode(), "Fehlerhafte Eingabe");
-        Eis eis = EisDTO.Converter.toEis(eisDTO);
+    public Response post(@Valid @NotNull @FormParam("name") String name, @FormParam("allergene") String[] allergene) {
+        Set<Allergene> enthalten = new HashSet<>();
+        List<Allergene> alleAllergene = new ArrayList<Allergene>(EnumSet.allOf(Allergene.class));
+        for(String allergen : allergene) {
+            for(Allergene gesucht : alleAllergene) {
+                if(allergen.equals(gesucht.toString()))
+                enthalten.add(gesucht);
+            }
+        }
+        Eis eis = new Eis(null, name, enthalten);
         eisRepo.create(eis);
-        //return Response.ok().build();
-        return get(null);
+        return Response.ok().header("Refresh", "0; url=/eis").build();
+    }
+
+    private Nutzer eingeloggterKunde(SecurityContext sec) {
+        Principal user = sec.getUserPrincipal();
+        if(user == null) return null;
+        Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
+        if(optKunde.isEmpty()) return null;
+        return optKunde.get();
     }
 }

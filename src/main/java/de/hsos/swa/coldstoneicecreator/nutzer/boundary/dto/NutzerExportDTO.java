@@ -1,6 +1,6 @@
-package de.hsos.swa.coldstoneicecreator.kunden.boundary.dto;
+package de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto;
 
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
 public class NutzerExportDTO {
 

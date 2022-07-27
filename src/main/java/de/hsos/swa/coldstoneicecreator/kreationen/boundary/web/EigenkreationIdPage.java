@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -35,7 +36,7 @@ import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
 import de.hsos.swa.coldstoneicecreator.produkt.control.SauceControl;
 import de.hsos.swa.coldstoneicecreator.produkt.control.ZutatControl;
@@ -123,12 +124,13 @@ public class EigenkreationIdPage {
     @POST
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(
         summary = "Fuegt eine bestimmte Eigenkreation der Bestellung hinzu",
         description = "Fuegt eine bereits existierende Eigenkreation ueber die uerbergebene ID, " + 
                         "eines angemeldeten Nutzers, der aktuellen Bestellung hinzu"
     )
-    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PositiveOrZero Long anzahl) {
+    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PositiveOrZero @FormParam("anzahl") Long anzahl) {
         Nutzer kunde = this.eingeloggterKunde(sec);
         if(kunde == null) return Response.status(Status.NOT_FOUND).build();
         eigenkreationRepo.post(id, anzahl, kunde);

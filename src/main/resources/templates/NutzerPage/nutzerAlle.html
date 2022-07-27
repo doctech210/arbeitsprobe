@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Alle Kunden</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Roboto, "Tahoma", Arial, sans-serif;
+        }
+        form{
+            float: left;
+        }
+        #just-line-break {
+            white-space: pre-line;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        h1 { font-size: 2.25rem; }
+        h2 { font-size: 1.6rem }
+        h3 { font-size: 1.5rem }
+        h4 { font-size: 1.4rem }
+        h5 { font-size: 1.25rem }
+        h6 { font-size: 1rem }
+        p {
+            padding: .15rem 0;
+            margin: 0;
+            line-height: 1.3rem;
+        }
+        a {
+            text-decoration: underline;
+            color: #1259A5;
+        }
+        a:hover, a:active { color: #c00; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            clear: both;
+        }        
+        .content-wrapper {
+            padding: 0 13rem;
+            background: white;
+        }
+        .left-column {
+            grid-column: span 8;
+            padding-right: 3rem;
+        }
+        .left-column p {
+            padding: .15rem 0;
+            margin: 0;
+            font-weight: 300;
+        }
+        .left-column ul {
+            margin: 0;
+            padding: 10px 0 0 25px;
+            list-style-type: "\1F680";
+            font-weight: 300;
+        }
+        .left-column li { padding-left: 10px; }
+        .left-column .cta-button {
+            margin: 20px 0;
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #18A0FB;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            text-transform: uppercase;
+            border: none;
+        }
+        .left-column .cta-input {
+            padding: 1rem;
+            margin: 20px 0;
+            background-color: white;
+            font-weight: 600;
+            color: #18A0FB;
+            /* border: none; */
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+    <div class="left-column">
+        <h1>Liste aller Kunden</h1>
+        <ul>
+            {#for nutzer in nutzerDTO}
+            <p>
+            <h2>
+                {#if nutzer.id > 0}
+                    ID: {nutzer.id}
+                    {nutzer.name}
+                    {nutzer.role}
+                    
+                    <div id="just-line-break"></div>
+                    <form action="http://localhost:8080/kunden/{nutzer.id}" method="GET" id="get_{nutzer.id}">
+                        <input type="hidden" value="{nutzer.id}" name="kundeSuchId">
+                    </form>
+                    <input type="submit" value="Ansehen" form="get_{nutzer.id}" class="cta-button">
+
+                    <form action="http://localhost:8080/kunden/loeschen" method="POST" id="delete_{nutzer.id}">
+                        <input type="hidden" value="{nutzer.id}" name="kundeId">
+                    </form>
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="submit" value="Loeschen" form="delete_{nutzer.id}" class="cta-button">
+                {/if}
+            </h2>
+            </p>
+            {/for}
+                    </ul>
+            <p>
+                Noch kein Kunde bei uns?
+                <form action="registrieren" autocomplete="off">
+                    <div class="form-group py-3">
+                        <input type="text" class="cta-input" name="name" placeholder="Name" id="name" required>
+                    </div>
+                    <div class="form-group py-3">
+                        <input type="password" class="cta-input" name="password" placeholder="Passwort" id="password" required>
+                    </div>
+
+                    <div class="row px-3 py-3">
+                        <button type="submit" formaction="http://localhost:8080/login/" formmethod="post"
+                            class="cta-button">Jetzt registrieren!</button>
+                    </div>
+                </form>
+            </p>
+        <p><a href="/" class="cta-button">Home</a></p>
+        </div>
+    </div>
+</body>
+</html>

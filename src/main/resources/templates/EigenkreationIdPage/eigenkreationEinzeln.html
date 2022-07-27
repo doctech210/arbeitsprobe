@@ -61,19 +61,45 @@
             <a href="/eis/">Eissorten</a>
             <a href="/zutaten/">Zutaten</a>
             <a href="/saucen/">Saucen</a>
-            <a href="/kunden/">Kunden</a>
+            <a href="/nutzer/">Nutzer</a>
         </div>
         <div class="main"> 
-            {eigenkreationDTO.name}
-            {eigenkreationDTO.eissorte.name}
-            {eigenkreationDTO.eissorte2.name}
-            {#for zutat in eigenkreationDTO.zutaten}
-                {zutat.name}
-            {/for}
-            {eigenkreationDTO.sauce.name}
-            {#for allergen in eigenkreationDTO.allergene}
-                <div class="capsToCapitalize"> {allergen}</div>
-            {/for}
+            <p>
+                <h2>{eigenkreationDTO.name}</h2>
+            </p>
+            <p>
+                <ul>
+                    <p>
+                        <strong>Eissorte</strong>
+                        <li>{eigenkreationDTO.eissorte.name}</li>
+                        {#if eigenkreationDTO.eissorte.id != eigenkreationDTO.eissorte2.id}
+                            <li>{eigenkreationDTO.eissorte2.name}</li>
+                        {/if}
+                    </p>
+                    <p>
+                        <strong>Toppings</strong>
+                        {#for zutat in eigenkreationDTO.zutaten}
+                            <li>
+                                {zutat.name}
+                            </li>
+                        {/for}
+                    </p>
+                    {#if eigenkreationDTO.sauce != null}
+                        <p>
+                            <strong>Soße</strong>
+                            <li>
+                                {eigenkreationDTO.sauce.name}
+                            </li>
+                        </p>
+                    {/if}
+                    <p>
+                        <strong>Allergene</strong>
+                        {#for allergen in eigenkreationDTO.allergene}
+                            <li><div class="capsToCapitalize"> {allergen}</div></li>
+                        {/for}
+                    </p>
+                </ul>
+            </p>
         </div>
     </p>
 </body>

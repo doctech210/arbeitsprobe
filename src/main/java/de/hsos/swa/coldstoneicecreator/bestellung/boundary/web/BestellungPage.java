@@ -29,7 +29,7 @@ import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 
@@ -98,7 +98,7 @@ public class BestellungPage {
 
     @POST
     @Transactional
-    @Path("/delete/")
+    @Path("/loeschen")
     @RolesAllowed("Kunde")
     @Operation(
         summary = "Loescht die aktuelle Bestellung",
@@ -110,8 +110,9 @@ public class BestellungPage {
         Bestellung bestellung = this.offeneBestellung(nutzer);
         if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden")).build();
         bestellungRepo.bestellungLoeschen(bestellung.getId());
+        nutzer.deleteBestellung();
         //return Response.noContent().build();
-        return Response.ok().header("Refresh", "0; url=/bookings").build();
+        return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
 
     /**

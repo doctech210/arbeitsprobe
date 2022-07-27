@@ -1,4 +1,4 @@
-package de.hsos.swa.coldstoneicecreator.kunden.entity;
+package de.hsos.swa.coldstoneicecreator.nutzer.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,22 +63,36 @@ public class Nutzer extends PanacheEntityBase{
     }
 
     public void deleteEigenkreation(Eigenkreation eigenkreation, Long postenId){
-        Bestellung zuLoeschen = null;
+        //Bestellung zuLoeschen = null;
         for(Bestellung bestellung : bestellungen) {
             if(!bestellung.isBestellt()){
                 if(postenId != null) {
                     bestellung.removePostenEigen(postenId);
                 }
                     if(bestellung.getBestellpostenEigen().size() == 0 && bestellung.getBestellpostenHaus().size() == 0) {
-                        zuLoeschen = bestellung;
+                        //zuLoeschen = bestellung;
+                        this.deleteBestellung();
                     }
+            }
+        }
+        // if(zuLoeschen != null) {
+        //     this.bestellungen.remove(zuLoeschen);
+        //     zuLoeschen.delete();
+        // }
+        eigenkreation.setBestellbar(false);
+    }
+
+    public void deleteBestellung(){
+        Bestellung zuLoeschen = null;
+        for(Bestellung bestellung : bestellungen){
+            if(!bestellung.isBestellt()){
+                zuLoeschen = bestellung;
             }
         }
         if(zuLoeschen != null) {
             this.bestellungen.remove(zuLoeschen);
             zuLoeschen.delete();
         }
-        eigenkreation.setBestellbar(false);
     }
 
     public Long getId() {

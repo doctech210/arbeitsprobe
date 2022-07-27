@@ -3,8 +3,8 @@ package de.hsos.swa.coldstoneicecreator.bestellung.boundary.rest;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto.BestellungDTO;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
 
 import java.util.List;
 import java.util.Optional;

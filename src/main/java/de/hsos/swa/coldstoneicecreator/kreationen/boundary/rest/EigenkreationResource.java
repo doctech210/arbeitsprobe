@@ -30,7 +30,7 @@ import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.*;
 import de.hsos.swa.coldstoneicecreator.produkt.gateway.EisRepository;
 import de.hsos.swa.coldstoneicecreator.produkt.gateway.SauceRepository;

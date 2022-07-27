@@ -1,7 +1,7 @@
 package de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Kreation;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
 public class KreationDAO {
 

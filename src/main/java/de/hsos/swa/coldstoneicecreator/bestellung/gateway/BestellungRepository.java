@@ -10,10 +10,12 @@ import javax.ws.rs.NotFoundException;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellungControl;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
+import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationIdDAO;
-import de.hsos.swa.coldstoneicecreator.kunden.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
 @ApplicationScoped
 public class BestellungRepository implements BestellungControl {
@@ -95,6 +97,17 @@ public class BestellungRepository implements BestellungControl {
         Nutzer kunde = kreationDAO.getKunde();
         kunde.addBestellung(bestellung);
         neueKreation.fire(new KreationIdDAO(kreationDAO, bestellung.getId())); //Geht an das BestellpostenRepository
+    }
+
+    @Override
+    public boolean isBestellungLeer(Long bestellId){
+        Bestellung bestellung = this.bestellungAbfragen(bestellId); 
+        List<BestellpostenEigen> eigen = bestellung.getBestellpostenEigen();
+        List<BestellpostenHaus> haus = bestellung.getBestellpostenHaus();
+        if(eigen.size() == 0 && haus.size() == 0){
+            return true;
+        }
+        return false;
     }
 }
 

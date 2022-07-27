@@ -19,4 +19,6 @@ public interface BestellungControl {
     public boolean bestellungLoeschen(Long bestellId);
 
     public boolean bestellungLoeschen(Long bestellId, Long kundeId);
+    
+    public boolean isBestellungLeer(Long bestellId);
 }

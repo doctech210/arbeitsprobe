@@ -73,6 +73,34 @@
   margin-bottom: 30px;
 }
 
+/*https://www.w3schools.com/howto/howto_js_collapsible.asp fuer das collapsible*/
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
 </style>
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -91,11 +119,13 @@
                 <a href="/eis/">Eissorten</a>
                 <a href="/zutaten/">Zutaten</a>
                 <a href="/saucen/">Saucen</a>
-                <a href="/kunden/">Kunden</a>
+                <a href="/nutzer/">Nutzer</a>
             </div>
             <div class="main">
 
                 <h1>Eigenkreationen</h1>
+                
+                <a href="/eigenkreationen/erstellen">Eigenkreationen</a>
                 {#for eigenkreation in eigenkreationenDTO}
                 {#if eigenkreation.bestellbar}
                     <p>
@@ -126,6 +156,15 @@
                             {/for}
                         {/if}
                     </ul>
+                    <form action="/eigenkreationen/{eigenkreation.id}">
+                        <input type="submit" value="Ansehen" />
+                    </form>
+                
+                    <form action="/eigenkreationen/{eigenkreation.id}" method="POST" id="add_{eigenkreation.id}">
+                        <input type="number" value="1" name="anzahl">
+                    <input type="hidden" name="_method" value="POST">
+                    <input type="submit" value="In den Warenkorb" form="add_{eigenkreation.id}">
+                    </form>
                 </p>
                 {/for}
                 <p>

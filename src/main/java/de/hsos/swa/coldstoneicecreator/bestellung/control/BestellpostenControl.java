@@ -8,6 +8,8 @@ import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenHaus;
 public interface BestellpostenControl {
 
     public List<BestellpostenEigen> getAllEigen();
+
+    public List<BestellpostenHaus> getAllHaus();
     
     public BestellpostenEigen postenEigenAnlegen(Long bestellId, Long kreationId, Long anzahl);
 
@@ -20,4 +22,5 @@ public interface BestellpostenControl {
     public boolean postenLoeschenEigen(Long postenId);
 
     public boolean postenLoeschenHaus(Long postenId);
+
 }
