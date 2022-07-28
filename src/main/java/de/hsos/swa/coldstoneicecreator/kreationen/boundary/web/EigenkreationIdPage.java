@@ -25,6 +25,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -34,7 +35,6 @@ import org.eclipse.microprofile.faulttolerance.Timeout;
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
-import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
@@ -128,26 +128,49 @@ public class EigenkreationIdPage {
         return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden");
     }
 
-    @PUT
+    @POST
     @Transactional
+    @Path("/put/")
+    @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"Admin", "Kunde"})
     @Operation(
         summary = "Aendern einer bestimmten Eigenkreation",
         description = "Aendert eine bestimmte Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
-    public Response put(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @Valid KreationIdDTO kreationIdDTO) {
+    public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @FormParam("name") String name, @FormParam("eis") Long eisId, @FormParam("eis2") Long eis2Id, @FormParam("sauce") Long sauceId, @FormParam("zutat") String[] zutatenId, @FormParam("anzahl") Long anzahl) {
         Nutzer nutzer = this.eingeloggterKunde(sec);
+        Eigenkreation eigenkreationAlt = eigenkreationRepo.getById(id);
         if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
-        Eis eissorte1 = eisRepo.getById(kreationIdDTO.eissorte1Id);
-        Eis eissorte2 = eisRepo.getById(kreationIdDTO.eissorte2Id);
-        List<Zutat> zutaten = new ArrayList<>();
-        for(Long zutatId : kreationIdDTO.zutatenId) {
-            zutaten.add(zutatRepo.getById(zutatId));
+        Eis eissorte1 = eisRepo.getById(eisId);
+        Eis eissorte2 = null;
+        if(eis2Id != null) {
+            eissorte2= eisRepo.getById(eis2Id);
+        }else {
+            eissorte2 = eissorte1;
         }
-        Sauce sauce = sauceRepo.getById(kreationIdDTO.sauceId);
-        Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, kreationIdDTO.name);
-        eigenkreationRepo.put(id, eigenkreation, nutzer);
-        return Response.ok().build();
+        Sauce sauce = null;
+        if(sauceId != null){
+            sauce = sauceRepo.getById(sauceId);
+        }
+        List<Zutat> zutaten = new ArrayList<>();
+        for(String zutatId : zutatenId) {
+        if(zutatenId != null)
+            {
+                zutaten.add(zutatRepo.getById(Long.valueOf(zutatId)));
+            }
+        }
+        if(name == null) {
+            name = eigenkreationAlt.getName();
+        }
+        Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, name);
+        if(anzahl == null) {
+            eigenkreationRepo.create(nutzer, eigenkreation);
+        }else{
+            eigenkreationRepo.create(nutzer, eigenkreation, null);
+        }
+        eigenkreationAlt.setBestellbar(false);
+        
+        return Response.seeOther(UriBuilder.fromPath("/eigenkreationen").build()).build();
     }
     
     @POST

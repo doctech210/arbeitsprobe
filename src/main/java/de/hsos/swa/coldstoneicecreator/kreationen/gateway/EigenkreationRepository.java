@@ -42,6 +42,15 @@ public class EigenkreationRepository implements EigenkreationControl{
     }
 
     @Override
+    public boolean create(Nutzer nutzer, Eigenkreation eigenkreation) {
+        if(eigenkreation == null) return false;
+        eigenkreation.setId(null);
+        eigenkreation.persist();
+        nutzer.addEigenkreation(eigenkreation);
+        return true;
+    }
+
+    @Override
     public List<Eigenkreation> get() {
         return Eigenkreation.listAll();
     }

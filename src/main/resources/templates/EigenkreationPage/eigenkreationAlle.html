@@ -11,9 +11,9 @@
     .capsToCapitalize::first-line {
         text-transform: capitalize;
     }    
-    /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
+/*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
 
-    /* The navigation bar */
+/* The navigation bar */
 .navbarallergene {
   overflow: hidden;
   background-color: #333;
@@ -130,45 +130,45 @@
                 </form>
 
                 {#for eigenkreation in eigenkreationenDTO}
-                {#if eigenkreation.bestellbar}
-                    <p>
-                        <h2>{eigenkreation.name}</h2>
-                    </p>
-                    <p>
-                        <ul>
-                        <strong>Eissorte</strong>
-                            <li>{eigenkreation.eissorte.name}</li>
-                            {#if eigenkreation.eissorte.id != eigenkreation.eissorte2.id}
-                                <li>{eigenkreation.eissorte2.name}</li>
-                            {/if}
-                            <strong>Toppings</strong>
-                            {#for zutat in eigenkreation.zutaten}
-                                <li>
-                                    {zutat.name}
-                                </li>
-                            {/for}
-                            {#if eigenkreation.sauce != null}
-                                <strong>Soße</strong>
-                                <li>
-                                    {eigenkreation.sauce.name}
-                                </li>
-                            {/if}
-                            <strong>Allergene</strong>
-                            {#for allergen in eigenkreation.allergene}
-                                <li><div class="capsToCapitalize"> {allergen}</div></li>
-                            {/for}
-                        {/if}
-                    </ul>
-                    <form action="/eigenkreationen/{eigenkreation.id}">
-                        <input type="submit" value="Ansehen" />
-                    </form>
-                
-                    <form action="/eigenkreationen/{eigenkreation.id}" method="POST" id="add_{eigenkreation.id}">
-                        <input type="number" value="1" name="anzahl">
-                    <input type="hidden" name="_method" value="POST">
-                    <input type="submit" value="In den Warenkorb" form="add_{eigenkreation.id}">
-                    </form>
-                </p>
+                    {#if eigenkreation.bestellbar}
+                        <p>
+                            <h2>{eigenkreation.name}</h2>
+                        </p>
+                        <p>
+                            <ul>
+                            <strong>Eissorte</strong>
+                                <li>{eigenkreation.eissorte.name}</li>
+                                {#if eigenkreation.eissorte.id != eigenkreation.eissorte2.id}
+                                    <li>{eigenkreation.eissorte2.name}</li>
+                                {/if}
+                                <strong>Toppings</strong>
+                                {#for zutat in eigenkreation.zutaten}
+                                    <li>
+                                        {zutat.name}
+                                    </li>
+                                {/for}
+                                {#if eigenkreation.sauce != null}
+                                    <strong>Soße</strong>
+                                    <li>
+                                        {eigenkreation.sauce.name}
+                                    </li>
+                                {/if}
+                                <strong>Allergene</strong>
+                                {#for allergen in eigenkreation.allergene}
+                                    <li><div class="capsToCapitalize"> {allergen}</div></li>
+                                {/for}
+                            </ul>
+                        </p>
+                        <form action="/eigenkreationen/{eigenkreation.id}">
+                            <input type="submit" value="Ansehen" />
+                        </form>
+                    
+                        <form action="/eigenkreationen/{eigenkreation.id}" method="POST" id="add_{eigenkreation.id}">
+                            <input type="number" value="1" name="anzahl">
+                            <input type="hidden" name="_method" value="POST">
+                            <input type="submit" value="In den Warenkorb" form="add_{eigenkreation.id}">
+                        </form>
+                    {/if}
                 {/for}
                 <p>
                     <script>

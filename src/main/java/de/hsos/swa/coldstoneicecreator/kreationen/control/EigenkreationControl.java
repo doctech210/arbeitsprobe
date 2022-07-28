@@ -9,6 +9,8 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 public interface EigenkreationControl {
     
     public boolean create(Nutzer nutzer, Eigenkreation eigenkreation, Long anzahl);
+
+    public boolean create(Nutzer nutzer, Eigenkreation eigenkreation);
     
     public List<Eigenkreation> get();
 

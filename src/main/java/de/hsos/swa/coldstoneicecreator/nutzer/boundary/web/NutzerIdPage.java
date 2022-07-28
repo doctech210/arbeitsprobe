@@ -19,7 +19,6 @@ import io.quarkus.qute.TemplateInstance;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerExportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerImportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.control.NutzerControl;
