@@ -125,7 +125,10 @@
 
                 <h1>Eigenkreationen</h1>
                 
-                <a href="/eigenkreationen/erstellen">Eigenkreationen</a>
+                <form action="/eigenkreationen/erstellen">
+                    <input type="submit" value="Erstelle deine eigene Kreation" />
+                </form>
+
                 {#for eigenkreation in eigenkreationenDTO}
                 {#if eigenkreation.bestellbar}
                     <p>

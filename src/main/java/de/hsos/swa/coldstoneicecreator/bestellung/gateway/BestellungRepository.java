@@ -32,8 +32,8 @@ public class BestellungRepository implements BestellungControl {
     }
 
     @Override
-    public List<Bestellung> bestellungenAbfragen(Long kundeId) {
-        return Bestellung.list("bestellId_id", kundeId);
+    public List<Bestellung> bestellungenAbfragen(Long nutzerId) {
+        return Bestellung.list("bestellId_id", nutzerId);
     }
 
     @Override
@@ -44,8 +44,8 @@ public class BestellungRepository implements BestellungControl {
     }
 
     @Override
-    public Bestellung bestellungAbfragen(Long bestellId, Long kundeId) {
-        List<Bestellung> bestellungen = Bestellung.list("bestellId_id", kundeId);
+    public Bestellung bestellungAbfragen(Long bestellId, Long nutzerId) {
+        List<Bestellung> bestellungen = Bestellung.list("bestellId_id", nutzerId);
         Bestellung bestellung = null;
         for(Bestellung b : bestellungen) {
             if(Long.compare(b.getId(), bestellId) == 0) bestellung = b;
@@ -61,8 +61,8 @@ public class BestellungRepository implements BestellungControl {
     }
 
     @Override
-    public Bestellung bestellungAnlegen(Bestellung bestellung, Long kundeId) {
-        List<Bestellung> bestellungen = this.bestellungenAbfragen(kundeId);
+    public Bestellung bestellungAnlegen(Bestellung bestellung, Long nutzerId) {
+        List<Bestellung> bestellungen = this.bestellungenAbfragen(nutzerId);
         for(Bestellung b : bestellungen) {
             if(!b.isBestellt()) return null;
         }
@@ -77,8 +77,8 @@ public class BestellungRepository implements BestellungControl {
     }
 
     @Override
-    public boolean bestellungLoeschen(Long bestellId, Long kundeId) {
-        List<Bestellung> bestellungen = this.bestellungenAbfragen(kundeId);
+    public boolean bestellungLoeschen(Long bestellId, Long nutzerId) {
+        List<Bestellung> bestellungen = this.bestellungenAbfragen(nutzerId);
         for(Bestellung b : bestellungen) {
             if(Long.compare(b.getId(), bestellId) == 0) b.delete(); return true;
         }
@@ -94,8 +94,8 @@ public class BestellungRepository implements BestellungControl {
             }
         }
         Bestellung bestellung = this.bestellungAnlegen(new Bestellung(), kreationDAO.getKunde().getId());
-        Nutzer kunde = kreationDAO.getKunde();
-        kunde.addBestellung(bestellung);
+        Nutzer nutzer = kreationDAO.getKunde();
+        nutzer.addBestellung(bestellung);
         neueKreation.fire(new KreationIdDAO(kreationDAO, bestellung.getId())); //Geht an das BestellpostenRepository
     }
 

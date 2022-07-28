@@ -9,7 +9,7 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 public interface HauskreationControl {
     public boolean create(Hauskreation hauskreation);
 
-    public boolean create(Nutzer kunde, Hauskreation eigenkreation, Long anzahl);
+    public boolean create(Nutzer nutzer, Hauskreation eigenkreation, Long anzahl);
     
     public List<Hauskreation> get();
 

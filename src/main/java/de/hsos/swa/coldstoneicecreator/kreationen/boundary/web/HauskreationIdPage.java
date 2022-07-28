@@ -116,10 +116,10 @@ public class HauskreationIdPage {
         description = "Fuegt eine bestimmte Hauskreation über die uerbergebenen ID der aktuellen Bestellung hinzu"
     )
     public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PositiveOrZero @FormParam("anzahl") Long anzahl) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
         Hauskreation hauskreation = hauskreationRepo.getById(id);
-        hauskreationRepo.create(kunde, hauskreation, anzahl);
+        hauskreationRepo.create(nutzer, hauskreation, anzahl);
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
 

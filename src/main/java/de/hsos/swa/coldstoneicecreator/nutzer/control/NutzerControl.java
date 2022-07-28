@@ -6,7 +6,7 @@ import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
 
 public interface NutzerControl {
-    public boolean create(Nutzer kunde);
+    public boolean create(Nutzer nutzer);
     
     public List<Nutzer> get();
 
@@ -14,7 +14,7 @@ public interface NutzerControl {
 
     public boolean delete(Long id);
 
-    public boolean put(Long id, Nutzer kunde);
+    public boolean put(Long id, Nutzer nutzer);
 
     public boolean nameVerfuegbar(String name);
 }

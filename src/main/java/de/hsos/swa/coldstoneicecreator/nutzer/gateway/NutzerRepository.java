@@ -12,10 +12,9 @@ import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 public class NutzerRepository implements NutzerControl{
     
     @Override
-    public boolean create(Nutzer kunde) {
-        kunde.setId(null);
-        kunde.persist();
-        //UserLogin.add(kunde.getName(), kunde.getPasswort(), kunde.getRole());
+    public boolean create(Nutzer nutzer) {
+        nutzer.setId(null);
+        nutzer.persist();
         return true;
     }
 
@@ -34,20 +33,17 @@ public class NutzerRepository implements NutzerControl{
     }
 
     @Override
-    public boolean put(Long id, Nutzer kunde) {
+    public boolean put(Long id, Nutzer nutzer) {
         boolean geaendert = false;
-        Nutzer alteKunde = Nutzer.findById(id);
-        //UserLogin loginKunde = UserLogin.findById(id);
-        String neuerName = kunde.getName();
+        Nutzer alteNutzer = Nutzer.findById(id);
+        String neuerName = nutzer.getName();
         if(neuerName != "string" && neuerName != "") {
-            alteKunde.setName(neuerName);
-            //loginKunde.username = neuerName;
+            alteNutzer.setName(neuerName);
             geaendert = true;
         }
-        String neuesPasswort = kunde.getPasswort();
+        String neuesPasswort = nutzer.getPasswort();
         if(neuesPasswort != "string" && neuesPasswort != "") {
-            alteKunde.setPasswort(neuesPasswort);
-            //loginKunde.password = BcryptUtil.bcryptHash(neuesPasswort);
+            alteNutzer.setPasswort(neuesPasswort);
             geaendert = true;
         }
         return geaendert;

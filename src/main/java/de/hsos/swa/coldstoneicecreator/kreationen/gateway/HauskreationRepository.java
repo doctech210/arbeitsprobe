@@ -31,8 +31,8 @@ public class HauskreationRepository implements HauskreationControl{
     }
 
     @Override
-    public boolean create(Nutzer kunde, Hauskreation hauskreation, Long anzahl) {
-        this.neueHauskreation.fire(new KreationDAO(kunde, hauskreation, anzahl, false));  //geht an BestellungRepository
+    public boolean create(Nutzer nutzer, Hauskreation hauskreation, Long anzahl) {
+        this.neueHauskreation.fire(new KreationDAO(nutzer, hauskreation, anzahl, false));  //geht an BestellungRepository
         return true;
     }
 

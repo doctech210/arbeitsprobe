@@ -59,8 +59,8 @@ public class NutzerIdResource {
         summary = "Aendern eines bestimmten Nutzers",
         description = "Returns all orders saved in the database"
     )
-    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull NutzerImportDTO kundeImportDTO) {
-        Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(kundeImportDTO);
+    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull NutzerImportDTO nutzerImportDTO) {
+        Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(nutzerImportDTO);
         nutzerRepo.put(id, nutzer);
         return Response.ok().build();
     }

@@ -20,6 +20,7 @@ import io.quarkus.qute.TemplateInstance;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerDTO;
+import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerExportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerImportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.control.NutzerControl;
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
@@ -41,7 +42,7 @@ public class NutzerIdPage {
     @CheckedTemplate
     static class Templates {
 
-        static native TemplateInstance nutzerEinzeln(NutzerDTO nutzerDTO);
+        static native TemplateInstance nutzerEinzeln(NutzerExportDTO nutzerDTO);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }
@@ -55,7 +56,7 @@ public class NutzerIdPage {
     public TemplateInstance get(@NotNull @PathParam("id") Long id) {
         Nutzer nutzer = nutzerRepo.getById(id);
         if(nutzer != null) { 
-            NutzerDTO nutzerDTO = NutzerDTO.Converter.toDTO(nutzer);
+            NutzerExportDTO nutzerDTO = NutzerExportDTO.Converter.toDTO(nutzer);
             return Templates.nutzerEinzeln(nutzerDTO);
         }
         return Templates.error(Response.Status.NOT_FOUND.getStatusCode(), "Bitte erst Anmelden");
@@ -69,8 +70,8 @@ public class NutzerIdPage {
         summary = "Aendern eines bestimmten Nutzers",
         description = "Returns all orders saved in the database"
     )
-    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull NutzerImportDTO kundeImportDTO) {
-        Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(kundeImportDTO);
+    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull NutzerImportDTO nutzerImportDTO) {
+        Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(nutzerImportDTO);
         nutzerRepo.put(id, nutzer);
         return Response.ok().build();
     }

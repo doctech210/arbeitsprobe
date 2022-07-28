@@ -1,133 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Alle Kunden</title>
     <style>
-        body {
-            margin: 0;
-            font-family: Roboto, "Tahoma", Arial, sans-serif;
-        }
-        form{
-            float: left;
-        }
-        #just-line-break {
-            white-space: pre-line;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            margin-bottom: 0.5rem;
-            font-weight: 400;
-            line-height: 1.5;
-        }
-        h1 { font-size: 2.25rem; }
-        h2 { font-size: 1.6rem }
-        h3 { font-size: 1.5rem }
-        h4 { font-size: 1.4rem }
-        h5 { font-size: 1.25rem }
-        h6 { font-size: 1rem }
-        p {
-            padding: .15rem 0;
-            margin: 0;
-            line-height: 1.3rem;
-        }
-        a {
-            text-decoration: underline;
-            color: #1259A5;
-        }
-        a:hover, a:active { color: #c00; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            clear: both;
-        }        
-        .content-wrapper {
-            padding: 0 13rem;
-            background: white;
-        }
-        .left-column {
-            grid-column: span 8;
-            padding-right: 3rem;
-        }
-        .left-column p {
-            padding: .15rem 0;
-            margin: 0;
-            font-weight: 300;
-        }
-        .left-column ul {
-            margin: 0;
-            padding: 10px 0 0 25px;
-            list-style-type: "\1F680";
-            font-weight: 300;
-        }
-        .left-column li { padding-left: 10px; }
-        .left-column .cta-button {
-            margin: 20px 0;
+        .capsToCapitalize {
+            text-transform: lowercase;
             display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #18A0FB;
-            font-weight: 600;
-            color: white;
-            text-decoration: none;
-            text-transform: uppercase;
-            border: none;
         }
-        .left-column .cta-input {
-            padding: 1rem;
-            margin: 20px 0;
-            background-color: white;
-            font-weight: 600;
-            color: #18A0FB;
-            /* border: none; */
-        }
+            
+        .capsToCapitalize::first-line {
+            text-transform: capitalize;
+        } 
+    
+    
+    /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
+    
+        /* The navigation bar */
+        .navbarallergene {
+      overflow: hidden;
+      background-color: #333;
+      position: fixed; /* Set the navbar to fixed position */
+      bottom: 0; /* Position the navbar at the top of the page */
+      width: 100%; /* Full width */
+    }
+    
+    .navbarallergene input[type=button] {
+      float: left;
+      display: block;
+      background-color: #333;
+      color:#f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      border: none;
+      width: 10%;
+    }
+    
+    /* Change background on mouse-over */
+    .navbarallergene input[type=button]:hover {
+      background: #ddd;
+      color: black;
+      width: 10%;
+    }
+    
+    .navbar {
+      overflow: hidden;
+      background-color: #333;
+      position: fixed;
+      top: 0;
+      width: 100%;
+    }
+    
+    .navbar a {
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      text-align: center;
+      font-size: 17px;
+      width:8%;
+    }
+    
+    .navbar a:hover {
+      background: #ddd;
+      color: black;
+      width:8%;
+    }
+    
+    .main {
+      padding: 16px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    
+    
     </style>
-</head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Saucen</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+        <script src='main.js'></script>
+    </head>
+
 <body>
     <div class="content-wrapper">
-    <div class="left-column">
-        <h1>Liste aller Kunden</h1>
-        <ul>
-            {#for nutzer in nutzerDTO}
-            <p>
-            <h2>
-                {#if nutzer.id > 0}
-                    ID: {nutzer.id}
-                    {nutzer.name}
-                    {nutzer.role}
-                    
-                    <div id="just-line-break"></div>
-                    <form action="http://localhost:8080/kunden/{nutzer.id}" method="GET" id="get_{nutzer.id}">
-                        <input type="hidden" value="{nutzer.id}" name="kundeSuchId">
-                    </form>
-                    <input type="submit" value="Ansehen" form="get_{nutzer.id}" class="cta-button">
-
-                    <form action="http://localhost:8080/kunden/loeschen" method="POST" id="delete_{nutzer.id}">
-                        <input type="hidden" value="{nutzer.id}" name="kundeId">
-                    </form>
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="submit" value="Loeschen" form="delete_{nutzer.id}" class="cta-button">
-                {/if}
-            </h2>
-            </p>
-            {/for}
-                    </ul>
-            <p>
-                Noch kein Kunde bei uns?
-                <form action="registrieren" autocomplete="off">
-                    <div class="form-group py-3">
-                        <input type="text" class="cta-input" name="name" placeholder="Name" id="name" required>
-                    </div>
-                    <div class="form-group py-3">
-                        <input type="password" class="cta-input" name="password" placeholder="Passwort" id="password" required>
-                    </div>
-
-                    <div class="row px-3 py-3">
-                        <button type="submit" formaction="http://localhost:8080/login/" formmethod="post"
-                            class="cta-button">Jetzt registrieren!</button>
-                    </div>
-                </form>
-            </p>
-        <p><a href="/" class="cta-button">Home</a></p>
-        </div>
+        <div class="left-column">
+            <div class="navbar">
+                <a href="/hauskreationen/">Hauskreationen</a>
+                <a href="/eigenkreationen/">Eigenkreationen</a>
+                <a href="/bestellungen/">Bestellungen</a>
+                <a href="/eis/">Eissorten</a>
+                <a href="/zutaten/">Zutaten</a>
+                <a href="/saucen/">Saucen</a>
+                <a href="/nutzer/">Nutzer</a>
+            </div>
+          <div class="main">
+            {#if eingeloggterNutzer.role == "Admin"}
+                <h1>Alle Registrierten Nutzer</h1>
+                {#for nutzer in nutzerDTO}
+                    <h2>{nutzer.id}, {nutzer.name}, {nutzer.role}</h2>
+                {/for}
+            {#else}
+                {#for nutzer in nutzerDTO}
+                    {#if eingeloggterNutzer.id == nutzer.id}
+                        <h1>Hallo {nutzer.name}!</h1>
+                        <h3>Deine Accountinformationen:</h3>
+                        <p><strong>{nutzer.name}</strong></p>
+                        <p>{nutzer.role}</p>
+                    {/if}
+                {/for}
+            {/if}
+      </div>
     </div>
+  </div>
 </body>
 </html>

@@ -111,38 +111,33 @@
                         {/if}
                     </ul>
                 </p>
-                <!-- {#if nutzer.role == "Admin"}
-                    <input type="submit" value="Loeschen" form="delete_{sauce.id}" class="cta-button">
-                    <form action="http://localhost:8080/saucen/{sauce.id}/loeschen" method="POST" id="delete_{sauce.id}">
-                        <input type="hidden" name="SauceId" id="delete_{sauce.id}" value="{sauce.id}">
-                    </form>
-                {/if} -->
+                {/for}
+                
                 {#if nutzer.role == "Admin"}
-                    {/for}
                     <p>
-                    orm action="erstellen" autocomplete="off">
-                            lass="form-group py-3">
+                    <form action="erstellen" autocomplete="off">
+                        <div class="form-group py-3">
                           <input type="text" class="cta-input" name="name" placeholder="Name" id="name" required>
-                    </div>
-                        etails>
-                        ummary>Allergene:</summary>
-                        <fieldset>
-                            for allergen in allergene}
-                                 class="form-group py-3">
-                                     allergen.name() != "VEGAN"}
-                                    <input type="checkbox" id="{allergen.name().toString()}" name="allergene" value="{allergen.name().toString()}">
-                                    {allergen.name()}<br />
-                                {/if}
-                          </div>
-                        {/for}
-                        </fieldset>
-                  </details>
-                                                     class="row px-3 py-3">
+                        </div>
+                        <details>
+                            <summary>Allergene:</summary>
+                            <fieldset>
+                            {#for allergen in allergene}
+                                <div class="form-group py-3">
+                                    {#if allergen.name() != "VEGAN"}
+                                        <input type="checkbox" id="{allergen.name().toString()}" name="allergene" value="{allergen.name().toString()}">
+                                        {allergen.name()}<br />
+                                    {/if}
+                                </div>
+                            {/for}
+                            </fieldset>
+                        </details>
+                        <div class="row px-3 py-3">
                             <input type="submit" formaction="http://localhost:8080/saucen/" formmethod="post">
                         </div>
-                    </fo
-                {/if}rm>
+                    </form>
                 </p>
+                {/if}
                 <p>
                     <script>
                         function insertParam(key, value) {

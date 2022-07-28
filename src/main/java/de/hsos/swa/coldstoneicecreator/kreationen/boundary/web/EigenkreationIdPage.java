@@ -20,6 +20,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -37,12 +38,13 @@ import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
+import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
+import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.SauceDTO;
+import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.*;
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
 import de.hsos.swa.coldstoneicecreator.produkt.control.SauceControl;
 import de.hsos.swa.coldstoneicecreator.produkt.control.ZutatControl;
-import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
-import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
-import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 
@@ -72,7 +74,7 @@ public class EigenkreationIdPage {
     @CheckedTemplate
     static class Templates {
 
-        static native TemplateInstance eigenkreationEinzeln(EigenkreationDTO eigenkreationDTO);
+        static native TemplateInstance eigenkreationEinzeln(EigenkreationDTO eigenkreationDTO, List<EisDTO> eisDTO, List<ZutatDTO> zutatenDTO, List<SauceDTO> sauceDTO);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }
@@ -83,18 +85,45 @@ public class EigenkreationIdPage {
         summary = "Gibt eine bestimmte Eigenkreation zurueck",
         description = "Gibt eine bestimmte Eigenkreation des angemeldeten Nutzer ueber die uebergebene ID zurueck"
     )
-    public TemplateInstance get(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden");
+    public TemplateInstance get(@Context SecurityContext sec, @Valid @QueryParam("Allergene") List<Allergene> allergene, @NotNull @PathParam("id") Long id) {
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden");
         Eigenkreation eigenkreation = null;
-        if(kunde.getRole().equals("Admin")){
+        if(nutzer.getRole().equals("Admin")){
             eigenkreation = eigenkreationRepo.getById(id);
         }else{
-            eigenkreation = eigenkreationRepo.getById(id, kunde);
+            eigenkreation = eigenkreationRepo.getById(id, nutzer);
         }
+
+        List<Eis> alleEis = eisRepo.get();
+        if(allergene != null) {
+            alleEis = eisRepo.getOhneAllergene(allergene);
+        }
+        List<EisDTO> alleEisDTO = new ArrayList<>();
+        for(Eis eis : alleEis) {
+            alleEisDTO.add(EisDTO.Converter.toDTO(eis));
+        }
+        List<Zutat> alleZutaten = zutatRepo.get();
+        if(allergene != null) {
+            alleZutaten = zutatRepo.getOhneAllergene(allergene);
+        }
+        List<ZutatDTO> alleZutatenDTO = new ArrayList<>();
+        for(Zutat zutat : alleZutaten) {
+            alleZutatenDTO.add(ZutatDTO.Converter.toDTO(zutat));
+        }
+        List<Sauce> alleSauce = sauceRepo.get();
+        if(allergene != null){
+            alleSauce = sauceRepo.getOhneAllergene(allergene);
+        }
+        List<SauceDTO> alleSauceDTO = new ArrayList<>();
+        for(Sauce sauce : alleSauce) {
+            alleSauceDTO.add(SauceDTO.Converter.toDTO(sauce));
+        }
+
+
         if(eigenkreation != null) { 
             EigenkreationDTO eigenkreationDTO = EigenkreationDTO.Converter.toDTO(eigenkreation);
-            return Templates.eigenkreationEinzeln(eigenkreationDTO);
+            return Templates.eigenkreationEinzeln(eigenkreationDTO, alleEisDTO, alleZutatenDTO, alleSauceDTO);
         }
         return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden");
     }
@@ -107,8 +136,8 @@ public class EigenkreationIdPage {
         description = "Aendert eine bestimmte Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
     public Response put(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @Valid KreationIdDTO kreationIdDTO) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
         Eis eissorte1 = eisRepo.getById(kreationIdDTO.eissorte1Id);
         Eis eissorte2 = eisRepo.getById(kreationIdDTO.eissorte2Id);
         List<Zutat> zutaten = new ArrayList<>();
@@ -117,7 +146,7 @@ public class EigenkreationIdPage {
         }
         Sauce sauce = sauceRepo.getById(kreationIdDTO.sauceId);
         Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, kreationIdDTO.name);
-        eigenkreationRepo.put(id, eigenkreation, kunde);
+        eigenkreationRepo.put(id, eigenkreation, nutzer);
         return Response.ok().build();
     }
     
@@ -131,9 +160,9 @@ public class EigenkreationIdPage {
                         "eines angemeldeten Nutzers, der aktuellen Bestellung hinzu"
     )
     public Response post(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PositiveOrZero @FormParam("anzahl") Long anzahl) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
-        eigenkreationRepo.post(id, anzahl, kunde);
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        eigenkreationRepo.post(id, anzahl, nutzer);
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
     
@@ -146,9 +175,9 @@ public class EigenkreationIdPage {
         description = "Aendern einer Zutaten einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
     public Response putZutaten(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("zutatnummer") int zutatnummer, @NotNull Long neueZutatId) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
-        eigenkreationRepo.putZutat(id, --zutatnummer, neueZutatId, kunde);
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        eigenkreationRepo.putZutat(id, --zutatnummer, neueZutatId, nutzer);
         return Response.ok().build();
     }
 

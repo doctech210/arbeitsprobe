@@ -98,6 +98,11 @@
             </div>
             <div class="main"> 
                 <h1>Hauskreationen</h1>
+
+                <form action="/hauskreationen/erstellen">
+                    <input type="submit" value="erstelle deine eigene Kreation" />
+                </form>
+
                 {#for hauskreation in hauskreationenDTO}
                 <p>
                     <h2>{hauskreation.name}</h2>

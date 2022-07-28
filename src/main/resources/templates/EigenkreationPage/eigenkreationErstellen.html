@@ -3,17 +3,17 @@
 <head>
 
 <style>
-    .capsToCapitalize {
-        text-transform: lowercase;
-        display: inline-block;
-    }
-        
-    .capsToCapitalize::first-line {
-        text-transform: capitalize;
-    }    
-    /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
+.capsToCapitalize {
+    text-transform: lowercase;
+    display: inline-block;
+}
+    
+.capsToCapitalize::first-line {
+    text-transform: capitalize;
+}    
+/*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
 
-    /* The navigation bar */
+/* The navigation bar */
 .navbarallergene {
   overflow: hidden;
   background-color: #333;
@@ -71,7 +71,7 @@
   padding: 16px;
   margin-top: 30px;
   margin-bottom: 30px;
-
+}
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {
   background-color: #eee;
@@ -97,12 +97,8 @@
   overflow: hidden;
   background-color: #f1f1f1;
 }
-
-
-
-}
-
 </style>
+
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
 <title>Eigenkreationen</title>
@@ -113,107 +109,102 @@
 <body>
   <div class="content-wrapper">
       <div class="left-column">
-          <div class="navbar">
-              <a href="/hauskreationen/">Hauskreationen</a>
-              <a href="/eigenkreationen/">Eigenkreationen</a>
-              <a href="/bestellungen/">Bestellungen</a>
-              <a href="/eis/">Eissorten</a>
-              <a href="/zutaten/">Zutaten</a>
-              <a href="/saucen/">Saucen</a>
-              <a href="/nutzer/">Nutzer</a>
-          </div>
-          <div class="main">
-
-              <div class="content">
-                  <p>Hier koennte ihr Becher stehen!</p>
-                  
-                <form action="erstellen" autocomplete="off">
-                  <div class="form-group py-3">
-                        <input type="text" class="cta-input" name="name" placeholder="Name" id="name" required>
-                  </div>
-                  <details>
-                    <summary>Eis</summary>
-                      <fieldset>
-                      {#for eis in eisDTO}
-                        <div class="form-group py-3">
-                          <input type="radio" id="{eis.id}" name="eis" value="{eis.id}" required>
-                          <input type="radio" id="{eis.id}" name="eis2" value="{eis.id}"> 
-                          {eis.name}<br />
-                        </div>
-                      {/for}
-                      </fieldset>
-                  </details>
-                  <details>
-                  <summary>Zutaten</summary>
-                    <fieldset>
-                    {#for zutat in zutatenDTO}
-                      <div class="form-group py-3">
-                        <input type="checkbox" id="{zutat.id}" name="zutat" value="{zutat.id.toString}"> {zutat.name}<br />
-                      </div>
-                    {/for}
-                    </fieldset>
-                  </details>
-                  <details>
-                    <summary>Sauce</summary>
-                    <fieldset>
-                      {#for sauce in sauceDTO}
-                        <div class="form-group py-3">
-                          <input type="radio" name="sauce" id="{sauce.id}" value="{sauce.id}"> {sauce.name} <br />
-                        </div>
-                      {/for}
-                    </fieldset>
-                  </details>
+        <div class="navbar">
+            <a href="/hauskreationen/">Hauskreationen</a>
+            <a href="/eigenkreationen/">Eigenkreationen</a>
+            <a href="/bestellungen/">Bestellungen</a>
+            <a href="/eis/">Eissorten</a>
+            <a href="/zutaten/">Zutaten</a>
+            <a href="/saucen/">Saucen</a>
+            <a href="/nutzer/">Nutzer</a>
+        </div>
+        <div class="main">
+          <p>Hier koennte ihr Becher stehen!</p>
+          <form action="erstellen" autocomplete="off">
+            <div class="form-group py-3">
+              <input type="text" class="cta-input" name="name" placeholder="Name" id="name" required>
+            </div>
+            <details>
+              <summary>Eis</summary>
+                <fieldset>
+                  {#for eis in eisDTO}
                     <div class="form-group py-3">
-                      <input type="number" class="cta-input" name="anzahl" placeholder="Anzahl" id="anzahl" required>
+                      <input type="radio" id="{eis.id}" name="eis" value="{eis.id}" required>
+                      <input type="radio" id="{eis.id}" name="eis2" value="{eis.id}"> 
+                      {eis.name}<br />
                     </div>
+                  {/for}
+                </fieldset>
+              </details>
+              <details>
+                <summary>Zutaten</summary>
+                <fieldset>
+                  {#for zutat in zutatenDTO}
+                    <div class="form-group py-3">
+                      <input type="checkbox" id="{zutat.id}" name="zutat" value="{zutat.id.toString}"> {zutat.name}<br />
+                    </div>
+                  {/for}
+                </fieldset>
+              </details>
+              <details>
+                <summary>Sauce</summary>
+                <fieldset>
+                  {#for sauce in sauceDTO}
+                    <div class="form-group py-3">
+                      <input type="radio" name="sauce" id="{sauce.id}" value="{sauce.id}"> {sauce.name} <br />
+                    </div>
+                  {/for}
+                </fieldset>
+              </details>
+                <div class="form-group py-3">
+                  <input type="number" class="cta-input" name="anzahl" placeholder="Anzahl" id="anzahl" required>
                 </div>
 
-                <div class="row px-3 py-3">
-                    <input type="submit" formaction="http://localhost:8080/eigenkreationen/" formmethod="post" class="cta-button">
-                </div>
-              </form>
-              
-          </div>
-          <script>
-            function insertParam(key, value) {
-                key = escape(key); value = escape(value);
+            <div class="row px-3 py-3">
+                <input type="submit" formaction="http://localhost:8080/eigenkreationen/" formmethod="post" class="cta-button">
+            </div>
+          </form>
+        </div>
+        <script>
+          function insertParam(key, value) {
+              key = escape(key); value = escape(value);
 
-                var currentURL = window.location.href;
-                    if(currentURL.includes(value)){
-                        var zuEntfernen = key + "=" + value;
-                        if(currentURL.includes("&" + zuEntfernen)){
-                            currentURL = currentURL.replace("&" + zuEntfernen,'');
-                        }else{
-                            if(currentURL.includes("&")){
-                                currentURL = currentURL.replace(zuEntfernen + "&", '');
-                            }else{
-                                currentURL = currentURL.replace("?" + zuEntfernen, '');
-                            }
-                        }
-                    }else{
-                    if(currentURL.includes("?")){
-                        currentURL += "&";
-                    }else{
-                        currentURL += "?";
-                    }
-                currentURL +=  key + "=" + value
-                }
-                window.location.href = currentURL;
-            }
-        </script>
-          <div class="navbarallergene">
-              <input type="button" onclick="insertParam('Allergene','ALKOHOL')" value = 'Alkohol'>
-              <input type="button" onclick="insertParam('Allergene','EI')" value = 'Ei'>
-              <input type="button" onclick="insertParam('Allergene','GELANTINE')" value = 'Gelantine'>
-              <input type="button" onclick="insertParam('Allergene','GLUTEN')" value = 'Gluten'>
-              <input type="button" onclick="insertParam('Allergene','HONIG')" value = 'Honig'>
-              <input type="button" onclick="insertParam('Allergene','KOFFEIN')" value = 'Koffein'>
-              <input type="button" onclick="insertParam('Allergene','LAKTOSE')" value = 'Laktose'>
-              <input type="button" onclick="insertParam('Allergene','NUSS')" value = 'Nuss'>
-              <input type="button" onclick="insertParam('Allergene','SUESSSTOFF')" value = 'Suessstoff'>
-              <input type="button" onclick="insertParam('Allergene','VEGAN')" value = 'Vegan'>
-          </div>
-      </div>
+              var currentURL = window.location.href;
+                  if(currentURL.includes(value)){
+                      var zuEntfernen = key + "=" + value;
+                      if(currentURL.includes("&" + zuEntfernen)){
+                          currentURL = currentURL.replace("&" + zuEntfernen,'');
+                      }else{
+                          if(currentURL.includes("&")){
+                              currentURL = currentURL.replace(zuEntfernen + "&", '');
+                          }else{
+                              currentURL = currentURL.replace("?" + zuEntfernen, '');
+                          }
+                      }
+                  }else{
+                  if(currentURL.includes("?")){
+                      currentURL += "&";
+                  }else{
+                      currentURL += "?";
+                  }
+              currentURL +=  key + "=" + value
+              }
+              window.location.href = currentURL;
+          }
+      </script>
+        <div class="navbarallergene">
+            <input type="button" onclick="insertParam('Allergene','ALKOHOL')" value = 'Alkohol'>
+            <input type="button" onclick="insertParam('Allergene','EI')" value = 'Ei'>
+            <input type="button" onclick="insertParam('Allergene','GELANTINE')" value = 'Gelantine'>
+            <input type="button" onclick="insertParam('Allergene','GLUTEN')" value = 'Gluten'>
+            <input type="button" onclick="insertParam('Allergene','HONIG')" value = 'Honig'>
+            <input type="button" onclick="insertParam('Allergene','KOFFEIN')" value = 'Koffein'>
+            <input type="button" onclick="insertParam('Allergene','LAKTOSE')" value = 'Laktose'>
+            <input type="button" onclick="insertParam('Allergene','NUSS')" value = 'Nuss'>
+            <input type="button" onclick="insertParam('Allergene','SUESSSTOFF')" value = 'Suessstoff'>
+            <input type="button" onclick="insertParam('Allergene','VEGAN')" value = 'Vegan'>
+        </div>
+    </div>
   </div>   
 </body>
 </html>

@@ -78,9 +78,9 @@ public class EigenkreationPage {
         description = "Gibt alle Eigenkreationen des angemeldeten Nutzers mit dem eingestellten Filter zurueck"
     )
     public TemplateInstance get(@Valid @QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Templates.error(Status.FORBIDDEN.getStatusCode(), "Bitte erst einloggen");
-        List<Eigenkreation> alle = kunde.getEigenkreationen();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Templates.error(Status.FORBIDDEN.getStatusCode(), "Bitte erst einloggen");
+        List<Eigenkreation> alle = nutzer.getEigenkreationen();
         if(allergene != null) alle = eigenkreationRepo.getOhneAllergene(allergene);
         List<EigenkreationDTO> alleDTO = new ArrayList<>();
         for(Eigenkreation eigenkreation : alle) {
@@ -99,8 +99,8 @@ public class EigenkreationPage {
     @Path("/erstellen")
     @RolesAllowed({"Admin", "Kunde"})
     public TemplateInstance getErstellen(@Valid @QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Templates.error(Status.FORBIDDEN.getStatusCode(), "Bitte erst einloggen");
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Templates.error(Status.FORBIDDEN.getStatusCode(), "Bitte erst einloggen");
         List<Eis> alleEis = eisRepo.get();
         if(allergene != null) {
             alleEis = eisRepo.getOhneAllergene(allergene);
@@ -139,8 +139,8 @@ public class EigenkreationPage {
                         "der aktuellen Bestellung hinzu"
     )
         public Response post(@Context SecurityContext sec, @FormParam("name") String name, @FormParam("eis") Long eisId, @FormParam("eis2") Long eis2Id, @FormParam("sauce") Long sauceId, @FormParam("anzahl") Long anzahl, @FormParam("zutat") String[] zutatenId) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
         Eis eissorte1 = eisRepo.getById(eisId);
         Eis eissorte2 = null;
         if(eis2Id != null) {
@@ -160,7 +160,7 @@ public class EigenkreationPage {
             }
         }
         Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, name);
-        eigenkreationRepo.create(kunde, eigenkreation, anzahl);
+        eigenkreationRepo.create(nutzer, eigenkreation, anzahl);
         //return Response.ok().build();
 
         return Response.seeOther(UriBuilder.fromPath("/eigenkreationen").build()).build();

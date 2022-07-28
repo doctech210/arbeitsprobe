@@ -55,13 +55,13 @@ public class BestellungIdResource {
         description = "Gibt die Bestellung mit der uebergegebenen ID zurueck"
     )
     public Response get(@Context SecurityContext sec, @PathParam("id") Long id) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
         Bestellung bestellung = null;
-        if(kunde.getRole().equals("Admin")){
+        if(nutzer.getRole().equals("Admin")){
             bestellung = bestellungRepo.bestellungAbfragen(id);
         }else{
-            bestellung = bestellungRepo.bestellungAbfragen(id, kunde.getId());
+            bestellung = bestellungRepo.bestellungAbfragen(id, nutzer.getId());
         }
         if(bestellung == null) return Response.status(Status.NOT_FOUND).build();
         BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);

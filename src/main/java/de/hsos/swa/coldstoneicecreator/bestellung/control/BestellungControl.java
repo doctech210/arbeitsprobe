@@ -8,17 +8,17 @@ public interface BestellungControl {
     
     public List<Bestellung> bestellungenAbfragen();
 
-    public List<Bestellung> bestellungenAbfragen(Long kundeId);
+    public List<Bestellung> bestellungenAbfragen(Long nutzerId);
     
     public Bestellung bestellungAbfragen(Long bestellId);
 
-    public Bestellung bestellungAbfragen(Long bestellId, Long kundeId);
+    public Bestellung bestellungAbfragen(Long bestellId, Long nutzerId);
 
-    public Bestellung bestellungAnlegen(Bestellung bestellungen, Long kundeId);
+    public Bestellung bestellungAnlegen(Bestellung bestellungen, Long nutzerId);
 
     public boolean bestellungLoeschen(Long bestellId);
 
-    public boolean bestellungLoeschen(Long bestellId, Long kundeId);
+    public boolean bestellungLoeschen(Long bestellId, Long nutzerId);
     
     public boolean isBestellungLeer(Long bestellId);
 }

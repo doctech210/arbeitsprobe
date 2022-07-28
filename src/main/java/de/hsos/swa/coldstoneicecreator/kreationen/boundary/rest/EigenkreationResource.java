@@ -63,9 +63,9 @@ public class EigenkreationResource {
         description = "Gibt alle Eigenkreationen des angemeldeten Nutzers mit dem eingestellten Filter zurueck"
     )
     public Response get(@Valid @QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
-        List<Eigenkreation> alle = kunde.getEigenkreationen();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+        List<Eigenkreation> alle = nutzer.getEigenkreationen();
         if(allergene != null) alle = eigenkreationRepo.getOhneAllergene(allergene);
         List<EigenkreationDTO> alleDTO = new ArrayList<>();
         for(Eigenkreation eigenkreation : alle) {
@@ -83,8 +83,8 @@ public class EigenkreationResource {
                         "der aktuellen Bestellung hinzu"
     )
     public Response post(@Context SecurityContext sec, @Valid @NotNull KreationIdDTO eigenkreationIds) {
-        Nutzer kunde = this.eingeloggterKunde(sec);
-        if(kunde == null) return Response.status(Status.NOT_FOUND).build();
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
         Eis eissorte1 = eisRepo.getById(eigenkreationIds.eissorte1Id);
         Eis eissorte2 = eisRepo.getById(eigenkreationIds.eissorte2Id);
         Sauce sauce = sauceRepo.getById(eigenkreationIds.sauceId);
@@ -93,7 +93,7 @@ public class EigenkreationResource {
             zutaten.add(ZutatRepo.getById(id));
         }
         Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, eigenkreationIds.name);
-        eigenkreationRepo.create(kunde, eigenkreation, eigenkreationIds.anzahl);
+        eigenkreationRepo.create(nutzer, eigenkreation, eigenkreationIds.anzahl);
         return Response.ok().build();
     }
 

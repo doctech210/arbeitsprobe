@@ -5,7 +5,7 @@ import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
 public class KreationIdDAO {
 
-    private Nutzer kunde;
+    private Nutzer nutzer;
     private Kreation kreation;
     private Long anzahl;
     private Long bestellId;
@@ -15,7 +15,7 @@ public class KreationIdDAO {
     }
 
     public KreationIdDAO(KreationDAO kreationDAO, Long bestellId){
-        this.kunde = kreationDAO.getKunde();
+        this.nutzer = kreationDAO.getKunde();
         this.kreation = kreationDAO.getKreation();
         this.anzahl = kreationDAO.getAnzahl();
         this.eigen = kreationDAO.isEigen();
@@ -23,7 +23,7 @@ public class KreationIdDAO {
     }
 
     public Nutzer getKunde() {
-        return kunde;
+        return nutzer;
     }
 
     public Kreation getKreation() {

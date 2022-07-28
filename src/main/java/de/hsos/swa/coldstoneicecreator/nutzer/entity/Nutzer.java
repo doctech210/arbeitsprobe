@@ -28,8 +28,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 @UserDefinition
 public class Nutzer extends PanacheEntityBase{
     
-    @Id @GeneratedValue(generator = "kunde_seq")
-    @SequenceGenerator(name = "kunde_seq", initialValue = 2)
+    @Id @GeneratedValue(generator = "nutzer_seq")
+    @SequenceGenerator(name = "nutzer_seq", initialValue = 2)
     private Long id;
 
     @Pattern(regexp = "^[a-zA-Z\\s]*$",
@@ -42,7 +42,7 @@ public class Nutzer extends PanacheEntityBase{
     private String role = "Kunde";
     
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="kundenkreation_id")
+    @JoinColumn(name="nutzerkreation_id")
     private List<Eigenkreation> eigenkreationen;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="bestellId_id")

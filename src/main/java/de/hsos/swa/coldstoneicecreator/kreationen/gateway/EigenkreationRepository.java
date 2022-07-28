@@ -8,7 +8,6 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
 import de.hsos.swa.coldstoneicecreator.bestellung.gateway.BestellpostenRepository;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.KreationDAO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao.ZutatenIdDAO;
@@ -19,7 +18,6 @@ import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Eis;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Zutat;
-import io.smallrye.common.constraint.NotNull;
 
 @ApplicationScoped
 public class EigenkreationRepository implements EigenkreationControl{
@@ -34,12 +32,12 @@ public class EigenkreationRepository implements EigenkreationControl{
     BestellpostenRepository postenRepo;
 
     @Override
-    public boolean create(Nutzer kunde, Eigenkreation eigenkreation, Long anzahl) {
+    public boolean create(Nutzer nutzer, Eigenkreation eigenkreation, Long anzahl) {
         if(eigenkreation == null) return false;
         eigenkreation.setId(null);
         eigenkreation.persist();
-        kunde.addEigenkreation(eigenkreation);
-        this.neueEigenkreation.fire(new KreationDAO(kunde, eigenkreation, anzahl, true)); //geht an BestellungRepository
+        nutzer.addEigenkreation(eigenkreation);
+        this.neueEigenkreation.fire(new KreationDAO(nutzer, eigenkreation, anzahl, true)); //geht an BestellungRepository
         return true;
     }
 
@@ -54,8 +52,8 @@ public class EigenkreationRepository implements EigenkreationControl{
     }
 
     @Override
-    public Eigenkreation getById(Long id, Nutzer kunde) {
-        List<Eigenkreation> eigenkreationen = kunde.getEigenkreationen();
+    public Eigenkreation getById(Long id, Nutzer nutzer) {
+        List<Eigenkreation> eigenkreationen = nutzer.getEigenkreationen();
         for(Eigenkreation eigenkreation : eigenkreationen) {
             if(Long.compare(eigenkreation.getId(), id) == 0) return eigenkreation;
         }
@@ -84,10 +82,10 @@ public class EigenkreationRepository implements EigenkreationControl{
     }
 
     @Override
-    public boolean put(Long id, Eigenkreation eigenkreation, Nutzer kunde) {
+    public boolean put(Long id, Eigenkreation eigenkreation, Nutzer nutzer) {
         boolean geaendert = false;
         Eigenkreation alteEigenkreation = null;
-        List<Eigenkreation> eigenkreationen = kunde.getEigenkreationen();
+        List<Eigenkreation> eigenkreationen = nutzer.getEigenkreationen();
         for(Eigenkreation ek : eigenkreationen) {
             if(Long.compare(ek.getId(), id) == 0) alteEigenkreation =  ek;
         }
@@ -116,10 +114,10 @@ public class EigenkreationRepository implements EigenkreationControl{
     }
     
     @Override
-    public boolean putZutat(Long id, int zutatnummer, Long neueZutatId, Nutzer kunde) {
+    public boolean putZutat(Long id, int zutatnummer, Long neueZutatId, Nutzer nutzer) {
         boolean geaendert = false;
         Eigenkreation eigenkreation = null;
-        List<Eigenkreation> eigenkreationen = kunde.getEigenkreationen();
+        List<Eigenkreation> eigenkreationen = nutzer.getEigenkreationen();
         for(Eigenkreation ek : eigenkreationen) {
             if(Long.compare(ek.getId(), id) == 0) eigenkreation =  ek;
         }
@@ -187,12 +185,5 @@ public class EigenkreationRepository implements EigenkreationControl{
                 }
             }
         }
-    }
-
-    private Bestellung offeneBestellung(@NotNull Nutzer nutzer) {
-        for(Bestellung b : nutzer.getBestellungen()){
-            if(!b.isBestellt()) return b;
-        } 
-        return null;
     }
 }

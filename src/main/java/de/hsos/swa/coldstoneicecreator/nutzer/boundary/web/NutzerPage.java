@@ -1,6 +1,8 @@
 package de.hsos.swa.coldstoneicecreator.nutzer.boundary.web;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -14,7 +16,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import io.quarkus.qute.CheckedTemplate;
@@ -44,7 +48,7 @@ public class NutzerPage {
     @CheckedTemplate
     static class Templates {
 
-        static native TemplateInstance nutzerAlle(List<NutzerExportDTO> nutzerDTO);
+        static native TemplateInstance nutzerAlle(List<NutzerExportDTO> nutzerDTO, NutzerExportDTO eingeloggterNutzer);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }
@@ -55,13 +59,14 @@ public class NutzerPage {
         summary = "Gibt alle Nutzer zurueck",
         description = "Gibt alle angemeldeten Nutzer zurueck"
     )
-    public TemplateInstance get() {
+    public TemplateInstance get(@Context SecurityContext sec) {
+        NutzerExportDTO nutzer = NutzerExportDTO.Converter.toDTO(this.eingeloggterNutzer(sec));
         List<Nutzer> alle = nutzerRepo.get();
         List<NutzerExportDTO> alleDTO = new ArrayList<>();
-        for(Nutzer nutzer : alle) {
-            alleDTO.add(NutzerExportDTO.Converter.toDTO(nutzer));
+        for(Nutzer nutz : alle) {
+            alleDTO.add(NutzerExportDTO.Converter.toDTO(nutz));
         }
-        return Templates.nutzerAlle(alleDTO);
+        return Templates.nutzerAlle(alleDTO, nutzer);
     }
 
     @POST
@@ -71,13 +76,21 @@ public class NutzerPage {
         summary = "Erstellt einen neuen Nutzer",
         description = "Erstellt einen neuen Nutzer"
     )
-    public TemplateInstance post(@Valid @NotNull NutzerImportDTO nutzerImportDTO) {
+    public TemplateInstance post(@Context SecurityContext sec, @Valid @NotNull NutzerImportDTO nutzerImportDTO) {
         Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(nutzerImportDTO);
         if(nutzerRepo.nameVerfuegbar(nutzer.getName())){
             nutzerRepo.create(nutzer);
-            return get();
+            return get(sec);
         } else {
             return Templates.error(Status.NOT_ACCEPTABLE.getStatusCode(), "Nutzername wird bereits verwendet");
         }
+    }
+
+    private Nutzer eingeloggterNutzer(@NotNull SecurityContext sec) {
+        Principal user = sec.getUserPrincipal();
+        if(user == null) return null;
+        Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
+        if(optKunde.isEmpty()) return null;
+        return optKunde.get();
     }
 }
