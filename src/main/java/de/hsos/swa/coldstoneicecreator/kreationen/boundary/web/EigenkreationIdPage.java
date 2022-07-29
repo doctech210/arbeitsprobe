@@ -159,7 +159,7 @@ public class EigenkreationIdPage {
                 zutaten.add(zutatRepo.getById(Long.valueOf(zutatId)));
             }
         }
-        if(name == null) {
+        if(name == null || name.equals("")) {
             name = eigenkreationAlt.getName();
         }
         Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, name);

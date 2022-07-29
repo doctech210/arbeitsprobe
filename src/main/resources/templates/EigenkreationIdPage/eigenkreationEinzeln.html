@@ -71,6 +71,7 @@
 .main {
   padding: 16px;
   margin-top: 30px;
+  margin-bottom: 30px;
 } 
 </style>
     <meta charset='utf-8'>
@@ -196,19 +197,6 @@
                   <input type="submit" formaction="/eigenkreationen/{eigenkreationDTO.id}/put/" formmethod="post" class="cta-button">
               </div>
             </form>
-
-            <script>
-                function inBecher(zutaten, idListe) {
-                    var enthalten = new Boolean("false");
-                    zutaten.array.forEach(element => {
-                        if(element.id == idListe) {
-                            enthalten = true;
-                        }
-                    });
-                    return enthalten;
-                }
-
-            </script>
             <script>
             function insertParam(key, value) {
                 key = escape(key); value = escape(value);

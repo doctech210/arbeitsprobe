@@ -76,15 +76,6 @@ public class EigenkreationRepository implements EigenkreationControl{
         for(Eigenkreation ek : eigenkreationen) {
             if(Long.compare(ek.getId(), id) == 0){
                 nutzer.deleteEigenkreation(ek, null);
-                // Bestellung bestellung = this.offeneBestellung(nutzer);
-                // //TODO lose Kopplung
-                // List<BestellpostenEigen> eigen = bestellung.getBestellpostenEigen();
-                // for(BestellpostenEigen bpe : eigen){
-                //     if(bpe.getEigenkreation().getId() == id){
-                //         postenRepo.postenLoeschenEigen(bpe.getId());
-                //         ek.delete();
-                //     }
-                // }
             }
         }
         return false;

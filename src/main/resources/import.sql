@@ -321,7 +321,7 @@ INSERT INTO Hauskreation (eissorte_id, eissorte2_id, name, sauce_id, id) VALUES 
 INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (1, 'LAKTOSE');
 INSERT INTO Hauskreation_allergene (Hauskreation_id, allergene) VALUES (1, 'GLUTEN');
 INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (1, 18);
-INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (1, 32);
+INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (1, 30);
 INSERT INTO Hauskreation_Zutat (Hauskreation_id, zutaten_id) VALUES (1, 56);
 
 INSERT INTO Hauskreation (eissorte_id, eissorte2_id, name, sauce_id, id) VALUES (1, 1, 'Schoko Schock', 9, 2);

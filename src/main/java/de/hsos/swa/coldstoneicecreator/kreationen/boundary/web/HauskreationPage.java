@@ -89,7 +89,6 @@ public class HauskreationPage {
         for(Hauskreation hauskreation : alle) {
             alleDTO.add(HauskreationDTO.Converter.toDTO(hauskreation));
         } 
-        //return Response.ok(alleDTO).build();
         return Templates.hauskreationAlle(alleDTO);
     }
 

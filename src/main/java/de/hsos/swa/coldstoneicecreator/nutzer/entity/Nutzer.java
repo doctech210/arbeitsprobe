@@ -63,22 +63,16 @@ public class Nutzer extends PanacheEntityBase{
     }
 
     public void deleteEigenkreation(Eigenkreation eigenkreation, Long postenId){
-        //Bestellung zuLoeschen = null;
         for(Bestellung bestellung : bestellungen) {
             if(!bestellung.isBestellt()){
                 if(postenId != null) {
                     bestellung.removePostenEigen(postenId);
                 }
                     if(bestellung.getBestellpostenEigen().size() == 0 && bestellung.getBestellpostenHaus().size() == 0) {
-                        //zuLoeschen = bestellung;
                         this.deleteBestellung();
                     }
             }
         }
-        // if(zuLoeschen != null) {
-        //     this.bestellungen.remove(zuLoeschen);
-        //     zuLoeschen.delete();
-        // }
         eigenkreation.setBestellbar(false);
     }
 

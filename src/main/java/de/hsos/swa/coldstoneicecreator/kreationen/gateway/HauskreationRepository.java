@@ -84,6 +84,11 @@ public class HauskreationRepository implements HauskreationControl{
             alteHauskreation.setEissorte(neuesEis2);
             geaendert = true;
         }
+        List<Zutat> neueZutaten = hauskreation.getZutaten();
+        if(neueZutaten != null) {
+            alteHauskreation.setZutaten(neueZutaten);
+            geaendert = true;
+        }
         Sauce neueSauce = hauskreation.getSauce();
         if(neueSauce != null) {
             alteHauskreation.setSauce(neueSauce);
@@ -109,13 +114,13 @@ public class HauskreationRepository implements HauskreationControl{
     public void sauceUpdate(@Observes Sauce neueSauce) {
         List<Hauskreation> hauskreationen = Hauskreation.listAll();
         for(Hauskreation hauskreation : hauskreationen) {
-            if(Long.compare(hauskreation.getSauce().getId(), neueSauce.getId()) == 0){
+            if(hauskreation.getSauce() != null && Long.compare(hauskreation.getSauce().getId(), neueSauce.getId()) == 0){
                 hauskreation.checkAllergene();
             }
         }
     }
 
-    public void eisUpdate(@Observes Zutat neueZutat) {
+    public void zutatUpdate(@Observes Zutat neueZutat) {
         List<Hauskreation> hauskreationen = Hauskreation.listAll();
         for(Hauskreation hauskreation : hauskreationen) {
             for(Zutat zutat : hauskreation.getZutaten()) {

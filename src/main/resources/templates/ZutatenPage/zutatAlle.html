@@ -11,6 +11,34 @@
         text-transform: capitalize;
     } 
 
+/* Style the button that is used to open and close the collapsible content 
+    https://www.w3schools.com/howto/howto_js_collapsible.asp
+*/
+.collapsible {
+background-color: white;
+color: #444;
+cursor: pointer;
+padding: 18px;
+width: 10%;
+border: none;
+text-align: left;
+outline: none;
+font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+padding: 0 18px;
+display: none;
+overflow: hidden;
+background-color: #f1f1f1;
+}
+
 
 /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
 
@@ -114,9 +142,49 @@
                         {/if}
                     </ul>
                 </p>
+
+                {#if nutzer.role == "Admin"}
+                    <button type="button" class="collapsible">Aendern</button>
+                    <div class="content">
+                        <p>
+                            <form action="aendern" autocomplete="off">
+                                <div class="form-group py-3">
+                                    <input type="text" name="name" placeholder="Name" id="name">
+                                </div>
+                                <div class="form-group py-3">
+                                    {#if zutat.premium}
+                                        <input type="radio" class="cta-input" id="premium" value="true" name="premium" checked> Ja
+                                        <input type="radio" class="cta-input" id="premium" value="false" name="premium"> Nein  
+                                    {#else}
+                                        <input type="radio" class="cta-input" id="premium" value="true" name="premium"> Ja
+                                        <input type="radio" class="cta-input" id="premium" value="false" name="premium" checked> Nein  
+                                    {/if}
+                                </div>
+                                <details>
+                                    <summary>Allergene:</summary>
+                                    <fieldset>
+                                    {#for allergen in allergene}
+                                        <div class="form-group py-3">
+                                            {#if allergen.name() != "VEGAN"}
+                                                <input type="checkbox" id="{allergen.name().toString()}" name="allergene" value="{allergen.name().toString()}">
+                                                {allergen.name()}<br />
+                                            {/if}
+                                        </div>
+                                    {/for}
+                                    </fieldset>
+                                </details>
+                                <div class="row px-3 py-3">
+                                    <input type="submit" formaction="/zutaten/{zutat.id}" formmethod="post" class="cta-button">
+                                </div>
+                            </form>
+                        </p>
+                    </div>
+                {/if}
+
+
                 <!-- {#if nutzer.role == "Admin"}
                     <input type="submit" value="Loeschen" form="delete_{zutat.id}" class="cta-button">
-                    <form action="http://localhost:8080/zutaten/{zutat.id}/loeschen" method="POST" id="delete_{zutat.id}">
+                    <form action="/zutaten/{zutat.id}/loeschen" method="POST" id="delete_{zutat.id}">
                         <input type="hidden" name="ZutatId" id="delete_{zutat.id}" value="{zutat.id}">
                     </form>
                 {/if} -->
@@ -147,13 +215,29 @@
                     </details>
 
                         <div class="row px-3 py-3">
-                            <input type="submit" formaction="http://localhost:8080/zutaten/" formmethod="post">
+                            <input type="submit" formaction="/zutaten/" formmethod="post">
                         </div>
                     </form>
                     </p>
                 {/if}
                 <p>
                     <script>
+                        var coll = document.getElementsByClassName("collapsible");
+                        var i;
+
+                        for (i = 0; i < coll.length; i++) {
+                        coll[i].addEventListener("click", function() {
+                            this.classList.toggle("active");
+                            var content = this.nextElementSibling;
+                            if (content.style.display === "block") {
+                            content.style.display = "none";
+                            } else {
+                            content.style.display = "block";
+                            }
+                        });
+                        }
+
+
                         function insertParam(key, value) {
                             key = escape(key); value = escape(value);
 

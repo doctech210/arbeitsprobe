@@ -52,7 +52,7 @@ public class SaucePage {
     @CheckedTemplate
     static class Templates {
         
-        static native TemplateInstance sauceAlle(List<SauceDTO> saucenDTO, Nutzer nutzer, List<Allergene> allergene);
+        static native TemplateInstance sauceAlle(List<SauceDTO> sauceDTO, Nutzer nutzer, List<Allergene> allergene);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }

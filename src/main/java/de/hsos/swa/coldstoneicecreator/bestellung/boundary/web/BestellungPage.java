@@ -79,21 +79,20 @@ public class BestellungPage {
     } 
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
     @Operation(
         summary = "Schickt die aktuelle Bestellung ab",
         description = "Schickt die aktuelle Bestellung des angemeldeten Nutzers ab"
     )
-    public TemplateInstance post(@Context SecurityContext sec) {
+    public Response post(@Context SecurityContext sec) {
         Nutzer nutzer = this.eingeloggterKunde(sec);
-        if(nutzer == null) return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Nutzer nicht gefunden");
+        if(nutzer == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Nutzer nicht gefunden")).build();
         Bestellung bestellung = this.offeneBestellung(nutzer);
-        if(bestellung == null) return Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden");
-        bestellung.setBestellt(true);        
-        //BestellungDTO bestellungDTO = BestellungDTO.Converter.toDTO(bestellung);
-        //return Response.ok(bestellungDTO).build();
-        return get(sec);
+        if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden")).build();
+        bestellung.setBestellt(true);
+        return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
 
     @POST

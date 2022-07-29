@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -36,8 +37,8 @@ import org.eclipse.microprofile.faulttolerance.Timeout;
 
 @RequestScoped
 @Path("/nutzer")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+@Produces(MediaType.TEXT_HTML)
 @Retry(maxRetries = 4)
 @Timeout(250)
 public class NutzerPage {
@@ -76,8 +77,8 @@ public class NutzerPage {
         summary = "Erstellt einen neuen Nutzer",
         description = "Erstellt einen neuen Nutzer"
     )
-    public TemplateInstance post(@Context SecurityContext sec, @Valid @NotNull NutzerImportDTO nutzerImportDTO) {
-        Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(nutzerImportDTO);
+    public TemplateInstance post(@Context SecurityContext sec, @FormParam("name") String name, @FormParam("passwort") String passwort) {
+        Nutzer nutzer = new Nutzer(name, passwort, new ArrayList<>());
         if(nutzerRepo.nameVerfuegbar(nutzer.getName())){
             nutzerRepo.create(nutzer);
             return get(sec);

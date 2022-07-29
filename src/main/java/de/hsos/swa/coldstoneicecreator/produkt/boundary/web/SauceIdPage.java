@@ -1,13 +1,19 @@
 package de.hsos.swa.coldstoneicecreator.produkt.boundary.web;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response.Status;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,6 +31,7 @@ import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.SauceDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.SauceControl;
+import de.hsos.swa.coldstoneicecreator.produkt.entity.Allergene;
 import de.hsos.swa.coldstoneicecreator.produkt.entity.Sauce;
 
 @RequestScoped
@@ -68,10 +75,18 @@ public class SauceIdPage {
         summary = "Aendern einer bestimmten Sauce",
         description = "Aendern einer bestimmte Sauce ueber die uebergebene ID"
     )
-    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull SauceDTO sauceDTO) {
-        Sauce sauce = SauceDTO.Converter.toSauce(sauceDTO);
+    public Response put(@NotNull @PathParam("id") Long id,  @FormParam("name") String name, @FormParam("allergene") String[] allergene) {
+        Set<Allergene> enthalten = new HashSet<>();
+        List<Allergene> alleAllergene = new ArrayList<Allergene>(EnumSet.allOf(Allergene.class));
+        for(String allergen : allergene) {
+            for(Allergene gesucht : alleAllergene) {
+                if(allergen.equals(gesucht.toString()))
+                enthalten.add(gesucht);
+            }
+        }
+        Sauce sauce = new Sauce(null, name, enthalten);
         sauceRepo.put(id, sauce);
-        return Response.ok().build();
+        return Response.ok().header("Refresh", "0; url=/saucen").build();
     }
 
     @POST

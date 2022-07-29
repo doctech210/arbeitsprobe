@@ -75,14 +75,19 @@
                                 {/if}                       
                             </h2>
                         </p>
-                        <form action="http://localhost:8080/bestellungen/{bestellung.id}" method="GET" id="get_{bestellung.id}">
+                        <form action="/bestellungen/{bestellung.id}" method="GET" id="get_{bestellung.id}">
                             <input type="hidden" name="bestellungEinzeln" id="get_{bestellung.id}" value="{bestellung.id}">
                             <input type="submit" value="Ansehen" form="get_{bestellung.id}" class="cta-button">
                         </form>
                         {#if bestellung.bestellt == false}
                             <input type="submit" value="Bestellung Loeschen" form="delete_{bestellung.id}" class="cta-button">
-                            <form action="http://localhost:8080/bestellungen/loeschen" method="POST" id="delete_{bestellung.id}">
+                            <form action="/bestellungen/loeschen" method="POST" id="delete_{bestellung.id}">
                                 <input type="hidden" name="BestellungId" id="delete_{bestellung.id}" value="{bestellung.id}">
+                            </form>
+
+                            <input type="submit" value="Bestellung abschicken" form="post_{bestellung.id}" class="cta-button">
+                            <form action="/bestellungen/" method="POST" id="post_{bestellung.id}">
+                                <input type="hidden" name="BestellungId" id="post_{bestellung.id}" value="{bestellung.id}">
                             </form>
                         {/if}
                     {/for}

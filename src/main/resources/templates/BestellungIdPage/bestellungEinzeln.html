@@ -136,11 +136,11 @@
                             <p>
                                 <h4>{postenEigen.anzahl} x {postenEigen.eigenkreationDTO.name}</h4>
                                 <input type="submit" value="Ansehen" form="get_{postenEigen.id}" class="cta-button">
-                                <form action="http://localhost:8080/eigenkreationen/{postenEigen.eigenkreationDTO.id}" method="GET" id="get_{postenEigen.id}">
+                                <form action="/eigenkreationen/{postenEigen.eigenkreationDTO.id}" method="GET" id="get_{postenEigen.id}">
                                     <input type="hidden" name="EigenkreationsId" id="get_{postenEigen.id}" value="{postenEigen.id}">
                                 </form>
                                 <input type="submit" value="Loeschen" form="delete_{postenEigen.id}" class="cta-button">
-                                <form action="http://localhost:8080/bestellungen/{bestellungDTO.id}/eigenposten/{postenEigen.id}/loeschen" method="POST" id="delete_{postenEigen.id}">
+                                <form action="/bestellungen/{bestellungDTO.id}/eigenposten/{postenEigen.id}/loeschen" method="POST" id="delete_{postenEigen.id}">
                                     <input type="hidden" name="EigenkreationsId" id="delete_{postenEigen.id}" value="{postenEigen.id}">
                                 </form>
                             </p> 
@@ -150,16 +150,21 @@
                             <p>
                                 <h4>{postenHaus.anzahl} x {postenHaus.hauskreationDTO.name}</h4>
                                 <input type="submit" value="Ansehen" form="get_{postenHaus.id}" class="cta-button">
-                                <form action="http://localhost:8080/hauskreationen/{postenHaus.hauskreationDTO.id}" method="GET" id="get_{postenHaus.id}">
+                                <form action="/hauskreationen/{postenHaus.hauskreationDTO.id}" method="GET" id="get_{postenHaus.id}">
                                     <input type="hidden" name="HauskreationsId" id="get_{postenHaus.id}" value="{postenHaus.id}">
                                 </form>
                                 <input type="submit" value="Loeschen" form="delete_{postenHaus.id}" class="cta-button">
-                                <form action="http://localhost:8080/bestellungen/{bestellungDTO.id}/hausposten/{postenHaus.id}/loeschen" method="POST" id="delete_{postenHaus.id}">
+                                <form action="/bestellungen/{bestellungDTO.id}/hausposten/{postenHaus.id}/loeschen" method="POST" id="delete_{postenHaus.id}">
                                     <input type="hidden" name="HauskreationsId" id="delete_{postenHaus.id}" value="{postenHaus.id}">
                                 </form>
                             </p> 
                         {/for}
-                        
+                        {#if bestellungDTO.bestellt == false}
+                            <input type="submit" value="Bestellung abschicken" form="post_{bestellungDTO.id}" class="cta-button">
+                            <form action="/bestellungen/" method="POST" id="post_{bestellungDTO.id}">
+                                <input type="hidden" name="BestellungId" id="post_{bestellungDTO.id}" value="{bestellungDTO.id}">
+                            </form>
+                        {/if}
                     </p>
                 </ul>
             </div>
