@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import io.quarkus.elytron.security.common.BcryptUtil;
 
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
@@ -50,13 +51,20 @@ public class Nutzer extends PanacheEntityBase{
     
     public Nutzer() {
     }
-    
+
     public Nutzer(String name, String passwort, List<Eigenkreation> eigenkreationen) {
-        this.id = null;
         this.name = name;
-        this.passwort = passwort;
-        this.eigenkreationen = eigenkreationen;
+        this.passwort = BcryptUtil.bcryptHash(passwort);
+        this.eigenkreationen = eigenkreationen; 
     }
+
+    // public void add(String name, String passwort, List<Eigenkreation> eigenkreationen){
+    //     Nutzer nutzer = new Nutzer();
+    //     nutzer.name = name;
+    //     nutzer.passwort = BcryptUtil.bcryptHash(passwort);
+    //     nutzer.eigenkreationen = eigenkreationen; 
+    //     nutzer.persist();
+    // }
 
     public boolean addEigenkreation(Eigenkreation eigenkreation) {
         return this.eigenkreationen.add(eigenkreation);

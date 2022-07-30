@@ -23,7 +23,7 @@ public class Eis extends PanacheEntityBase {
     @SequenceGenerator(name = "eis_seq", initialValue = 10)
     private Long id;
 
-    @Pattern(regexp = "^[a-zA-Z\\s]*$",
+    @Pattern(regexp = "^[a-zA-Z()\\s]*$",
              message = "Use only letters for the name!")
     private String name;
     

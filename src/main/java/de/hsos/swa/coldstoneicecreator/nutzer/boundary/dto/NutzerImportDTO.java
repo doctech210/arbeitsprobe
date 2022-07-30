@@ -24,7 +24,9 @@ public class NutzerImportDTO {
 
         public static Nutzer toNutzer(NutzerImportDTO nutzerImportDTO) {
             if(nutzerImportDTO == null) return null;
-            return new Nutzer(nutzerImportDTO.name, nutzerImportDTO.passwort, null);
+            Nutzer nutzer = new Nutzer(nutzerImportDTO.name, nutzerImportDTO.passwort, null);
+            //nutzer.add(nutzerImportDTO.name, nutzerImportDTO.passwort, null);
+            return nutzer;
         }
     }
 }

@@ -103,14 +103,11 @@
                     <h2>{nutzer.id}, {nutzer.name}, {nutzer.role}</h2>
                 {/for}
             {#else}
-                {#for nutzer in nutzerDTO}
-                    {#if eingeloggterNutzer.id == nutzer.id}
-                        <h1>Hallo {nutzer.name}!</h1>
+                        <h1>Hallo {eingeloggterNutzer.name}!</h1>
                         <h3>Deine Accountinformationen:</h3>
-                        <p><strong>{nutzer.name}</strong></p>
-                        <p>{nutzer.role}</p>
-                    {/if}
-                {/for}
+                        <p><strong>{eingeloggterNutzer.name}</strong></p>
+                        <p>{eingeloggterNutzer.role}</p>
+
             {/if}
       </div>
     </div>

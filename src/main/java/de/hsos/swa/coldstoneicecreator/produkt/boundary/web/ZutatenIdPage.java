@@ -79,8 +79,9 @@ public class ZutatenIdPage {
         List<Allergene> alleAllergene = new ArrayList<Allergene>(EnumSet.allOf(Allergene.class));
         for(String allergen : allergene) {
             for(Allergene gesucht : alleAllergene) {
-                if(allergen.equals(gesucht.toString()))
-                enthalten.add(gesucht);
+                if(allergen.equals(gesucht.toString())) {
+                    enthalten.add(gesucht);
+                }
             }
         }
         Zutat zutat = new Zutat(null, name, premium, enthalten);

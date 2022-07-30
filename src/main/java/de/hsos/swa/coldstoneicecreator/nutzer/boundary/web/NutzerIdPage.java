@@ -1,4 +1,8 @@
 package de.hsos.swa.coldstoneicecreator.nutzer.boundary.web;
+
+import java.security.Principal;
+import java.util.Optional;
+
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -11,7 +15,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response;
 
 import io.quarkus.qute.CheckedTemplate;
@@ -52,13 +58,18 @@ public class NutzerIdPage {
         summary = "Gibt einen bestimmten Nutzer zurueck",
         description = "Gibt einen bestimmten Nutzer ueber die uebergebenen ID zurueck"
     )
-    public TemplateInstance get(@NotNull @PathParam("id") Long id) {
+    public TemplateInstance get(@NotNull @PathParam("id") Long id, @Context SecurityContext sec) {
         Nutzer nutzer = nutzerRepo.getById(id);
         if(nutzer != null) { 
-            NutzerExportDTO nutzerDTO = NutzerExportDTO.Converter.toDTO(nutzer);
-            return Templates.nutzerEinzeln(nutzerDTO);
+            Nutzer erlaubt = this.eingeloggterNutzer(sec);
+            if(Long.compare(erlaubt.getId(), id) == 0){
+                NutzerExportDTO nutzerDTO = NutzerExportDTO.Converter.toDTO(nutzer);
+                return Templates.nutzerEinzeln(nutzerDTO);
+            }
+            return Templates.error(Response.Status.FORBIDDEN.getStatusCode(), "Sie sind nicht fuer diese Seite authorisiert");
         }
         return Templates.error(Response.Status.NOT_FOUND.getStatusCode(), "Bitte erst Anmelden");
+        
     }
 
     @POST
@@ -86,5 +97,13 @@ public class NutzerIdPage {
     public Response delete(@NotNull @PathParam("id") Long id) {
         nutzerRepo.delete(id);
         return Response.ok().header("Refresh", "0; url=/nutzer").build();
+    }
+
+    private Nutzer eingeloggterNutzer(@NotNull SecurityContext sec) {
+        Principal user = sec.getUserPrincipal();
+        if(user == null) return null;
+        Optional<Nutzer> optKunde = Nutzer.find("name", user.getName()).firstResultOptional();
+        if(optKunde.isEmpty()) return null;
+        return optKunde.get();
     }
 }

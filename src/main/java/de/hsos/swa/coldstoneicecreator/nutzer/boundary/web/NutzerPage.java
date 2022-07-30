@@ -9,7 +9,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -28,7 +27,6 @@ import io.quarkus.qute.TemplateInstance;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerExportDTO;
-import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerImportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.control.NutzerControl;
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
@@ -55,7 +53,7 @@ public class NutzerPage {
     }
 
     @GET
-    @RolesAllowed({"Admin"})
+    @RolesAllowed({"Kunde","Admin"})
     @Operation(
         summary = "Gibt alle Nutzer zurueck",
         description = "Gibt alle angemeldeten Nutzer zurueck"
@@ -79,6 +77,7 @@ public class NutzerPage {
     )
     public TemplateInstance post(@Context SecurityContext sec, @FormParam("name") String name, @FormParam("passwort") String passwort) {
         Nutzer nutzer = new Nutzer(name, passwort, new ArrayList<>());
+        // nutzer.add(name, passwort, new ArrayList<>());
         if(nutzerRepo.nameVerfuegbar(nutzer.getName())){
             nutzerRepo.create(nutzer);
             return get(sec);

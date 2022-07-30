@@ -12,11 +12,9 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -33,7 +31,6 @@ import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
-import de.hsos.swa.coldstoneicecreator.bestellung.entity.BestellpostenEigen;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.EigenkreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;
@@ -189,46 +186,46 @@ public class EigenkreationIdPage {
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
     
-    @PUT
-    @Transactional
-    @RolesAllowed({"Admin", "Kunde"})
-    @Path("/zutaten/{zutatnummer:\\d+}")
-    @Operation(
-        summary = "Aendern einer Zutat einer bestimmten Eigenkreation",
-        description = "Aendern einer Zutaten einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
-    )
-    public Response putZutaten(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("zutatnummer") int zutatnummer, @NotNull Long neueZutatId) {
-        Nutzer nutzer = this.eingeloggterKunde(sec);
-        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
-        eigenkreationRepo.putZutat(id, --zutatnummer, neueZutatId, nutzer);
-        return Response.ok().build();
-    }
+    // @PUT
+    // @Transactional
+    // @RolesAllowed({"Admin", "Kunde"})
+    // @Path("/zutaten/{zutatnummer:\\d+}")
+    // @Operation(
+    //     summary = "Aendern einer Zutat einer bestimmten Eigenkreation",
+    //     description = "Aendern einer Zutaten einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
+    // )
+    // public Response putZutaten(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("zutatnummer") int zutatnummer, @NotNull Long neueZutatId) {
+    //     Nutzer nutzer = this.eingeloggterKunde(sec);
+    //     if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+    //     eigenkreationRepo.putZutat(id, --zutatnummer, neueZutatId, nutzer);
+    //     return Response.ok().build();
+    // }
 
-    @DELETE
-    @Transactional
-    @RolesAllowed({"Admin", "Kunde"})
-    @Path("/loeschen")
-    @Operation(
-        summary = "Loeschen einer bestimmten Eigenkreation",
-        description = "Loeschen einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
-    )
-    public Response delete(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
-        Nutzer nutzer = this.eingeloggterKunde(sec);
-        Eigenkreation eigenkreation = eigenkreationRepo.getById(id);
-        if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
-        List<BestellpostenEigen> bestellpostenEigen = bestellpostenRepo.getAllEigen();
-        Long postenId = null;
-        for(BestellpostenEigen eigen : bestellpostenEigen) {
+    // @DELETE
+    // @Transactional
+    // @RolesAllowed({"Admin", "Kunde"})
+    // @Path("/loeschen")
+    // @Operation(
+    //     summary = "Loeschen einer bestimmten Eigenkreation",
+    //     description = "Loeschen einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
+    // )
+    // public Response delete(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
+    //     Nutzer nutzer = this.eingeloggterKunde(sec);
+    //     Eigenkreation eigenkreation = eigenkreationRepo.getById(id);
+    //     if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
+    //     List<BestellpostenEigen> bestellpostenEigen = bestellpostenRepo.getAllEigen();
+    //     Long postenId = null;
+    //     for(BestellpostenEigen eigen : bestellpostenEigen) {
             
-            if(eigen.getEigenkreation().equals(eigenkreation)) {
-                postenId = eigen.getId();
-            }
+    //         if(eigen.getEigenkreation().equals(eigenkreation)) {
+    //             postenId = eigen.getId();
+    //         }
                 
-        }
-        if(postenId == null) return Response.status(Status.NOT_FOUND).build();
-        nutzer.deleteEigenkreation(eigenkreation, postenId);
-        return Response.ok().header("Refresh", "0; url=/bestellungen").build();
-    }
+    //     }
+    //     if(postenId == null) return Response.status(Status.NOT_FOUND).build();
+    //     nutzer.deleteEigenkreation(eigenkreation, postenId);
+    //     return Response.ok().header("Refresh", "0; url=/bestellungen").build();
+    // }
 
     /**
      * 

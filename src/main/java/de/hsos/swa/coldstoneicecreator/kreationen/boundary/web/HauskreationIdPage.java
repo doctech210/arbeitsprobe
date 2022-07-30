@@ -12,7 +12,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -170,18 +169,18 @@ public class HauskreationIdPage {
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
 
-    @DELETE
-    @Transactional
-    @RolesAllowed({"Admin"})
-    @Path("/loeschen")
-    @Operation(
-        summary = "Loeschen einer bestimmten Hauskreation",
-        description = "Loeschen einer bestimmten Hauskreation ueber die uebergebene ID"
-    )
-    public Response delete(@NotNull @PathParam("id") Long id) {
-        hauskreationRepo.delete(id);
-        return Response.ok().header("Refresh", "0; url=/bestellungen").build();
-    }
+    // @DELETE
+    // @Transactional
+    // @RolesAllowed({"Admin"})
+    // @Path("/loeschen")
+    // @Operation(
+    //     summary = "Loeschen einer bestimmten Hauskreation",
+    //     description = "Loeschen einer bestimmten Hauskreation ueber die uebergebene ID"
+    // )
+    // public Response delete(@NotNull @PathParam("id") Long id) {
+    //     hauskreationRepo.delete(id);
+    //     return Response.ok().header("Refresh", "0; url=/bestellungen").build();
+    // }
 
     /**
      * 

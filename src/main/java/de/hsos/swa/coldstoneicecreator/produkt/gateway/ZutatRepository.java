@@ -63,10 +63,12 @@ public class ZutatRepository implements ZutatControl{
     @Override
     public boolean put(Long id, Zutat zutat) {
         Zutat alteZutat = Zutat.findById(id);
-        if(!(zutat.getName().equals("string") || zutat.getName().equals("")))
+        if(!(zutat.getName().equals("string") || zutat.getName().equals(""))){
             alteZutat.setName(zutat.getName());
-        if(!(zutat.getAllergene().isEmpty()) || zutat.getAllergene() != null)
+        }
+        if(!(zutat.getAllergene().isEmpty()) || zutat.getAllergene() != null){
             alteZutat.setAllergene(zutat.getAllergene());
+        }
         alteZutat.setPremium(zutat.isPremium());
         this.kreationenUpdaten(alteZutat); 
         return true;
