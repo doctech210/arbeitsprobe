@@ -3,8 +3,10 @@ package de.hsos.swa.coldstoneicecreator.produkt;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
@@ -18,6 +20,7 @@ import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 
 @QuarkusTest
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestMethodOrder(OrderAnnotation.class)
 public class EisIdResourceTest {
     
@@ -47,19 +50,19 @@ public class EisIdResourceTest {
         .then().statusCode(200);
     }
 
-    // @Test
-    // @Order(4)
-    // @TestSecurity(user= "admin", roles = {"Admin"})
-    // public void deleteForbidden(){
-    //     given().contentType(ContentType.JSON).when().delete("/api/eis/1")
-    //         .then().statusCode(500);
-    // }
+    @Test
+    @Order(4)
+    @TestSecurity(user= "admin", roles = {"Admin"})
+    public void deleteForbidden(){
+        given().contentType(ContentType.JSON).when().delete("/api/eis/1")
+            .then().statusCode(500);
+    }
 
-    // @Test
-    // @Order(5)
-    // @TestSecurity(user= "admin", roles = {"Admin"})
-    // public void deleteAllowed(){
-    //     given().contentType(ContentType.JSON).when().delete("/api/eis/6")
-    //         .then().statusCode(204);
-    // }
+    @Test
+    @Order(5)
+    @TestSecurity(user= "admin", roles = {"Admin"})
+    public void deleteAllowed(){
+        given().contentType(ContentType.JSON).when().delete("/api/eis/6")
+            .then().statusCode(204);
+    }
 }

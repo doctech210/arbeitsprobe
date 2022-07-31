@@ -1,7 +1,9 @@
 package de.hsos.swa.coldstoneicecreator.kreationen;
 
+import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
@@ -20,6 +22,7 @@ import java.util.List;
 
 
 @QuarkusTest
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestMethodOrder(OrderAnnotation.class)
 public class EigenkreationResourceTest {
 
@@ -27,21 +30,21 @@ public class EigenkreationResourceTest {
     URL eigenkreationenEndpoint;
 
     @Test
-    @Order(1)
+    @Order(25)
     public void testGetUnauthorized(){
         given().contentType(ContentType.JSON).when().get(eigenkreationenEndpoint)
             .then().statusCode(401);
     }
 
     @Test
-    @Order(2)
+    @Order(26)
     public void testPostUnauthorized() {
         given().contentType(ContentType.JSON).when().post(eigenkreationenEndpoint)
             .then().statusCode(401);
     }
 
     @Test
-    @Order(3)
+    @Order(27)
     @TestSecurity(user= "admin", roles = {"Admin"})
     public void testGetAdminEmpty(){
         given().contentType(ContentType.JSON).when().get(eigenkreationenEndpoint)
@@ -50,7 +53,7 @@ public class EigenkreationResourceTest {
     }
 
     @Test
-    @Order(4)
+    @Order(28)
     @TestSecurity(user= "admin", roles = {"Admin"})
     public void testPostAdmin(){
         List<Long> zutaten = new ArrayList<>();
@@ -61,7 +64,7 @@ public class EigenkreationResourceTest {
     }
 
     @Test
-    @Order(5)
+    @Order(29)
     @TestSecurity(user= "user", roles = {"Kunde"})
     public void testPostKunde(){
         List<Long> zutaten = new ArrayList<>();
@@ -72,7 +75,7 @@ public class EigenkreationResourceTest {
     }
 
     @Test
-    @Order(6)
+    @Order(30)
     @TestSecurity(user= "admin", roles = {"Admin"})
     public void testGetAdminFull(){
         given().contentType(ContentType.JSON).when().get(eigenkreationenEndpoint)

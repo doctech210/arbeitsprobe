@@ -3,8 +3,10 @@ package de.hsos.swa.coldstoneicecreator.produkt;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
@@ -18,18 +20,19 @@ import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 
 @QuarkusTest
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestMethodOrder(OrderAnnotation.class)
 public class ZutatenIdResourceTest {
     
     @Test
-    @Order(1)
+    @Order(17)
     public void testGetNotFound(){
         given().contentType(ContentType.JSON).when().get("/api/zutaten/0")
             .then().statusCode(401);
     }
 
     @Test
-    @Order(2)
+    @Order(18)
     @TestSecurity(user= "admin", roles = {"Admin"})
     public void testGetFound(){
         given().contentType(ContentType.JSON).when().get("/api/zutaten/1")
@@ -37,7 +40,7 @@ public class ZutatenIdResourceTest {
     }
 
     @Test
-    @Order(3)
+    @Order(19)
     @TestSecurity(user= "admin", roles = {"Admin"})
     public void testPutEis(){
         Set<Allergene> allergene = new HashSet<>();
@@ -47,19 +50,19 @@ public class ZutatenIdResourceTest {
         .then().statusCode(200);
     }
 
-    // @Test
-    // @Order(4)
-    // @TestSecurity(user= "admin", roles = {"Admin"})
-    // public void deleteForbidden(){
-    //     given().contentType(ContentType.JSON).when().delete("/api/zutaten/1")
-    //         .then().statusCode(500);
-    // }
+    @Test
+    @Order(20)
+    @TestSecurity(user= "admin", roles = {"Admin"})
+    public void deleteForbidden(){
+        given().contentType(ContentType.JSON).when().delete("/api/zutaten/1")
+            .then().statusCode(500);
+    }
 
-    // @Test
-    // @Order(5)
-    // @TestSecurity(user= "admin", roles = {"Admin"})
-    // public void deleteAllowed(){
-    //     given().contentType(ContentType.JSON).when().delete("/api/zutaten/3")
-    //         .then().statusCode(204);
-    // }
+    @Test
+    @Order(21)
+    @TestSecurity(user= "admin", roles = {"Admin"})
+    public void deleteAllowed(){
+        given().contentType(ContentType.JSON).when().delete("/api/zutaten/44")
+            .then().statusCode(204);
+    }
 }

@@ -1,6 +1,11 @@
 package de.hsos.swa.coldstoneicecreator.kreationen;
 
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
 
@@ -14,15 +19,19 @@ import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 
 @QuarkusTest
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
+@TestMethodOrder(OrderAnnotation.class)
 public class EigenkreationIdResourceTest {
     
     @Test
+    @Order(31)
     public void testGet(){
         given().contentType(ContentType.JSON).when().get("/api/eigenkreationen/0")
             .then().statusCode(401);
     }
 
     @Test
+    @Order(32)
     @TestSecurity(user= "admin", roles = {"Admin"})
     public void testGetAdmin(){
         given().contentType(ContentType.JSON).when().get("/api/eigenkreationen/1")
@@ -30,6 +39,7 @@ public class EigenkreationIdResourceTest {
     }
 
     @Test
+    @Order(33)
     @TestSecurity(user= "user", roles = {"Kunde"})
     public void testGetKunde(){
         given().contentType(ContentType.JSON).when().get("/api/eigenkreationen/1")
@@ -37,6 +47,7 @@ public class EigenkreationIdResourceTest {
     }
 
     @Test
+    @Order(34)
     @TestSecurity(user= "user", roles = {"Kunde"})
     public void testPutEigenkreationKunde(){
         List<Long> zutaten = new ArrayList<>();
@@ -48,6 +59,7 @@ public class EigenkreationIdResourceTest {
     }
 
     @Test
+    @Order(35)
     @TestSecurity(user= "user", roles = {"Kunde"})
     public void testPostKunde(){
         given().contentType(ContentType.JSON).body(Long.valueOf(100))
@@ -56,6 +68,7 @@ public class EigenkreationIdResourceTest {
     }
 
     @Test
+    @Order(36)
     @TestSecurity(user= "user", roles = {"Kunde"})
     public void testPutZutatenKunde(){
         given().contentType(ContentType.JSON).body(Long.valueOf(20))
@@ -63,10 +76,12 @@ public class EigenkreationIdResourceTest {
             .then().statusCode(200);   
     }
 
-    // @Test
-    // @TestSecurity(user= "user", roles = {"Kunde"})
-    // public void testDeleteKunde(){
-    //     given().contentType(ContentType.JSON).body(Long.valueOf(1)).when()
-    //         .delete("/api/eigenkreationen/1").then().statusCode(204);
-    // }
+    @Test
+    @Order(37)
+    @TestSecurity(user= "user", roles = {"Kunde"})
+    public void testDeleteKunde(){
+        given().contentType(ContentType.JSON).body(Long.valueOf(1)).when()
+            .delete("/api/eigenkreationen/1").then().statusCode(404);
+            //TODO: Gucken wie wir das machen?
+    }
 }
