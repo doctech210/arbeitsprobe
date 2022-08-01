@@ -1,3 +1,5 @@
+//@author Stefan Bierenriede 852142
+
 package de.hsos.swa.coldstoneicecreator.nutzer;
 
 import org.junit.jupiter.api.ClassOrderer;

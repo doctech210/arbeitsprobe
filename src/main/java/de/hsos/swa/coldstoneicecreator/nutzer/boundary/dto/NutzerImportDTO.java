@@ -1,3 +1,5 @@
+//@author Stefan Bierenriede 852142
+
 package de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto;
 
 import javax.validation.constraints.Pattern;
@@ -25,7 +27,6 @@ public class NutzerImportDTO {
         public static Nutzer toNutzer(NutzerImportDTO nutzerImportDTO) {
             if(nutzerImportDTO == null) return null;
             Nutzer nutzer = new Nutzer(nutzerImportDTO.name, nutzerImportDTO.passwort, null);
-            //nutzer.add(nutzerImportDTO.name, nutzerImportDTO.passwort, null);
             return nutzer;
         }
     }

@@ -1,3 +1,5 @@
+//@author Stefan Bierenriede 852142
+
 package de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Kreation;

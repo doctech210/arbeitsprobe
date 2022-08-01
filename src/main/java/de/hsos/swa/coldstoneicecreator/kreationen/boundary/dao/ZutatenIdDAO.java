@@ -1,3 +1,5 @@
+//@author Marvin Gels 868603
+
 package de.hsos.swa.coldstoneicecreator.kreationen.boundary.dao;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Eigenkreation;

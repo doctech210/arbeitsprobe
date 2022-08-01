@@ -1,3 +1,5 @@
+//@author Stefan Bierenriede 852142
+
 package de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto;
 
 import java.util.List;
@@ -37,17 +39,5 @@ public class NutzerDTO {
             }
             return new NutzerDTO(nutzer.getId(), nutzer.getName(), nutzer.getPasswort(), eigenkreationenDTO);
         }
-
-        /*public static Nutzer toNutzer(NutzerDTO nutzerDTO) {
-            if(nutzerDTO == null) return null;
-            List<Eigenkreation> eigenkreationen = new ArrayList<>();
-            for(EigenkreationDTO eigenkreationDTO : nutzerDTO.eigenkreationenDTO) {
-                eigenkreationen.add(EigenkreationDTO.Converter.toEigenkreation(eigenkreationDTO));
-            }
-            Nutzer nutzer = new Nutzer(nutzerDTO.name, nutzerDTO.passwort, eigenkreationen);
-            nutzer.add(nutzer);
-            nutzer.setEigenkreationen(eigenkreationen);
-            return nutzer;
-        }*/
     }
 }

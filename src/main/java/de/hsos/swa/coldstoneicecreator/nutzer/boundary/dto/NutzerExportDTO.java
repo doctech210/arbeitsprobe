@@ -1,3 +1,5 @@
+//@author Stefan Bierenriede 852142
+
 package de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto;
 
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;

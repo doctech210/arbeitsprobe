@@ -1,3 +1,5 @@
+//@author Marvin Gels 868603
+
 package de.hsos.swa.coldstoneicecreator.produkt.boundary.rest;
 import java.util.ArrayList;
 import java.util.List;

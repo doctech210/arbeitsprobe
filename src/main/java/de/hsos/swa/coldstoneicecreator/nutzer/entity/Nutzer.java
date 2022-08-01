@@ -1,3 +1,5 @@
+//@author Stefan Bierenriede 852142
+
 package de.hsos.swa.coldstoneicecreator.nutzer.entity;
 
 import java.util.ArrayList;
@@ -57,14 +59,6 @@ public class Nutzer extends PanacheEntityBase{
         this.passwort = BcryptUtil.bcryptHash(passwort);
         this.eigenkreationen = eigenkreationen; 
     }
-
-    // public void add(String name, String passwort, List<Eigenkreation> eigenkreationen){
-    //     Nutzer nutzer = new Nutzer();
-    //     nutzer.name = name;
-    //     nutzer.passwort = BcryptUtil.bcryptHash(passwort);
-    //     nutzer.eigenkreationen = eigenkreationen; 
-    //     nutzer.persist();
-    // }
 
     public boolean addEigenkreation(Eigenkreation eigenkreation) {
         return this.eigenkreationen.add(eigenkreation);

@@ -1,3 +1,5 @@
+//@author Marvin Gels 868603
+
 package de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto;
 
 import java.math.BigDecimal;

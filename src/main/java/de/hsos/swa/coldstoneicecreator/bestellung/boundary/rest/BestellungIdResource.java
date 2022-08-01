@@ -1,3 +1,5 @@
+//@author Stefan Bierenriede 852142, Marvin Gels 868603
+
 package de.hsos.swa.coldstoneicecreator.bestellung.boundary.rest;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.control.BestellpostenControl;
