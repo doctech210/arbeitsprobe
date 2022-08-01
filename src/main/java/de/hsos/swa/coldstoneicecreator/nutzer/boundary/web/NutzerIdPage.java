@@ -7,9 +7,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,7 +26,6 @@ import io.quarkus.qute.TemplateInstance;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerExportDTO;
-import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerImportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.control.NutzerControl;
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 
@@ -74,16 +73,17 @@ public class NutzerIdPage {
 
     @POST
     @Transactional
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RolesAllowed({"Admin", "Kunde"})
     @Path("/aendern")
     @Operation(
         summary = "Aendern eines bestimmten Nutzers",
         description = "Returns all orders saved in the database"
     )
-    public Response put(@NotNull @PathParam("id") Long id, @Valid @NotNull NutzerImportDTO nutzerImportDTO) {
-        Nutzer nutzer = NutzerImportDTO.Converter.toNutzer(nutzerImportDTO);
+    public Response put(@NotNull @PathParam("id") Long id, @FormParam("name") String name, @FormParam("passwort") String passwort) {
+        Nutzer nutzer = new Nutzer(name, passwort, null);
         nutzerRepo.put(id, nutzer);
-        return Response.ok().build();
+        return Response.ok().header("Refresh", "0; url=/nutzer").build();
     }
 
     @POST

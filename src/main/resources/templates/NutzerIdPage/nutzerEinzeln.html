@@ -85,24 +85,35 @@
     </head>
 </head>
 <body>
-    <div class="content-wrapper">
-        <div class="left-column">
-            <div class="navbar">
-                <a href="/hauskreationen/">Hauskreationen</a>
-                <a href="/eigenkreationen/">Eigenkreationen</a>
-                <a href="/bestellungen/">Bestellungen</a>
-                <a href="/eis/">Eissorten</a>
-                <a href="/zutaten/">Zutaten</a>
-                <a href="/saucen/">Saucen</a>
-                <a href="/nutzer/{nutzerDTO.id}">Nutzer</a>
-            </div>
-        </div>
+  <div class="content-wrapper">
+      <div class="left-column">
+          <div class="navbar">
+              <a href="/hauskreationen/">Hauskreationen</a>
+              <a href="/eigenkreationen/">Eigenkreationen</a>
+              <a href="/bestellungen/">Bestellungen</a>
+              <a href="/eis/">Eissorten</a>
+              <a href="/zutaten/">Zutaten</a>
+              <a href="/saucen/">Saucen</a>
+              <a href="/nutzer/{nutzerDTO.id}">Nutzer</a>
+          </div>
+      </div>
+  </div>
+  <div class="main">
+      <h1>Hallo {nutzerDTO.name}!</h1>
+      <h3>Deine Accountinformationen:</h3>
+      <p><strong>{nutzerDTO.name}</strong></p>
+      <p>{nutzerDTO.role}</p>
+  </div>
+  <form action="aendern" autocomplete="off">
+    <div class="form-group py-3">
+      <input type="text" name="name" placeholder="Name" id="name">
     </div>
-    <div class="main">
-        <h1>Hallo {nutzerDTO.name}!</h1>
-        <h3>Deine Accountinformationen:</h3>
-        <p><strong>{nutzerDTO.name}</strong></p>
-        <p>{nutzerDTO.role}</p>
+    <div class="form-group py-3">
+      <input type="password" name="passwort" placeholder="Passwort" id="passwort">
     </div>
+    <div class="row px-3 py-3">
+      <input type="submit" formaction="/nutzer/{nutzerDTO.id}/aendern" formmethod="post" class="cta-button">
+    </div>
+  </form>
 </body>
 </html>

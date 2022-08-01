@@ -98,16 +98,18 @@
             </div>
           <div class="main">
             {#if eingeloggterNutzer.role == "Admin"}
-                <h1>Alle Registrierten Nutzer</h1>
-                {#for nutzer in nutzerDTO}
-                    <h2>{nutzer.id}, {nutzer.name}, {nutzer.role}</h2>
-                {/for}
+              <h1>Alle Registrierten Nutzer</h1>
+              {#for nutzer in nutzerDTO}
+                  <h2>{nutzer.id}, {nutzer.name}, {nutzer.role}</h2>
+              {/for}
             {#else}
-                        <h1>Hallo {eingeloggterNutzer.name}!</h1>
-                        <h3>Deine Accountinformationen:</h3>
-                        <p><strong>{eingeloggterNutzer.name}</strong></p>
-                        <p>{eingeloggterNutzer.role}</p>
-
+              <h1>Hallo {eingeloggterNutzer.name}!</h1>
+              <h3>Deine Accountinformationen:</h3>
+              <p><strong>{eingeloggterNutzer.name}</strong></p>
+              <p>{eingeloggterNutzer.role}</p>
+              <form action="/nutzer/{eingeloggterNutzer.id}">
+                <input type="submit" value="Einstellungen" />
+              </form>
             {/if}
       </div>
     </div>

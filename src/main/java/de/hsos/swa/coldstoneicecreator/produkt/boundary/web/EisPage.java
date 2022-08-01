@@ -33,6 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
 
+import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerExportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.EisControl;
@@ -53,7 +54,7 @@ public class EisPage {
     @CheckedTemplate
     static class Templates {
         
-        static native TemplateInstance eisAlle(List<EisDTO> eisDTO, Nutzer nutzer, List<Allergene> allergene);
+        static native TemplateInstance eisAlle(List<EisDTO> eisDTO, NutzerExportDTO nutzer, List<Allergene> allergene);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }
@@ -67,6 +68,7 @@ public class EisPage {
     public TemplateInstance get(@Context SecurityContext sec, @Valid @QueryParam("Allergene") List<Allergene> allergene) {
         List<Eis> alle = eisRepo.get();
         Nutzer nutzer = this.eingeloggterKunde(sec);
+        NutzerExportDTO nutzerDTO = NutzerExportDTO.Converter.toDTO(nutzer);
         if(allergene != null) {
             alle = eisRepo.getOhneAllergene(allergene);
         }
@@ -75,7 +77,7 @@ public class EisPage {
             alleDTO.add(EisDTO.Converter.toDTO(eis));
         }
         List<Allergene> alleAllergene = new ArrayList<Allergene>(EnumSet.allOf(Allergene.class));
-        return Templates.eisAlle(alleDTO, nutzer, alleAllergene);
+        return Templates.eisAlle(alleDTO, nutzerDTO, alleAllergene);
     }
 
     @POST

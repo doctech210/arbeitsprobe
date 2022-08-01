@@ -26,10 +26,13 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.HauskreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.control.HauskreationControl;
 import de.hsos.swa.coldstoneicecreator.kreationen.entity.Hauskreation;
+import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerExportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.EisDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.SauceDTO;
@@ -67,7 +70,7 @@ public class HauskreationPage {
     @CheckedTemplate
     static class Templates {
 
-        static native TemplateInstance hauskreationAlle(List<HauskreationDTO> hauskreationenDTO);
+        static native TemplateInstance hauskreationAlle(List<HauskreationDTO> hauskreationenDTO, NutzerExportDTO nutzerDTO);
         
         static native TemplateInstance hauskreationErstellen(List<EisDTO> eisDTO, List<ZutatDTO> zutatenDTO, List<SauceDTO> sauceDTO);
 
@@ -75,12 +78,22 @@ public class HauskreationPage {
     }
 
     @GET
+    @Counted(
+        name = "getHauskreationen",
+        description = "Anzahl wie oft sich alle Hausbecher angezeigt wurden."
+    )
+    @Timed(
+        name = "getHauskreationenTimed",
+        description = "Zeit die benoetigt wird, um sich alle Hauskreationen zu holen."
+    )
     @RolesAllowed({"Admin", "Kunde"})
     @Operation(
         summary = "Gibt alle Hauskreationen zurueck",
         description = "Gibt alle Hauskreationen mit dem angegebenen Filter zurueck"
     )
-    public TemplateInstance get(@Valid @QueryParam("Allergene") List<Allergene> allergene) {
+    public TemplateInstance get(@Valid @QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
+        Nutzer nutzer = this.eingeloggterKunde(sec);
+        NutzerExportDTO nutzerDTO = NutzerExportDTO.Converter.toDTO(nutzer);
         List<Hauskreation> alle = hauskreationRepo.get();
         if(allergene != null) {
             alle = hauskreationRepo.getOhneAllergene(allergene);
@@ -89,12 +102,16 @@ public class HauskreationPage {
         for(Hauskreation hauskreation : alle) {
             alleDTO.add(HauskreationDTO.Converter.toDTO(hauskreation));
         } 
-        return Templates.hauskreationAlle(alleDTO);
+        return Templates.hauskreationAlle(alleDTO, nutzerDTO);
     }
 
     @GET
     @Path("/erstellen")
-    @RolesAllowed({"Admin", "Kunde"})
+    @RolesAllowed({"Admin"})
+    @Operation(
+        summary = "Uebergibt alle relevanten Daten zur Erstellung einer Hauskreation",
+        description = "Uebergibt alle Zutaten, Soßen und Eissorten um eine Hauskreation zu erstellen"
+    )
     public TemplateInstance getErstellen(@Valid @QueryParam("Allergene") List<Allergene> allergene, @Context SecurityContext sec) {
         Nutzer nutzer = this.eingeloggterKunde(sec);
         if(nutzer == null) return Templates.error(Status.FORBIDDEN.getStatusCode(), "Bitte erst einloggen");
@@ -160,11 +177,6 @@ public class HauskreationPage {
 
     }
 
-    /**
-     * 
-     * @param sec
-     * @return
-     */
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;

@@ -25,6 +25,8 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.EigenkreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
@@ -57,6 +59,14 @@ public class EigenkreationResource {
     ZutatRepository ZutatRepo;
 
     @GET
+    @Counted(
+        name = "getEigenkreationen",
+        description = "Anzahl wie oft sich alle Eigenkreationen angezeigt wurden (API)"
+    )
+    @Timed(
+        name = "getEigenkreationenTimed",
+        description = "Zeit die benoetigt wird, um sich alle Eigenkreationen zu holen (API)"
+    )
     @RolesAllowed({"Admin", "Kunde"})
     @Operation(
         summary = "Gibt alle Eigenkreationen des Nutzer zurueck",
@@ -75,6 +85,14 @@ public class EigenkreationResource {
     }
     
     @POST
+    @Counted(
+        name = "postEigenkreationen",
+        description = "Anzahl wie oft sich eine Eigenkreation erstellt wurde (API)"
+    )
+    @Timed(
+        name = "postEigenkreationenTimed",
+        description = "Zeit die benoetigt wird, um eine persoenliche Eigenkreation zu erstellen (API)"
+    )
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
     @Operation(

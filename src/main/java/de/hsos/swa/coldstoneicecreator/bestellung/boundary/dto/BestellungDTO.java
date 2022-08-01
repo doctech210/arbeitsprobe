@@ -1,6 +1,7 @@
 package de.hsos.swa.coldstoneicecreator.bestellung.boundary.dto;
 
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import de.hsos.swa.coldstoneicecreator.bestellung.entity.Bestellung;
@@ -12,15 +13,17 @@ public class BestellungDTO {
     public List<BestellpostenEigenDTO> bestellpostenEigenDTO;
     public List<BestellpostenHausDTO> bestellpostenHausDTO;
     public boolean bestellt;
+    public String preis;
 
     public BestellungDTO() {     
     }
 
-    public BestellungDTO(Long id, List<BestellpostenEigenDTO> bestellpostenEigenDTO, List<BestellpostenHausDTO> bestellpostenHausDTO, boolean bestellt) {
+    public BestellungDTO(Long id, List<BestellpostenEigenDTO> bestellpostenEigenDTO, List<BestellpostenHausDTO> bestellpostenHausDTO, boolean bestellt, String preis) {
         this.id = id;
         this.bestellpostenEigenDTO = bestellpostenEigenDTO;
         this.bestellpostenHausDTO = bestellpostenHausDTO;
         this.bestellt = bestellt;
+        this.preis = preis;
     }
 
     public static class Converter {
@@ -35,7 +38,7 @@ public class BestellungDTO {
             for(BestellpostenHaus bestellposten : bestellung.getBestellpostenHaus()) {
                 bestellpostenHausDTO.add(BestellpostenHausDTO.Converter.toDTO(bestellposten));
             }
-            return new BestellungDTO(bestellung.getId(), bestellpostenEigenDTO, bestellpostenHausDTO, bestellung.isBestellt());
+            return new BestellungDTO(bestellung.getId(), bestellpostenEigenDTO, bestellpostenHausDTO, bestellung.isBestellt(), preisBerechnen(bestellpostenHausDTO, bestellpostenEigenDTO));
         }
 
         public static Bestellung toBestellung(BestellungDTO bestellungDTO) {
@@ -49,6 +52,17 @@ public class BestellungDTO {
                 bestellpostenHaus.add(BestellpostenHausDTO.Converter.toBestellposten(bestellpostenDTO));
             }
             return new Bestellung(bestellungDTO.id, bestellpostenEigen, bestellpostenHaus, bestellungDTO.bestellt);
+        }
+
+        private static String preisBerechnen(List<BestellpostenHausDTO> bestellpostenHausDTOs, List<BestellpostenEigenDTO> bestellpostenEigenDTOs){
+            BigDecimal preisGesamt = new BigDecimal("0.0");
+            for(BestellpostenHausDTO bphDTO : bestellpostenHausDTOs){
+                preisGesamt = preisGesamt.add(new BigDecimal(bphDTO.preis));
+            }
+            for(BestellpostenEigenDTO bpeDTO : bestellpostenEigenDTOs){
+                preisGesamt = preisGesamt.add(new BigDecimal(bpeDTO.preis));
+            }
+            return preisGesamt.toString();
         }
     }
 }

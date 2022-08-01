@@ -97,11 +97,11 @@
             </div>
             <div class="main"> 
                 <h1>Hauskreationen</h1>
-
-                <form action="/hauskreationen/erstellen">
-                    <input type="submit" value="erstelle deine eigene Kreation" />
-                </form>
-
+                {#if nutzerDTO != null && nutzerDTO.role == "Admin"}
+                    <form action="/hauskreationen/erstellen">
+                        <input type="submit" value="Neue Hauskreation" />
+                    </form>
+                {/if}
                 {#for hauskreation in hauskreationenDTO}
                 <p>
                     <h2>{hauskreation.name}</h2>
@@ -130,6 +130,9 @@
                             <li><div class="capsToCapitalize"> {allergen}</div></li>
                         {/for}
                     </ul>
+                    <p>
+                        <strong>Preis</strong> {hauskreation.preis} €
+                    </p>
                     <form action="/hauskreationen/{hauskreation.id}">
                         <input type="submit" value="Ansehen" />
                     </form>

@@ -3,6 +3,7 @@ package de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.math.BigDecimal;
 
 import javax.validation.constraints.Pattern;
 
@@ -24,12 +25,13 @@ public class HauskreationDTO{
              message = "Use only letters for the name!")
     public String name;
     public Set<Allergene> allergene;
+    public String preis;
     
     public HauskreationDTO() {
     }
 
     public HauskreationDTO(Long id, EisDTO eissorte, EisDTO eissorte2, List<ZutatDTO> zutaten, SauceDTO sauce,
-            String name, Set<Allergene> allergene) {
+            String name, Set<Allergene> allergene, String preis) {
         this.id = id;
         this.eissorte = eissorte;
         this.eissorte2 = eissorte2;
@@ -37,6 +39,7 @@ public class HauskreationDTO{
         this.sauce = sauce;
         this.name = name;
         this.allergene = allergene;
+        this.preis = preis;
     }
 
     public static class Converter{
@@ -49,7 +52,7 @@ public class HauskreationDTO{
             }
             return new HauskreationDTO(hauskreation.getId(), EisDTO.Converter.toDTO(hauskreation.getEissorte()), 
              EisDTO.Converter.toDTO(hauskreation.getEissorte2()), liste, SauceDTO.Converter.toDTO(hauskreation.getSauce()), 
-             hauskreation.getName(), hauskreation.getAllergene());
+             hauskreation.getName(), hauskreation.getAllergene(), preisBerechnen(hauskreation));
         }
 
         public static Hauskreation toHauskreation(HauskreationDTO hauskreationDTO) {
@@ -63,6 +66,19 @@ public class HauskreationDTO{
              hauskreationDTO.name);
              hauskreation.setAllergene(hauskreationDTO.allergene);
             return hauskreation;
+        }
+
+        private static String preisBerechnen(Hauskreation hauskreation){
+            BigDecimal preis = new BigDecimal("3.60");
+            BigDecimal zutatNormal = new BigDecimal("0.60");
+            BigDecimal zutatPremium = new BigDecimal("1.00");
+            BigDecimal sauce = new BigDecimal("0.50");
+            for(Zutat zutat : hauskreation.getZutaten()){
+                if(zutat.isPremium()) preis = preis.add(zutatPremium);
+                else preis = preis.add(zutatNormal);
+            }
+            if(hauskreation.getSauce() != null) preis = preis.add(sauce);
+            return preis.toString();
         }
     }
 }

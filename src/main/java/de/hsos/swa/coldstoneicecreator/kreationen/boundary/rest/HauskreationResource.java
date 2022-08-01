@@ -20,6 +20,8 @@ import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.HauskreationDTO;
 import de.hsos.swa.coldstoneicecreator.kreationen.boundary.dto.KreationIdDTO;
@@ -54,6 +56,14 @@ public class HauskreationResource {
     ZutatRepository ZutatRepo;
 
     @GET
+    @Counted(
+        name = "getHauskreationen",
+        description = "Anzahl wie oft sich alle Hausbecher angezeigt wurden (API)"
+    )
+    @Timed(
+        name = "getHauskreationenTimed",
+        description = "Zeit die benoetigt wird, um sich alle Hauskreationen zu holen. (API)"
+    )
     @RolesAllowed({"Admin", "Kunde"})
     @Operation(
         summary = "Gibt alle Hauskreationen zurueck",

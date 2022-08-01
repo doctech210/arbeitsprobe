@@ -30,6 +30,7 @@ import org.eclipse.microprofile.faulttolerance.Timeout;
 
 import javax.ws.rs.QueryParam;
 
+import de.hsos.swa.coldstoneicecreator.nutzer.boundary.dto.NutzerExportDTO;
 import de.hsos.swa.coldstoneicecreator.nutzer.entity.Nutzer;
 import de.hsos.swa.coldstoneicecreator.produkt.boundary.dto.ZutatDTO;
 import de.hsos.swa.coldstoneicecreator.produkt.control.ZutatControl;
@@ -52,7 +53,7 @@ public class ZutatenPage {
     @CheckedTemplate
     static class Templates {
         
-        static native TemplateInstance zutatAlle(List<ZutatDTO> zutatenDTO, Nutzer nutzer, List<Allergene> allergene);
+        static native TemplateInstance zutatAlle(List<ZutatDTO> zutatenDTO, NutzerExportDTO nutzer, List<Allergene> allergene);
 
         static native TemplateInstance error(int errorCode, String errorMessage);
     }
@@ -66,6 +67,7 @@ public class ZutatenPage {
     public TemplateInstance get(@Context SecurityContext sec, @Valid @QueryParam("Allergene") List<Allergene> allergene) {
         List<Zutat> alle = zutatRepo.get();
         Nutzer nutzer = this.eingeloggterKunde(sec);
+        NutzerExportDTO nutzerDTO = NutzerExportDTO.Converter.toDTO(nutzer);
         if(allergene != null) {
             alle = zutatRepo.getOhneAllergene(allergene);
         }
@@ -74,7 +76,7 @@ public class ZutatenPage {
             alleDTO.add(ZutatDTO.Converter.toDTO(zutat));
         }
         List<Allergene> alleAllergene = new ArrayList<Allergene>(EnumSet.allOf(Allergene.class));
-        return Templates.zutatAlle(alleDTO, nutzer, alleAllergene);
+        return Templates.zutatAlle(alleDTO, nutzerDTO, alleAllergene);
     }
 
     @POST

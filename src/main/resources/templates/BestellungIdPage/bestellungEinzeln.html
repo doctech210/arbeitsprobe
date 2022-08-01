@@ -4,81 +4,6 @@
     <meta charset="UTF-8">
     <title>Eine Bestellung</title>
     <style>
-        /* body {
-            margin: 0;
-            font-family: Roboto, "Tahoma", Arial, sans-serif;
-        }
-        form{
-            float: left;
-        }
-        #just-line-break {
-            white-space: pre-line;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            margin-bottom: 0.5rem;
-            font-weight: 400;
-            line-height: 1.5;
-        }
-        h1 { font-size: 2.25rem; }
-        h2 { font-size: 1.6rem }
-        h3 { font-size: 1.5rem }
-        h4 { font-size: 1.4rem }
-        h5 { font-size: 1.25rem }
-        h6 { font-size: 1rem }
-        p {
-            padding: .15rem 0;
-            margin: 0;
-            line-height: 1.3rem;
-        }
-        a {
-            text-decoration: underline;
-            color: #1259A5;
-        }
-        a:hover, a:active { color: #c00; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            clear: both;
-        }        
-        .content-wrapper {
-            padding: 0 13rem;
-            background: white;
-        }
-        .left-column {
-            grid-column: span 8;
-            padding-right: 3rem;
-        }
-        .left-column p {
-            padding: .15rem 0;
-            margin: 0;
-            font-weight: 300;
-        }
-        .left-column ul {
-            margin: 0;
-            padding: 10px 0 0 25px;
-            list-style-type: "\1F680";
-            font-weight: 300;
-        }
-        .left-column li { padding-left: 10px; }
-        .left-column .cta-button {
-            margin: 20px 0;
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #18A0FB;
-            font-weight: 600;
-            color: white;
-            text-decoration: none;
-            text-transform: uppercase;
-            border: none;
-        }
-        .left-column .cta-input {
-            padding: 1rem;
-            margin: 20px 0;
-            background-color: white;
-            font-weight: 600;
-            color: #18A0FB;
-            /*border: none;
-        } */
 
 /*Navbar aus: https://www.w3schools.com/howto/howto_css_fixed_menu.asp#:~:text=To%20create%20a%20fixed%20top%20menu%2C%20use%20position%3Afixed%20and,the%20height%20of%20your%20menu.*/
 
@@ -134,7 +59,8 @@
                         <h2>Eigenkreationen:</h2>
                         {#for postenEigen in bestellungDTO.bestellpostenEigenDTO}
                             <p>
-                                <h4>{postenEigen.anzahl} x {postenEigen.eigenkreationDTO.name}</h4>
+                                <h4>{postenEigen.anzahl} x {postenEigen.eigenkreationDTO.name}, {postenEigen.preis} €</h4>
+                                <!-- <p><strong>Preis:</strong> {postenEigen.preis}</p> -->
                                 <input type="submit" value="Ansehen" form="get_{postenEigen.id}" class="cta-button">
                                 <form action="/eigenkreationen/{postenEigen.eigenkreationDTO.id}" method="GET" id="get_{postenEigen.id}">
                                     <input type="hidden" name="EigenkreationsId" id="get_{postenEigen.id}" value="{postenEigen.id}">
@@ -148,7 +74,8 @@
                         <h2>Hauskreationen:</h2>
                         {#for postenHaus in bestellungDTO.bestellpostenHausDTO}
                             <p>
-                                <h4>{postenHaus.anzahl} x {postenHaus.hauskreationDTO.name}</h4>
+                                <h4>{postenHaus.anzahl} x {postenHaus.hauskreationDTO.name}, {postenHaus.preis} €</h4>
+                                <!-- <p><strong>Preis:</strong> {postenHaus.preis}<p> -->
                                 <input type="submit" value="Ansehen" form="get_{postenHaus.id}" class="cta-button">
                                 <form action="/hauskreationen/{postenHaus.hauskreationDTO.id}" method="GET" id="get_{postenHaus.id}">
                                     <input type="hidden" name="HauskreationsId" id="get_{postenHaus.id}" value="{postenHaus.id}">
