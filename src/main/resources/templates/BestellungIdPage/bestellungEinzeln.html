@@ -82,10 +82,12 @@
                                 <form action="/hauskreationen/{postenHaus.hauskreationDTO.id}" method="GET" id="get_{postenHaus.id}">
                                     <input type="hidden" name="HauskreationsId" id="get_{postenHaus.id}" value="{postenHaus.id}">
                                 </form>
+                                {#if bestellungDTO.bestellt == false}
                                 <input type="submit" value="Loeschen" form="delete_{postenHaus.id}" class="cta-button">
                                 <form action="/bestellungen/{bestellungDTO.id}/hausposten/{postenHaus.id}/loeschen" method="POST" id="delete_{postenHaus.id}">
                                     <input type="hidden" name="HauskreationsId" id="delete_{postenHaus.id}" value="{postenHaus.id}">
                                 </form>
+                                {/if}
                             </p> 
                         {/for}
                         {#if bestellungDTO.bestellt == false}
