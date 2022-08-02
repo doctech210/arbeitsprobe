@@ -132,8 +132,8 @@ public class EigenkreationIdResource {
     @RolesAllowed({"Admin", "Kunde"})
     @Path("/zutaten/{zutatnummer:\\d+}")
     @Operation(
-        summary = "Aendern einer Zutat einer bestimmten Eigenkreation",
-        description = "Aendern einer Zutaten einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
+        summary = "Aendern einer Zutat in einer bestimmten Eigenkreation",
+        description = "Aendern einer Zutaten in einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
     )
     public Response putZutaten(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("zutatnummer") int zutatnummer, @NotNull Long neueZutatId) {
         Nutzer nutzer = this.eingeloggterKunde(sec);

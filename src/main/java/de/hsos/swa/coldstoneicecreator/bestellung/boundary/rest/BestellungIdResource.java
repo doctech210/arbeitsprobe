@@ -117,7 +117,7 @@ public class BestellungIdResource {
     @DELETE
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    @Path("/hausposten/{postenId:\\d+}")
+    @Path("/hausposten/{hauspostenId:\\d+}")
     @Operation(
         summary = "Loeschen eines bestimmten Hausbestellposten aus der Bestellung",
         description = "Loeschen des Hausbestellposten mit der uebergebenen ID aus der Bestellung"
@@ -135,7 +135,7 @@ public class BestellungIdResource {
     @DELETE
     @Transactional
     @RolesAllowed({"Admin", "Kunde"})
-    @Path("/eigenposten/{postenId:\\d+}")
+    @Path("/eigenposten/{eigenpostenId:\\d+}")
     @Operation(
         summary = "Loeschen eines bestimmten Eigenbestellposten aus der Bestellung",
         description = "Loeschen des Eigenbestellposten mit der uebergebenen ID aus der Bestellung"

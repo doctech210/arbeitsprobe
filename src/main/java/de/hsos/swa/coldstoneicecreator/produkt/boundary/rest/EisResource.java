@@ -63,7 +63,7 @@ public class EisResource {
     @Transactional
     @RolesAllowed({"Admin"})
     @Operation(
-        summary = "Erstellen eine neue Eissorte",
+        summary = "Erstellen einer neuen Eissorte",
         description = "Erstellen einer neuen Eissorte"
     )
     public Response post(@Valid @NotNull EisDTO eisDTO) {

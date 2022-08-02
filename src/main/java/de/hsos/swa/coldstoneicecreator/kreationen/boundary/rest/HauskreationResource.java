@@ -87,8 +87,8 @@ public class HauskreationResource {
     @Transactional
     @RolesAllowed({"Admin"})
     @Operation(
-        summary = "Erstellt eine neue Hauskreation",
-        description = "Erstellt eine neue Hauskreation"
+        summary = "Erstellen einer neue Hauskreation",
+        description = "Erstellen einer neuen Hauskreation"
     )
     public Response post(@Valid @NotNull KreationIdDTO kreationIds) {
         Eis eissorte1 = eisRepo.getById(kreationIds.eissorte1Id);
