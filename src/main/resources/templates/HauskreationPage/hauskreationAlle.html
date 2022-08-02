@@ -167,5 +167,32 @@
             </div>
         </div>
     </div>   
+    <script>
+        function insertParam(key, value) {
+            key = escape(key); value = escape(value);
+
+            var currentURL = window.location.href;
+                if(currentURL.includes(value)){
+                    var zuEntfernen = key + "=" + value;
+                    if(currentURL.includes("&" + zuEntfernen)){
+                        currentURL = currentURL.replace("&" + zuEntfernen,'');
+                    }else{
+                        if(currentURL.includes("&")){
+                            currentURL = currentURL.replace(zuEntfernen + "&", '');
+                        }else{
+                            currentURL = currentURL.replace("?" + zuEntfernen, '');
+                        }
+                    }
+                }else{
+                if(currentURL.includes("?")){
+                    currentURL += "&";
+                }else{
+                    currentURL += "?";
+                }
+            currentURL +=  key + "=" + value
+            }
+            window.location.href = currentURL;
+        }
+    </script>
 </body>
 </html>
