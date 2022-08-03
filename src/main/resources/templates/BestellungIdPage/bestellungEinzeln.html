@@ -67,10 +67,12 @@
                                 <form action="/eigenkreationen/{postenEigen.eigenkreationDTO.id}" method="GET" id="get_{postenEigen.id}">
                                     <input type="hidden" name="EigenkreationsId" id="get_{postenEigen.id}" value="{postenEigen.id}">
                                 </form>
-                                <input type="submit" value="Loeschen" form="delete_{postenEigen.id}" class="cta-button">
-                                <form action="/bestellungen/{bestellungDTO.id}/eigenposten/{postenEigen.id}/loeschen" method="POST" id="delete_{postenEigen.id}">
-                                    <input type="hidden" name="EigenkreationsId" id="delete_{postenEigen.id}" value="{postenEigen.id}">
-                                </form>
+                                {#if bestellungDTO.bestellt == false}
+                                    <input type="submit" value="Loeschen" form="delete_{postenEigen.id}" class="cta-button">
+                                    <form action="/bestellungen/{bestellungDTO.id}/eigenposten/{postenEigen.id}/loeschen" method="POST" id="delete_{postenEigen.id}">
+                                        <input type="hidden" name="EigenkreationsId" id="delete_{postenEigen.id}" value="{postenEigen.id}">
+                                    </form>
+                                {/if}
                             </p> 
                         {/for}
                         <h2>Hauskreationen:</h2>
@@ -83,10 +85,10 @@
                                     <input type="hidden" name="HauskreationsId" id="get_{postenHaus.id}" value="{postenHaus.id}">
                                 </form>
                                 {#if bestellungDTO.bestellt == false}
-                                <input type="submit" value="Loeschen" form="delete_{postenHaus.id}" class="cta-button">
-                                <form action="/bestellungen/{bestellungDTO.id}/hausposten/{postenHaus.id}/loeschen" method="POST" id="delete_{postenHaus.id}">
-                                    <input type="hidden" name="HauskreationsId" id="delete_{postenHaus.id}" value="{postenHaus.id}">
-                                </form>
+                                    <input type="submit" value="Loeschen" form="delete_{postenHaus.id}" class="cta-button">
+                                    <form action="/bestellungen/{bestellungDTO.id}/hausposten/{postenHaus.id}/loeschen" method="POST" id="delete_{postenHaus.id}">
+                                        <input type="hidden" name="HauskreationsId" id="delete_{postenHaus.id}" value="{postenHaus.id}">
+                                    </form>
                                 {/if}
                             </p> 
                         {/for}
