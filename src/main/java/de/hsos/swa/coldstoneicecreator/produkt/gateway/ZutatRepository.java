@@ -42,7 +42,7 @@ public class ZutatRepository implements ZutatControl{
                 va.add(Allergene.EI);
                 va.add(Allergene.HONIG);
                 va.add(Allergene.LAKTOSE);
-                va.add(Allergene.GELANTINE);
+                va.add(Allergene.GELATINE);
             }
         }
         va.addAll(allergene);

@@ -155,7 +155,7 @@ INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (34, 'LAKTOSE');
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (34, 'NUSS');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Gummibaeren', FALSE, 35);
-INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (35, 'GELANTINE');
+INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (35, 'GELATINE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Hanuta', FALSE, 36);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (36, 'GLUTEN');
@@ -189,7 +189,7 @@ INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (44, 'LAKTOSE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Kit Kat', FALSE, 45);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (45, 'LAKTOSE');
-INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (45, 'GELANTINE');
+INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (45, 'GELATINE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Knisterbrause', FALSE, 46);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (46, 'HONIG');
@@ -204,7 +204,7 @@ INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (49, 'LAKTOSE');
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (49, 'NUSS');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Marshmallows', FALSE, 50);
-INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (50, 'GELANTINE');
+INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (50, 'GELATINE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Milchschnitte', FALSE, 51);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (51, 'LAKTOSE');
@@ -227,7 +227,7 @@ INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (57, 'LAKTOSE');
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (57, 'NUSS');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Pico Balla', FALSE, 58);
-INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (58, 'GELANTINE');
+INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (58, 'GELATINE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Puffreis', FALSE, 59);
 
@@ -247,7 +247,7 @@ INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (63, 'NUSS');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Schaumkuesse', FALSE, 64);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (64, 'GLUTEN');
-INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (64, 'GELANTINE');
+INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (64, 'GELATINE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Schokocrossies', FALSE, 65);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (65, 'GLUTEN');
@@ -265,7 +265,7 @@ INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (68, 'NUSS');
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (68, 'LAKTOSE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Wackelpudding', FALSE, 69);
-INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (69, 'GELANTINE');
+INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (69, 'GELATINE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Weisse Crisp', FALSE, 70);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (70, 'GLUTEN');
@@ -292,7 +292,7 @@ INSERT INTO Zutat (name, premium, id) VALUES ('Lemon Curd', FALSE, 76);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (76, 'EI');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Marshemellowcreme', FALSE, 77);
-INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (77, 'GELANTINE');
+INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (77, 'GELATINE');
 
 INSERT INTO Zutat (name, premium, id) VALUES ('Nutella', FALSE, 78);
 INSERT INTO Zutat_allergene (Zutat_id, allergene) VALUES (78, 'LAKTOSE');
