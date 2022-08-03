@@ -92,10 +92,7 @@ public class HauskreationRepository implements HauskreationControl{
             geaendert = true;
         }
         Sauce neueSauce = hauskreation.getSauce();
-        if(neueSauce != null) {
-            alteHauskreation.setSauce(neueSauce);
-            geaendert = true;
-        }
+        alteHauskreation.setSauce(neueSauce);
         String neuerName = hauskreation.getName();
         if(neuerName != "string" && neuerName != "") {
             alteHauskreation.setName(neuerName);

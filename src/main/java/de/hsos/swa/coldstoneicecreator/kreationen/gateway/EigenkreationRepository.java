@@ -103,10 +103,7 @@ public class EigenkreationRepository implements EigenkreationControl{
             geaendert = true;
         }
         Sauce neueSauce = eigenkreation.getSauce();
-        if(neueSauce != null) {
-            alteEigenkreation.setSauce(neueSauce);
-            geaendert = true;
-        }
+        alteEigenkreation.setSauce(neueSauce);
         String neuerName = eigenkreation.getName();
         if(neuerName != "string" && neuerName != "") {
             alteEigenkreation.setName(neuerName);

@@ -209,16 +209,21 @@ background-color: #f1f1f1;
                             {#for sauce in sauceDTO}
                             <div class="form-group py-3">
                                 {#if hauskreationDTO.sauce != null}
-                                {#if hauskreationDTO.sauce.id == sauce.id}
-                                    <input type="radio" name="sauce" id="{sauce.id}" value="{sauce.id}" checked> {sauce.name} <br />
+                                    {#if hauskreationDTO.sauce.id == sauce.id}
+                                        <input type="radio" name="sauce" id="{sauce.id}" value="{sauce.id}" checked> {sauce.name} <br />
+                                    {#else}
+                                        <input type="radio" name="sauce" id="{sauce.id}" value="{sauce.id}"> {sauce.name} <br />
+                                    {/if}
                                 {#else}
                                     <input type="radio" name="sauce" id="{sauce.id}" value="{sauce.id}"> {sauce.name} <br />
                                 {/if}
-                                {#else}
-                                <input type="radio" name="sauce" id="{sauce.id}" value="{sauce.id}"> {sauce.name} <br />
-                                {/if}
                             </div>
                             {/for}
+                            {#if hauskreationDTO.sauce != null}
+                                <input type="radio" name="sauce" id="null" value=0> keine <br />
+                            {#else}
+                                <input type="radio" name="sauce" id="null" value=0 checked> keine <br />
+                            {/if}
                         </fieldset>
                         </details>
         

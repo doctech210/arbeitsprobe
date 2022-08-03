@@ -192,6 +192,11 @@
                         {/if}
                       </div>
                     {/for}
+                    {#if eigenkreationDTO.sauce != null}
+                        <input type="radio" name="sauce" id="null" value=0> keine <br />
+                    {#else}
+                        <input type="radio" name="sauce" id="null" value=0 checked> keine <br />
+                    {/if}
                   </fieldset>
                 </details>
   

@@ -148,7 +148,7 @@ public class EigenkreationIdPage {
             eissorte2 = eissorte1;
         }
         Sauce sauce = null;
-        if(sauceId != null){
+        if(sauceId != null && Long.compare(sauceId, Long.valueOf(0)) != 0){
             sauce = sauceRepo.getById(sauceId);
         }
         List<Zutat> zutaten = new ArrayList<>();
