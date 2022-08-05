@@ -20,7 +20,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import io.quarkus.qute.CheckedTemplate;
@@ -77,14 +79,14 @@ public class NutzerPage {
         summary = "Erstellt einen neuen Nutzer",
         description = "Erstellt einen neuen Nutzer"
     )
-    public TemplateInstance post(@Context SecurityContext sec, @FormParam("name") String name, @FormParam("passwort") String passwort) {
+    public Response post(@Context SecurityContext sec, @FormParam("name") String name, @FormParam("passwort") String passwort) {
         Nutzer nutzer = new Nutzer(name, passwort, new ArrayList<>());
         // nutzer.add(name, passwort, new ArrayList<>());
         if(nutzerRepo.nameVerfuegbar(nutzer.getName())){
             nutzerRepo.create(nutzer);
-            return get(sec);
+            return Response.seeOther(UriBuilder.fromPath("/hauskreationen").build()).build();
         } else {
-            return Templates.error(Status.NOT_ACCEPTABLE.getStatusCode(), "Nutzername wird bereits verwendet");
+            return Response.ok(Templates.error(Status.NOT_ACCEPTABLE.getStatusCode(), "Nutzername wird bereits verwendet")).build();
         }
     }
 
