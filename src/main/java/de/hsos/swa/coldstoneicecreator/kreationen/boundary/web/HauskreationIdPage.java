@@ -171,19 +171,6 @@ public class HauskreationIdPage {
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
 
-    // @DELETE
-    // @Transactional
-    // @RolesAllowed({"Admin"})
-    // @Path("/loeschen")
-    // @Operation(
-    //     summary = "Loeschen einer bestimmten Hauskreation",
-    //     description = "Loeschen einer bestimmten Hauskreation ueber die uebergebene ID"
-    // )
-    // public Response delete(@NotNull @PathParam("id") Long id) {
-    //     hauskreationRepo.delete(id);
-    //     return Response.ok().header("Refresh", "0; url=/bestellungen").build();
-    // }
-
     /**
      * 
      * @param sec

@@ -112,7 +112,6 @@ public class BestellungPage {
         if(bestellung == null) return Response.ok(Templates.error(Response.Status.BAD_REQUEST.getStatusCode(), "Bestellung nicht gefunden")).build();
         bestellungRepo.bestellungLoeschen(bestellung.getId());
         nutzer.deleteBestellung();
-        //return Response.noContent().build();
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
 

@@ -188,47 +188,6 @@ public class EigenkreationIdPage {
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
     
-    // @PUT
-    // @Transactional
-    // @RolesAllowed({"Admin", "Kunde"})
-    // @Path("/zutaten/{zutatnummer:\\d+}")
-    // @Operation(
-    //     summary = "Aendern einer Zutat einer bestimmten Eigenkreation",
-    //     description = "Aendern einer Zutaten einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
-    // )
-    // public Response putZutaten(@Context SecurityContext sec, @NotNull @PathParam("id") Long id, @NotNull @PathParam("zutatnummer") int zutatnummer, @NotNull Long neueZutatId) {
-    //     Nutzer nutzer = this.eingeloggterKunde(sec);
-    //     if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
-    //     eigenkreationRepo.putZutat(id, --zutatnummer, neueZutatId, nutzer);
-    //     return Response.ok().build();
-    // }
-
-    // @DELETE
-    // @Transactional
-    // @RolesAllowed({"Admin", "Kunde"})
-    // @Path("/loeschen")
-    // @Operation(
-    //     summary = "Loeschen einer bestimmten Eigenkreation",
-    //     description = "Loeschen einer bestimmten Eigenkreation eines angemeldeten Nutzers ueber die uebergebene ID"
-    // )
-    // public Response delete(@Context SecurityContext sec, @NotNull @PathParam("id") Long id) {
-    //     Nutzer nutzer = this.eingeloggterKunde(sec);
-    //     Eigenkreation eigenkreation = eigenkreationRepo.getById(id);
-    //     if(nutzer == null) return Response.status(Status.NOT_FOUND).build();
-    //     List<BestellpostenEigen> bestellpostenEigen = bestellpostenRepo.getAllEigen();
-    //     Long postenId = null;
-    //     for(BestellpostenEigen eigen : bestellpostenEigen) {
-            
-    //         if(eigen.getEigenkreation().equals(eigenkreation)) {
-    //             postenId = eigen.getId();
-    //         }
-                
-    //     }
-    //     if(postenId == null) return Response.status(Status.NOT_FOUND).build();
-    //     nutzer.deleteEigenkreation(eigenkreation, postenId);
-    //     return Response.ok().header("Refresh", "0; url=/bestellungen").build();
-    // }
-
     /**
      * 
      * @param sec

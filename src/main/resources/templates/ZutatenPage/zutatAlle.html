@@ -183,14 +183,6 @@ background-color: #f1f1f1;
                         </p>
                     </div>
                 {/if}
-
-
-                <!-- {#if nutzer.role == "Admin"}
-                    <input type="submit" value="Loeschen" form="delete_{zutat.id}" class="cta-button">
-                    <form action="/zutaten/{zutat.id}/loeschen" method="POST" id="delete_{zutat.id}">
-                        <input type="hidden" name="ZutatId" id="delete_{zutat.id}" value="{zutat.id}">
-                    </form>
-                {/if} -->
                 {/for}
                 {#if nutzer.role == "Admin"}
                     <p>
