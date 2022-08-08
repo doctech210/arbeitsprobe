@@ -103,11 +103,6 @@ public class BestellungResource {
         return Response.noContent().build();
     }
 
-    /**
-     * 
-     * @param nutzer
-     * @return
-     */
     private Bestellung offeneBestellung(@NotNull Nutzer nutzer) {
         for(Bestellung b : nutzer.getBestellungen()){
             if(!b.isBestellt()) return b;
@@ -115,11 +110,6 @@ public class BestellungResource {
         return null;
     }
 
-    /**
-     * 
-     * @param sec
-     * @return
-     */
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;

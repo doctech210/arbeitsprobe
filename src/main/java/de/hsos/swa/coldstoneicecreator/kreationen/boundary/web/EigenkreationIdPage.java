@@ -187,12 +187,7 @@ public class EigenkreationIdPage {
         eigenkreationRepo.post(id, anzahl, nutzer);
         return Response.ok().header("Refresh", "0; url=/bestellungen").build();
     }
-    
-    /**
-     * 
-     * @param sec
-     * @return
-     */
+
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;

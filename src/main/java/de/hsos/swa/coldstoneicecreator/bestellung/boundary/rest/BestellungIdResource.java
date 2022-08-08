@@ -157,11 +157,6 @@ public class BestellungIdResource {
             return null;
         }
 
-    /**
-     * 
-     * @param sec
-     * @return
-     */
     private Nutzer eingeloggterKunde(@NotNull SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;

@@ -134,7 +134,7 @@ public class EigenkreationRepository implements EigenkreationControl{
         Eigenkreation eigenkreation = this.getById(kreationId);
         if(eigenkreation == null) return false;
         KreationDAO kreation = new KreationDAO(nutzer, eigenkreation, anzahl, true);
-        neueEigenkreation.fire(kreation);
+        neueEigenkreation.fire(kreation); //geht an das BestellungRepository
         return true;
     }
 
@@ -175,7 +175,7 @@ public class EigenkreationRepository implements EigenkreationControl{
         }
     }
 
-    public void eisUpdate(@Observes Zutat neueZutat) {
+    public void zutatUpdate(@Observes Zutat neueZutat) {
         List<Eigenkreation> eigenkreationen = Eigenkreation.listAll();
         for(Eigenkreation eigenkreation : eigenkreationen) {
             for(Zutat zutat : eigenkreation.getZutaten()) {

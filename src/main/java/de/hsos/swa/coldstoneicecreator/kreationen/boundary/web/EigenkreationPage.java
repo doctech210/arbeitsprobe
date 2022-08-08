@@ -103,7 +103,6 @@ public class EigenkreationPage {
         for(Zutat zutat : alleZutaten) {
             alleZutatenDTO.add(ZutatDTO.Converter.toDTO(zutat));
         }
-        //return Response.ok(alleDTO).build();
         return Templates.eigenkreationAlle(alleDTO);
     }
 
@@ -181,16 +180,10 @@ public class EigenkreationPage {
         }
         Eigenkreation eigenkreation = new Eigenkreation(null, eissorte1, eissorte2, zutaten, sauce, name);
         eigenkreationRepo.create(nutzer, eigenkreation, anzahl);
-        //return Response.ok().build();
 
         return Response.seeOther(UriBuilder.fromPath("/eigenkreationen").build()).build();
     }
 
-    /**
-     * 
-     * @param sec
-     * @return
-     */
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;

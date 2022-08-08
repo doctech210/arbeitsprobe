@@ -33,7 +33,7 @@ public class BestellpostenRepository implements BestellpostenControl {
         Eigenkreation kreation = Eigenkreation.findById(kreationId);
         Bestellung bestellung = Bestellung.findById(bestellId);
         if(kreation == null || bestellung == null) return null;
-        List<BestellpostenEigen> bestellposten = bestellung.getBestellpostenEigen();//BestellpostenEigen.listAll();
+        List<BestellpostenEigen> bestellposten = bestellung.getBestellpostenEigen();
         for(BestellpostenEigen bp : bestellposten){
             if(bp.getEigenkreation() == kreation){
                 bp.setAnzahl(bp.getAnzahl() + anzahl);
@@ -51,7 +51,7 @@ public class BestellpostenRepository implements BestellpostenControl {
         Hauskreation kreation = Hauskreation.findById(kreationId);
         Bestellung bestellung = Bestellung.findById(bestellId);
         if(kreation == null || bestellung == null) return null;
-        List<BestellpostenHaus> bestellposten = bestellung.getBestellpostenHaus();//BestellpostenHaus.listAll();
+        List<BestellpostenHaus> bestellposten = bestellung.getBestellpostenHaus();
         for(BestellpostenHaus bp : bestellposten){
             if(bp.getHauskreation() == kreation){
                 bp.setAnzahl(bp.getAnzahl() + anzahl);

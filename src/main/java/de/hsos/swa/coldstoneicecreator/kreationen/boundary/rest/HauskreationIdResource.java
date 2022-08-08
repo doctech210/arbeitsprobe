@@ -125,11 +125,6 @@ public class HauskreationIdResource {
         return Response.noContent().build();
     }
 
-    /**
-     * 
-     * @param sec
-     * @return
-     */
     private Nutzer eingeloggterKunde(SecurityContext sec) {
         Principal user = sec.getUserPrincipal();
         if(user == null) return null;
